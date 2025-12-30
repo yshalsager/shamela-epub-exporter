@@ -35,7 +35,9 @@ export default defineConfig([
         files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
         languageOptions: {
             parserOptions: {
-                projectService: true,
+                projectService: {
+                    allowDefaultProject: ['src/locales/main.loader.svelte.js'],
+                },
                 extraFileExtensions: ['.svelte'],
                 parser: ts_eslint.parser,
             },
@@ -62,6 +64,21 @@ export default defineConfig([
         plugins: {markdown},
         language: 'markdown/commonmark',
         extends: ['markdown/recommended'],
+        ignores: ['docs/**'],
     },
-    {files: ['**/*.css'], plugins: {css}, language: 'css/css', extends: ['css/recommended']},
+    {
+        files: ['**/*.css'],
+        plugins: {css},
+        language: 'css/css',
+        extends: ['css/recommended'],
+        rules: {
+            'css/no-invalid-properties': ['error', {allowUnknownVariables: true}],
+        },
+    },
+    {
+        files: ['src/entrypoints/popup/app.css'],
+        rules: {
+            'css/no-invalid-at-rules': 'off',
+        },
+    },
 ])

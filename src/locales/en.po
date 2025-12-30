@@ -169,9 +169,8 @@ msgstr "Scrape error."
 msgid "الكتاب {0}"
 msgstr "Book {0}"
 
-#: src/entrypoints/job/App.svelte
-msgid "أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء العمل."
-msgstr "Add a book ID or a list of URLs, then start the job and keep the Shamela tab open while it runs."
+#~ msgid "أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء العمل."
+#~ msgstr "Add a book ID or a list of URLs, then start the job and keep the Shamela tab open while it runs."
 
 #: src/entrypoints/job/App.svelte
 msgid "الكتب"
@@ -208,3 +207,9 @@ msgstr "Flatten the table of contents"
 #: src/entrypoints/job/App.svelte
 msgid "يُجعل فهرس الموضوعات في مستوى واحد."
 msgstr "Make the table of contents a single level."
+
+#: src/entrypoints/job/App.svelte
+msgid ""
+"أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء\n"
+"العمل."
+msgstr ""
