@@ -1,0 +1,202 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-30T14:24:18.839Z\n"
+"PO-Revision-Date: 2025-12-30T14:24:18.839Z\n"
+"Last-Translator: \n"
+"Language: en\n"
+"Language-Team: \n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
+"Source-Language: ar\n"
+"MIME-Version: 1.0\n"
+
+#: src/entrypoints/job/App.svelte
+#: src/entrypoints/job/App.svelte
+msgid "خطأ"
+msgstr "Error"
+
+#: src/entrypoints/job/App.svelte
+msgid "اكتمل"
+msgstr "Done"
+
+#: src/entrypoints/job/App.svelte
+msgid "معلومة"
+msgstr "Info"
+
+#: src/entrypoints/job/App.svelte
+msgid "في قائمة الانتظار"
+msgstr "Queued"
+
+#: src/entrypoints/job/App.svelte
+msgid "جارٍ التنفيذ"
+msgstr "Running"
+
+#: src/entrypoints/job/App.svelte
+msgid "مكتملة"
+msgstr "Completed"
+
+#: src/entrypoints/job/App.svelte
+msgid "مُلغاة"
+msgstr "Canceled"
+
+#: src/entrypoints/job/App.svelte
+msgid "أُعِدَّ ملف EPUB للتنزيل."
+msgstr "EPUB is ready for download."
+
+#: src/entrypoints/job/App.svelte
+#: src/entrypoints/popup/App.svelte
+msgid "الشاملة"
+msgstr "Shamela"
+
+#: src/entrypoints/job/App.svelte
+msgid "اللغة"
+msgstr "Language"
+
+#: src/entrypoints/job/App.svelte
+msgid "معرّف الكتاب"
+msgstr "Book ID"
+
+#: src/entrypoints/job/App.svelte
+msgid "مثال: 8567"
+msgstr "e.g. 8567"
+
+#: src/entrypoints/job/App.svelte
+msgid "روابط الكتاب (سطر لكل رابط)"
+msgstr "Book URLs (one per line)"
+
+#: src/entrypoints/job/App.svelte
+msgid "مثال: https://shamela.ws/book/8567"
+msgstr "e.g. https://shamela.ws/book/8567"
+
+#: src/entrypoints/job/App.svelte
+msgid "الخيارات"
+msgstr "Options"
+
+#: src/entrypoints/job/App.svelte
+msgid "تحسين الهوامش"
+msgstr "Improve footnotes"
+
+#: src/entrypoints/job/App.svelte
+msgid "الجزء (اختياري)"
+msgstr "Volume (optional)"
+
+#: src/entrypoints/job/App.svelte
+msgid "مثال: 2"
+msgstr "e.g. 2"
+
+#: src/entrypoints/job/App.svelte
+msgid "التقدّم"
+msgstr "Progress"
+
+#. placeholder {0}: current_job.book_id
+#: src/entrypoints/job/App.svelte
+msgid "المهمة {0}"
+msgstr "Job {0}"
+
+#. placeholder {0}: status_label(current_job?.status)
+#: src/entrypoints/job/App.svelte
+msgid "الحالة: {0}"
+msgstr "Status: {0}"
+
+#. placeholder {0}: current_job?.progress.current ?? 0
+#. placeholder {1}: current_job?.progress.total ?? 0
+#: src/entrypoints/job/App.svelte
+msgid "{0} / {1} صفحة"
+msgstr "{0} / {1} pages"
+
+#: src/entrypoints/job/App.svelte
+msgid "يُنشأ EPUB…"
+msgstr "Building EPUB…"
+
+#: src/entrypoints/job/App.svelte
+msgid "قائمة الانتظار"
+msgstr "Queue"
+
+#: src/entrypoints/job/App.svelte
+msgid "أحدث المهام وحالاتها."
+msgstr "Latest jobs and their status."
+
+#: src/entrypoints/job/App.svelte
+msgid "متابعة المهمة النشطة"
+msgstr "Follow active"
+
+#: src/entrypoints/job/App.svelte
+msgid "قائمة الانتظار خالية."
+msgstr "Queue is empty."
+
+#: src/entrypoints/job/App.svelte
+msgid "بدء"
+msgstr "Start"
+
+#: src/entrypoints/job/App.svelte
+msgid "إلغاء"
+msgstr "Cancel"
+
+#: src/entrypoints/job/App.svelte
+msgid "تفريغ"
+msgstr "Clear"
+
+#: src/entrypoints/job/App.svelte
+msgid "تنزيل آخر ملف"
+msgstr "Download last"
+
+#: src/entrypoints/job/App.svelte
+#: src/entrypoints/popup/App.svelte
+msgid "مُحمل الكتب"
+msgstr "Books downloader"
+
+#: src/entrypoints/popup/App.svelte
+msgid "افتح أداة التحميل من موقع المكتبة الشاملة والتصدير إلى كتاب إلكتروني بصيغة EPUB."
+msgstr "Open the Shamela tool to load and export as an EPUB ebook."
+
+#: src/entrypoints/popup/App.svelte
+msgid "فتح الأداة"
+msgstr "Open tool"
+
+#: src/entrypoints/background.ts
+msgid "أُلغيت المهمة."
+msgstr "Job canceled."
+
+#: src/entrypoints/background.ts
+msgid "خطأ في الاستخلاص"
+msgstr "Scrape error."
+
+#. placeholder {0}: book_id
+#: src/entrypoints/content.ts
+msgid "الكتاب {0}"
+msgstr "Book {0}"
+
+#: src/entrypoints/job/App.svelte
+msgid "أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء العمل."
+msgstr "Add a book ID or a list of URLs, then start the job and keep the Shamela tab open while it runs."
+
+#: src/entrypoints/job/App.svelte
+msgid "الكتب"
+msgstr "Books"
+
+#: src/entrypoints/job/App.svelte
+msgid "ألصق الروابط أو أضف معرّف كتاب واحد."
+msgstr "Paste URLs or add a single book ID."
+
+#: src/entrypoints/job/App.svelte
+msgid "تحسينات الكتاب المنشيء."
+msgstr "Generated book tweaks."
+
+#: src/entrypoints/job/App.svelte
+msgid "تحويل الهوامش إلى نوافذ منبثقة لسهولة التنقل منها وإليها."
+msgstr "Convert footnotes to pop-ups for easier navigation to and from them."
+
+#: src/entrypoints/job/App.svelte
+msgid "تحميل مجلد أو جزء محدد من الكتاب."
+msgstr "Download a folder or a specific volume of the book."
+
+#: src/entrypoints/job/App.svelte
+msgid "منتَظَر بدء المهمة."
+msgstr "Waiting for the job to start."
+
+#: src/entrypoints/job/App.svelte
+msgid "جاهز"
+msgstr "Ready"

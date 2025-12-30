@@ -60,6 +60,6 @@ export function format_number(value: number, locale_override?: string) {
 export function format_character_count(count: number, limit = 4096, locale_override?: string) {
     const target = locale_override ?? get(locale)
     const formatter = new Intl.NumberFormat(target)
-    const characters = 'characters'
+    const characters = 'أحرف'
     return `${formatter.format(count)}/${formatter.format(limit)} ${characters}`
 }

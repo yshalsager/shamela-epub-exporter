@@ -293,7 +293,7 @@ const render_page = (page: BookPage, title: string) => `<?xml version="1.0" enco
 
 export const build_epub = async (info: BookInfo, pages: BookPage[], options: JobOptions = {}) => {
   const zip = new JSZip()
-  const title = info.title || `Shamela ${info.id}`
+  const title = info.title || `الشاملة ${info.id}`
   const author = info.author || ''
   const identifier = `urn:shamela:${info.id}`
   const filename = sanitize_filename(`${title}${author ? ` - ${author}` : ''} - (${info.id}).epub`)

@@ -7,8 +7,9 @@ export default defineConfig({
   srcDir: 'src',
   modules: ['@wxt-dev/auto-icons', '@wxt-dev/module-svelte'],
   manifest: {
-    name: 'Shamela Export',
-    description: 'Export Shamela books to EPUB from your active session.',
+    name: '__MSG_extName__',
+    description: '__MSG_extDescription__',
+    default_locale: 'ar',
     permissions: ['tabs', 'scripting', 'storage', 'downloads'],
     host_permissions: ['https://shamela.ws/*'],
   },

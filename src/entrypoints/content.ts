@@ -122,7 +122,7 @@ const scrape_book = async (job_id: string, book_id: number, options: JobOptions,
   about_el.removeAttribute('class')
   const about = about_el.outerHTML
 
-  const title = meta_doc.querySelector(SELECTORS.title)?.textContent?.trim() || `Book ${book_id}`
+  const title = meta_doc.querySelector(SELECTORS.title)?.textContent?.trim() || `الكتاب ${book_id}`
   const author = meta_doc.querySelector(SELECTORS.author)?.textContent?.trim() || undefined
 
   let volumes: Record<string, [number, number]> = {}

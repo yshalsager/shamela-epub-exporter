@@ -5,9 +5,11 @@
   import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
   import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'
+  import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
   import { Switch } from '@/components/ui/switch'
   import { job_state } from '@/lib/job-state.svelte'
   import { build_epub } from '@/lib/shamela/epub'
+  import { apply_locale, available_locales, init_locale, locale } from '@/locales/locale'
   import type { BookInfo, BookPage, JobOptions, RuntimeMessage } from '@/lib/shamela/types'
 
   let book_id = $state('')
@@ -29,6 +31,10 @@
       ? Math.min(100, Math.round((current_job.progress.current / current_job.progress.total) * 100))
       : 0
   )
+  let current_locale_label = $derived.by(() => {
+    const current = $locale
+    return $available_locales.find((option) => option.locale === current)?.name ?? current
+  })
 
   const parse_ids = () => {
     const ids: number[] = []
@@ -60,10 +66,21 @@
   }
 
   const toast_title = (level: 'info' | 'success' | 'error') => {
-    if (level === 'error') return 'Error'
-    if (level === 'success') return 'Done'
-    return 'Info'
+    if (level === 'error') return 'خطأ'
+    if (level === 'success') return 'اكتمل'
+    return 'معلومة'
   }
+
+  const status_labels: Record<string, string> = {
+    queued: 'في قائمة الانتظار',
+    running: 'جارٍ التنفيذ',
+    done: 'مكتملة',
+    error: 'خطأ',
+    canceled: 'مُلغاة',
+    idle: 'جاهز',
+  }
+
+  const status_label = (status?: string) => status_labels[status ?? 'idle'] ?? status ?? status_labels.idle
 
   const start_jobs = async () => {
     const ids = parse_ids()
@@ -106,11 +123,12 @@
     const url = URL.createObjectURL(blob)
     last_download = { url, filename }
     await browser.downloads.download({ url, filename })
-    push_toast('success', 'EPUB is ready for download.')
+    push_toast('success', 'أُعِدَّ ملف EPUB للتنزيل.')
     is_building = false
   }
 
   onMount(() => {
+    void init_locale()
     const handler = (message: RuntimeMessage) => {
       if (message.type === 'job/done' && message.payload) {
         const { info, pages, options } = message.payload as {
@@ -142,31 +160,46 @@
   </div>
 
   <div class='mx-auto flex max-w-4xl flex-col gap-6 px-6 py-8'>
-    <header class='space-y-2'>
-      <p class='text-xs uppercase tracking-[0.35em] text-muted-foreground'>Shamela</p>
-      <h1 class='font-serif text-3xl font-semibold text-foreground'>Export job</h1>
-      <p class='max-w-2xl text-sm text-muted-foreground'>Queue a book id or a list of URLs, then keep the Shamela tab open while the job runs.</p>
+    <header class='flex flex-wrap items-start justify-between gap-4'>
+      <div class='space-y-2'>
+        <p class='text-xs uppercase tracking-[0.35em] text-muted-foreground'>الشاملة</p>
+        <h1 class='font-serif text-3xl font-semibold text-foreground'>مُحمل الكتب</h1>
+        <p class='max-w-2xl text-sm text-muted-foreground'>أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء العمل.</p>
+      </div>
+      <div class='w-full max-w-[220px] space-y-2'>
+        <Label for='locale-select'>اللغة</Label>
+        <Select type='single' value={$locale} onValueChange={(value) => void apply_locale(String(value))}>
+          <SelectTrigger id='locale-select' class='w-full'>
+            <span data-slot='select-value'>{current_locale_label}</span>
+          </SelectTrigger>
+          <SelectContent>
+            {#each $available_locales as option (option.locale)}
+              <SelectItem value={option.locale}>{option.name}</SelectItem>
+            {/each}
+          </SelectContent>
+        </Select>
+      </div>
     </header>
 
     <div class='grid gap-6 lg:grid-cols-[1.25fr_0.9fr]'>
       <Card>
         <CardHeader>
-          <CardTitle>Book source</CardTitle>
-          <CardDescription>Paste URLs or use a single id to open the book tab.</CardDescription>
+          <CardTitle>الكتب</CardTitle>
+          <CardDescription>ألصق الروابط أو أضف معرّف كتاب واحد.</CardDescription>
         </CardHeader>
         <CardContent class='space-y-4'>
           <div class='grid gap-2'>
-            <Label for='book_id'>Book id</Label>
-            <Input id='book_id' placeholder='e.g. 8567' bind:value={book_id} />
+            <Label for='book_id'>معرّف الكتاب</Label>
+            <Input id='book_id' placeholder='مثال: 8567' bind:value={book_id} />
           </div>
           <div class='grid gap-2'>
-            <Label for='urls'>Book URLs (one per line)</Label>
+            <Label for='urls'>روابط الكتاب (سطر لكل رابط)</Label>
             <textarea
               id='urls'
               rows='7'
               bind:value={urls}
               class='min-h-[140px] w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40'
-              placeholder='https://shamela.ws/book/8567'
+              placeholder='مثال: https://shamela.ws/book/8567'
             ></textarea>
           </div>
         </CardContent>
@@ -174,23 +207,23 @@
 
       <Card>
         <CardHeader>
-          <CardTitle>Options</CardTitle>
-          <CardDescription>Light tweaks applied during export.</CardDescription>
+          <CardTitle>الخيارات</CardTitle>
+          <CardDescription>تحسينات الكتاب المنشيء.</CardDescription>
         </CardHeader>
         <CardContent class='space-y-4'>
           <div class='flex items-center justify-between gap-4 rounded-lg border border-border bg-background/60 px-3 py-3'>
             <div class='space-y-1'>
-              <p class='text-sm font-medium text-foreground'>Improve hamesh</p>
-              <p class='text-xs text-muted-foreground'>Normalize notes layout and spacing.</p>
+              <p class='text-sm font-medium text-foreground'>تحسين الهوامش</p>
+              <p class='text-xs text-muted-foreground'>تحويل الهوامش إلى نوافذ منبثقة لسهولة التنقل منها وإليها.</p>
             </div>
             <Switch bind:checked={update_hamesh} />
           </div>
           <div class='grid gap-2'>
-            <Label for='volume'>Volume (optional)</Label>
-            <Input id='volume' placeholder='e.g. 2' bind:value={volume} />
+            <Label for='volume'>الجزء (اختياري)</Label>
+            <Input id='volume' placeholder='مثال: 2' bind:value={volume} />
           </div>
           <div class='rounded-lg border border-dashed border-border bg-muted/40 px-3 py-3 text-xs text-muted-foreground'>
-            Volume selection trims toc and pages after scraping the first page.
+            تحميل مجلد أو جزء محدد من الكتاب.
           </div>
         </CardContent>
       </Card>
@@ -199,8 +232,8 @@
     <div class='grid gap-6 lg:grid-cols-[1.2fr_0.8fr]'>
       <Card>
         <CardHeader>
-          <CardTitle>Progress</CardTitle>
-          <CardDescription>{current_job ? `Job ${current_job.book_id}` : 'Waiting for a job to start.'}</CardDescription>
+          <CardTitle>التقدّم</CardTitle>
+          <CardDescription>{current_job ? `المهمة ${current_job.book_id}` : 'منتَظَر بدء المهمة.'}</CardDescription>
         </CardHeader>
         <CardContent class='space-y-3'>
           {#if current_job?.error}
@@ -209,27 +242,27 @@
             </div>
           {/if}
           <div class='flex items-center justify-between text-xs text-muted-foreground'>
-            <span>Status: {current_job?.status ?? 'idle'}</span>
+            <span>الحالة: {status_label(current_job?.status)}</span>
             <span>
               {current_job?.progress.current ?? 0}
               /
               {current_job?.progress.total ?? 0}
-              pages
+              صفحة
             </span>
           </div>
           <div class='h-2 w-full overflow-hidden rounded-full bg-muted'>
             <div class='h-full rounded-full bg-primary transition-all' style={`width: ${progress_percent}%`}></div>
           </div>
           {#if is_building}
-            <p class='text-xs text-muted-foreground'>Building EPUB…</p>
+            <p class='text-xs text-muted-foreground'>يُنشأ EPUB…</p>
           {/if}
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Queue</CardTitle>
-          <CardDescription>Latest jobs and their status.</CardDescription>
+          <CardTitle>قائمة الانتظار</CardTitle>
+          <CardDescription>أحدث المهام وحالاتها.</CardDescription>
         </CardHeader>
         <CardContent class='space-y-2'>
           {#if jobs.length}
@@ -243,26 +276,26 @@
                     onclick={() => (selected_job_id = job.job_id)}
                   >
                     <span class='font-medium text-foreground'>#{job.book_id}</span>
-                    <span class='text-[10px] uppercase tracking-[0.2em] text-muted-foreground'>{job.status}</span>
+                    <span class='text-[10px] uppercase tracking-[0.2em] text-muted-foreground'>{status_label(job.status)}</span>
                   </button>
                 </li>
               {/each}
             </ul>
             <div class='pt-2'>
-              <Button variant='ghost' onclick={() => (selected_job_id = null)}>Follow active</Button>
+              <Button variant='ghost' onclick={() => (selected_job_id = null)}>متابعة المهمة النشطة</Button>
             </div>
           {:else}
-            <p class='text-xs text-muted-foreground'>Queue is empty.</p>
+            <p class='text-xs text-muted-foreground'>قائمة الانتظار خالية.</p>
           {/if}
         </CardContent>
       </Card>
     </div>
 
     <div class='flex flex-wrap gap-3'>
-      <Button onclick={start_jobs}>Start</Button>
-      <Button variant='secondary' onclick={cancel_job} disabled={!current_job || current_job.status !== 'running'}>Cancel</Button>
-      <Button variant='outline' onclick={clear_jobs} disabled={!jobs.length}>Clear</Button>
-      <Button variant='ghost' onclick={download_last} disabled={!last_download}>Download last</Button>
+      <Button onclick={start_jobs}>بدء</Button>
+      <Button variant='secondary' onclick={cancel_job} disabled={!current_job || current_job.status !== 'running'}>إلغاء</Button>
+      <Button variant='outline' onclick={clear_jobs} disabled={!jobs.length}>تفريغ</Button>
+      <Button variant='ghost' onclick={download_last} disabled={!last_download}>تنزيل آخر ملف</Button>
     </div>
   </div>
 </main>

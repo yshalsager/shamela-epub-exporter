@@ -15,6 +15,7 @@ stats-*.json
 web-ext.config.ts
 .wuchale
 src/locales/main.loader.svelte.js
+src/locales/js.loader*.js
 src/locales/data.js
 
 # Editor directories and files

@@ -106,7 +106,7 @@ const cancel_job = async (job_id: string) => {
   browser.runtime.sendMessage({
     type: 'job/toast',
     job_id,
-    payload: { level: 'info', message: 'Job canceled.' },
+    payload: { level: 'info', message: 'أُلغيت المهمة.' },
   })
   job_runtime.delete(job_id)
 }
@@ -169,7 +169,7 @@ export default defineBackground(() => {
     }
 
     if (message.type === 'scrape/error') {
-      const error_message = message.payload?.message ?? 'scrape error'
+      const error_message = message.payload?.message ?? 'خطأ في الاستخلاص'
       update_job(message.job_id, {
         status: error_message === 'canceled' ? 'canceled' : 'error',
         error: error_message,
@@ -179,7 +179,7 @@ export default defineBackground(() => {
         job_id: message.job_id,
         payload: {
           level: error_message === 'canceled' ? 'info' : 'error',
-          message: error_message === 'canceled' ? 'Scrape canceled.' : error_message,
+          message: error_message === 'canceled' ? 'أُلغي الاستخلاص.' : error_message,
         },
       })
       return
