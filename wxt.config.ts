@@ -1,5 +1,6 @@
 import { defineConfig } from 'wxt';
 import tailwindcss from '@tailwindcss/vite';
+import { wuchale } from '@wuchale/vite-plugin'
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -12,6 +13,6 @@ export default defineConfig({
     host_permissions: ['https://shamela.ws/*'],
   },
   vite: () => ({
-    plugins: [tailwindcss()],
+    plugins: [wuchale(), tailwindcss()],
   }),
 });

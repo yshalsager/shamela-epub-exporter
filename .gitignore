@@ -13,6 +13,9 @@ stats.html
 stats-*.json
 .wxt
 web-ext.config.ts
+.wuchale
+src/locales/main.loader.svelte.js
+src/locales/data.js
 
 # Editor directories and files
 .vscode/*
