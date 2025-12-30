@@ -1,8 +1,10 @@
 import type { TocTree, TocBranch } from './types'
 
 export const get_number_from_url = (url: string) => {
-  const match = url.match(/(\d+)(?:#|$)/)
-  return match ? Number.parseInt(match[1], 10) : 0
+  const last = url.split('/').pop() ?? ''
+  const cleaned = last.split('#')[0]
+  const value = Number.parseInt(cleaned, 10)
+  return Number.isNaN(value) ? 0 : value
 }
 
 export const get_start_end_pages = (volumes: Record<string, number>, pages: number) => {

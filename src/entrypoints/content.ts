@@ -6,6 +6,7 @@ const SELECTORS = {
   search: 'div.text-left',
   index: 'div.betaka-index',
   toc: 'h4 + ul > li',
+  toc_nav: '.s-nav',
   chapters: "ul a[href*='/book/']",
   author: 'h1 + div a',
   title: 'h1 a',
@@ -31,7 +32,8 @@ const parse_toc = (items: Element[], seen: Set<string> = new Set()): TocTree => 
   for (const item of items) {
     const link = item.querySelector('a')
     const href = link?.getAttribute('href') ?? ''
-    if (!href || href === 'javascript:;') continue
+    if (!href || href.startsWith('javascript') || href.startsWith('#')) continue
+
     const entry: TocItem = {
       page: get_number_from_url(href),
       text: link?.textContent?.trim() ?? '',
@@ -40,7 +42,8 @@ const parse_toc = (items: Element[], seen: Set<string> = new Set()): TocTree => 
     if (seen.has(key)) continue
     seen.add(key)
 
-    const sub_items = Array.from(item.querySelectorAll('ul > li'))
+    const sub_list = Array.from(item.children).find((child) => child.tagName === 'UL') as Element | undefined
+    const sub_items = sub_list ? Array.from(sub_list.children).filter((child) => child.tagName === 'LI') : []
     if (sub_items.length) {
       const branch: TocBranch = [entry, parse_toc(sub_items, seen)]
       result.push(branch)
@@ -82,33 +85,45 @@ const clean_page_html = (page_content: Element) => {
 
 const scrape_book = async (job_id: string, book_id: number, options: JobOptions, signal: AbortSignal) => {
   const base_url = `https://shamela.ws/book/${book_id}`
-  const meta_doc = await fetch_doc(base_url, signal)
+  const meta_doc = document.cloneNode(true) as Document
   const meta_content = meta_doc.querySelector(SELECTORS.page_content)
   if (!meta_content) throw new Error('page_content_missing')
 
   meta_content.querySelector(SELECTORS.search)?.remove()
-  const toc_el = meta_content.querySelector(SELECTORS.index)
-  toc_el?.querySelectorAll('a[href="javascript:;"]').forEach((el) => el.remove())
-  const toc_items = toc_el ? Array.from(toc_el.querySelectorAll(SELECTORS.toc)) : []
-  const toc = toc_items.length ? parse_toc(toc_items) : []
-
-  const page_chapters = chapters_by_page(
-    Array.from(meta_content.querySelectorAll(SELECTORS.chapters))
+  const first_page_doc = await fetch_doc(`${base_url}/1`, signal)
+  const total_pages = get_number_from_url(
+    first_page_doc.querySelector(SELECTORS.last_page)?.getAttribute('href') ?? ''
   )
+
+  const toc_els = Array.from(meta_doc.querySelectorAll(SELECTORS.index))
+  toc_els.forEach((el) => el.querySelectorAll('a[href^="javascript"], a[href="#"]').forEach((link) => link.remove()))
+  let toc_items = toc_els.flatMap((el) => Array.from(el.querySelectorAll(SELECTORS.toc)))
+  let toc_source: Element | null = toc_els[0] ?? null
+
+  if (!toc_items.length) {
+    const nav = first_page_doc.querySelector(SELECTORS.toc_nav)
+    if (nav) {
+      nav.querySelectorAll('a[href^="javascript"], a[href="#"]').forEach((link) => link.remove())
+      toc_items = Array.from(nav.querySelectorAll('ul > li'))
+      toc_source = nav
+    }
+  }
+
+  const toc = toc_items.length ? parse_toc(toc_items) : []
+  let chapter_anchors = toc_source ? Array.from(toc_source.querySelectorAll(SELECTORS.chapters)) : []
+  if (!chapter_anchors.length) {
+    chapter_anchors = Array.from(meta_content.querySelectorAll(SELECTORS.chapters))
+  }
+  const page_chapters = chapters_by_page(chapter_anchors)
 
   const about_el = meta_content.cloneNode(true) as Element
   about_el.querySelector(SELECTORS.search)?.remove()
-  about_el.querySelector(SELECTORS.index)?.remove()
+  about_el.querySelectorAll(SELECTORS.index).forEach((el) => el.remove())
   about_el.removeAttribute('class')
   const about = about_el.outerHTML
 
   const title = meta_doc.querySelector(SELECTORS.title)?.textContent?.trim() || `Book ${book_id}`
   const author = meta_doc.querySelector(SELECTORS.author)?.textContent?.trim() || undefined
-
-  const first_page_doc = await fetch_doc(`${base_url}/1`, signal)
-  const total_pages = get_number_from_url(
-    first_page_doc.querySelector(SELECTORS.last_page)?.getAttribute('href') ?? ''
-  )
 
   let volumes: Record<string, [number, number]> = {}
   const parts_menu = first_page_doc.querySelector(SELECTORS.page_parts_menu)

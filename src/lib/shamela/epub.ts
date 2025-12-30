@@ -246,6 +246,27 @@ const render_nav_items = (toc: TocTree, page_map: Map<number, string>): string =
   return render_list(toc)
 }
 
+const render_ncx_items = (toc: TocTree, page_map: Map<number, string>) => {
+  let sep_index = 0
+  const render_item = (item: TocItem | TocBranch): string => {
+    if (Array.isArray(item)) {
+      const [entry, children] = item
+      const href = page_map.get(entry.page) ?? page_file_name(entry.page)
+      const id = `sep_${sep_index}`
+      sep_index += 1
+      return `<navPoint id="${id}"><navLabel><text>${escape_xml(entry.text)}</text></navLabel><content src="${href}"/>${children
+        .map(render_item)
+        .join('')}</navPoint>`
+    }
+    const href = page_map.get(item.page) ?? page_file_name(item.page)
+    const base = href.split('/').pop() ?? ''
+    const id = base.replace('.xhtml', '') || `page_${item.page}`
+    return `<navPoint id="${id}"><navLabel><text>${escape_xml(item.text)}</text></navLabel><content src="${href}"/></navPoint>`
+  }
+
+  return toc.map(render_item).join('')
+}
+
 const render_nav_pages = (pages: BookPage[], page_map: Map<number, string>) => {
   const items = pages
     .map((page) => {
@@ -355,7 +376,10 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
     ? render_nav_items(info.toc, page_map)
     : render_nav_pages(sorted_pages, page_map)
   const info_link = '<li><a href="info.xhtml">بطاقة الكتاب</a></li>'
-  const nav_items = toc_html.startsWith('<ol>') ? toc_html.replace('<ol>', `<ol>${info_link}`) : `<ol>${info_link}</ol>`
+  const nav_link = '<li><a href="nav.xhtml">فهرس الموضوعات</a></li>'
+  const nav_items = toc_html.startsWith('<ol>')
+    ? toc_html.replace('<ol>', `<ol>${info_link}${nav_link}`)
+    : `<ol>${info_link}${nav_link}</ol>`
 
   zip.folder('OEBPS')?.file(
     'nav.xhtml',
@@ -374,6 +398,46 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
     </nav>
   </body>
 </html>
+`
+  )
+
+  const ncx_toc: TocTree = info.toc?.length
+    ? info.toc
+    : sorted_pages.map((page) => ({
+        page: page.page_number,
+        text: `صفحة ${page.page}`,
+      }))
+  const ncx_items = render_ncx_items(ncx_toc, page_map)
+  const ncx_id = crypto.randomUUID()
+  zip.folder('OEBPS')?.file(
+    'toc.ncx',
+    `<?xml version="1.0" encoding="utf-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+  <head>
+    <meta content="${ncx_id}" name="dtb:uid"/>
+    <meta content="0" name="dtb:depth"/>
+    <meta content="0" name="dtb:totalPageCount"/>
+    <meta content="0" name="dtb:maxPageNumber"/>
+  </head>
+  <docTitle>
+    <text>${escape_xml(title)}</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="info">
+      <navLabel>
+        <text>بطاقة الكتاب</text>
+      </navLabel>
+      <content src="info.xhtml"/>
+    </navPoint>
+    <navPoint id="nav">
+      <navLabel>
+        <text>فهرس الموضوعات</text>
+      </navLabel>
+      <content src="nav.xhtml"/>
+    </navPoint>
+    ${ncx_items}
+  </navMap>
+</ncx>
 `
   )
 
@@ -402,6 +466,7 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
   <manifest>
     <item id="info" href="info.xhtml" media-type="application/xhtml+xml" />
     <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav" />
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
     <item id="css" href="styles.css" media-type="text/css" />
     ${manifest_items}
   </manifest>
