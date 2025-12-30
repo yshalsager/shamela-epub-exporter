@@ -40,7 +40,7 @@ const parse_toc = (items: Element[], seen: Set<string> = new Set()): TocTree => 
     if (seen.has(key)) continue
     seen.add(key)
 
-    const sub_items = Array.from(item.querySelectorAll(':scope > ul > li'))
+    const sub_items = Array.from(item.querySelectorAll('ul > li'))
     if (sub_items.length) {
       const branch: TocBranch = [entry, parse_toc(sub_items, seen)]
       result.push(branch)
@@ -88,6 +88,7 @@ const scrape_book = async (job_id: string, book_id: number, options: JobOptions,
 
   meta_content.querySelector(SELECTORS.search)?.remove()
   const toc_el = meta_content.querySelector(SELECTORS.index)
+  toc_el?.querySelectorAll('a[href="javascript:;"]').forEach((el) => el.remove())
   const toc_items = toc_el ? Array.from(toc_el.querySelectorAll(SELECTORS.toc)) : []
   const toc = toc_items.length ? parse_toc(toc_items) : []
 
