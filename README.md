@@ -60,3 +60,7 @@ mise x pnpm -- pnpm run test -- --run
 
 - Keep the Shamela tab open while a job is running.
 - The extension relies on your browser session if Shamela is protected by Cloudflare.
+
+## Privacy
+
+See `PRIVACY.md`.
