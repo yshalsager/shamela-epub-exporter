@@ -1,0 +1,14 @@
+pre-commit:
+    commands:
+        eslint:
+            glob: '*.{js,ts,svelte}'
+            run: pnpm exec eslint --fix {staged_files} && git add {staged_files}
+        prettier:
+            glob: '*.{js,ts,svelte,html,css}'
+            run: 'pnpm exec prettier --write {staged_files} && git add {staged_files}'
+post-merge:
+    commands:
+        install-deps:
+            files: git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD
+            glob: 'package.json'
+            run: pnpm install

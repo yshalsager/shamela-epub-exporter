@@ -1,9 +1,13 @@
 [tools]
 node = "24"
-pnpm = "10"
+"aqua:evilmartians/lefthook" = '2'
+"aqua:pnpm/pnpm" = '10'
 
 [tasks.default]
 run = "pnpm run dev"
 
 [tasks.build]
 run = "pnpm run build"
+
+[tasks.update_dependencies]
+run = ['pnpm dlx npm-check-updates -u', 'pnpm install']
