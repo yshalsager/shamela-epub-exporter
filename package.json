@@ -25,6 +25,7 @@
     "@tsconfig/svelte": "^5.0.6",
     "@wuchale/svelte": "^0.18.0",
     "@wuchale/vite-plugin": "^0.16.1",
+    "@wxt-dev/auto-icons": "^1.1.0",
     "@wxt-dev/module-svelte": "^2.0.4",
     "bits-ui": "^2.14.4",
     "clsx": "^2.1.1",

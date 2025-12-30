@@ -5,7 +5,7 @@ import { wuchale } from '@wuchale/vite-plugin'
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   srcDir: 'src',
-  modules: ['@wxt-dev/module-svelte'],
+  modules: ['@wxt-dev/auto-icons', '@wxt-dev/module-svelte'],
   manifest: {
     name: 'Shamela Export',
     description: 'Export Shamela books to EPUB from your active session.',
