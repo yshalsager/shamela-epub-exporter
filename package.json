@@ -22,6 +22,7 @@
         "zip:firefox": "wxt zip -b firefox",
         "test": "vitest",
         "wuchale": "wuchale",
+        "wxt": "wxt",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "format": "prettier --write .",
         "lint": "prettier --check . && eslint . --fix",
