@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30T14:24:18.839Z\n"
-"PO-Revision-Date: 2025-12-30T14:24:18.839Z\n"
+"POT-Creation-Date: 2025-12-30T21:40:22.260Z\n"
+"PO-Revision-Date: 2025-12-30T21:40:22.260Z\n"
 "Last-Translator: \n"
 "Language: ar\n"
 "Language-Team: \n"
@@ -13,148 +13,150 @@ msgstr ""
 "Source-Language: ar\n"
 "MIME-Version: 1.0\n"
 
-#: src/entrypoints/job/App.svelte
-#: src/entrypoints/job/App.svelte
+#: src/entrypoints/popup/App.svelte
+#: src/entrypoints/popup/App.svelte
 msgid "خطأ"
 msgstr "خطأ"
 
-#: src/entrypoints/job/App.svelte
+#: src/entrypoints/popup/App.svelte
 msgid "اكتمل"
 msgstr "اكتمل"
 
-#: src/entrypoints/job/App.svelte
+#: src/entrypoints/popup/App.svelte
 msgid "معلومة"
 msgstr "معلومة"
 
-#: src/entrypoints/job/App.svelte
+#: src/entrypoints/popup/App.svelte
 msgid "في قائمة الانتظار"
 msgstr "في قائمة الانتظار"
 
-#: src/entrypoints/job/App.svelte
+#: src/entrypoints/popup/App.svelte
 msgid "جارٍ التنفيذ"
 msgstr "جارٍ التنفيذ"
 
-#: src/entrypoints/job/App.svelte
+#: src/entrypoints/popup/App.svelte
 msgid "مكتملة"
 msgstr "مكتملة"
 
-#: src/entrypoints/job/App.svelte
+#: src/entrypoints/popup/App.svelte
 msgid "مُلغاة"
 msgstr "مُلغاة"
 
-#: src/entrypoints/job/App.svelte
-msgid "أُعِدَّ ملف EPUB للتنزيل."
-msgstr "أُعِدَّ ملف EPUB للتنزيل."
+#: src/entrypoints/popup/App.svelte
+msgid "جاهز"
+msgstr "جاهز"
 
-#: src/entrypoints/job/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "الشاملة"
 msgstr "الشاملة"
 
-#: src/entrypoints/job/App.svelte
-msgid "اللغة"
-msgstr "اللغة"
-
-#: src/entrypoints/job/App.svelte
-msgid "معرّف الكتاب"
-msgstr "معرّف الكتاب"
-
-#: src/entrypoints/job/App.svelte
-msgid "مثال: 8567"
-msgstr "مثال: 8567"
-
-#: src/entrypoints/job/App.svelte
-msgid "روابط الكتاب (سطر لكل رابط)"
-msgstr "روابط الكتاب (سطر لكل رابط)"
-
-#: src/entrypoints/job/App.svelte
-msgid "مثال: https://shamela.ws/book/8567"
-msgstr "مثال: https://shamela.ws/book/8567"
-
-#: src/entrypoints/job/App.svelte
-msgid "الخيارات"
-msgstr "الخيارات"
-
-#: src/entrypoints/job/App.svelte
-msgid "تحسين الهوامش"
-msgstr "تحسين الهوامش"
-
-#: src/entrypoints/job/App.svelte
-msgid "الجزء (اختياري)"
-msgstr "الجزء (اختياري)"
-
-#: src/entrypoints/job/App.svelte
-msgid "مثال: 2"
-msgstr "مثال: 2"
-
-#: src/entrypoints/job/App.svelte
-msgid "التقدّم"
-msgstr "التقدّم"
-
-#. placeholder {0}: current_job.book_id
-#: src/entrypoints/job/App.svelte
-msgid "المهمة {0}"
-msgstr "المهمة {0}"
-
-#. placeholder {0}: status_label(current_job?.status)
-#: src/entrypoints/job/App.svelte
-msgid "الحالة: {0}"
-msgstr "الحالة: {0}"
-
-#. placeholder {0}: current_job?.progress.current ?? 0
-#. placeholder {1}: current_job?.progress.total ?? 0
-#: src/entrypoints/job/App.svelte
-msgid "{0} / {1} صفحة"
-msgstr "{0} / {1} صفحة"
-
-#: src/entrypoints/job/App.svelte
-msgid "يُنشأ EPUB…"
-msgstr "يُنشأ EPUB…"
-
-#: src/entrypoints/job/App.svelte
-msgid "قائمة الانتظار"
-msgstr "قائمة الانتظار"
-
-#: src/entrypoints/job/App.svelte
-msgid "أحدث المهام وحالاتها."
-msgstr "أحدث المهام وحالاتها."
-
-#: src/entrypoints/job/App.svelte
-msgid "متابعة المهمة النشطة"
-msgstr "متابعة المهمة النشطة"
-
-#: src/entrypoints/job/App.svelte
-msgid "قائمة الانتظار خالية."
-msgstr "قائمة الانتظار خالية."
-
-#: src/entrypoints/job/App.svelte
-msgid "بدء"
-msgstr "بدء"
-
-#: src/entrypoints/job/App.svelte
-msgid "إلغاء"
-msgstr "إلغاء"
-
-#: src/entrypoints/job/App.svelte
-msgid "تفريغ"
-msgstr "تفريغ"
-
-#: src/entrypoints/job/App.svelte
-msgid "تنزيل آخر ملف"
-msgstr "تنزيل آخر ملف"
-
-#: src/entrypoints/job/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "مُحمل الكتب"
 msgstr "مُحمل الكتب"
 
 #: src/entrypoints/popup/App.svelte
-msgid "افتح أداة التحميل من موقع المكتبة الشاملة والتصدير إلى كتاب إلكتروني بصيغة EPUB."
-msgstr "افتح أداة التحميل من موقع المكتبة الشاملة والتصدير إلى كتاب إلكتروني بصيغة EPUB."
+msgid "اللغة"
+msgstr "اللغة"
 
 #: src/entrypoints/popup/App.svelte
-msgid "فتح الأداة"
-msgstr "فتح الأداة"
+msgid "أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء العمل."
+msgstr "أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء العمل."
+
+#: src/entrypoints/popup/App.svelte
+msgid "الكتب"
+msgstr "الكتب"
+
+#: src/entrypoints/popup/App.svelte
+msgid "ألصق الروابط أو أضف معرّف كتاب واحد."
+msgstr "ألصق الروابط أو أضف معرّف كتاب واحد."
+
+#: src/entrypoints/popup/App.svelte
+msgid "معرّف الكتاب"
+msgstr "معرّف الكتاب"
+
+#: src/entrypoints/popup/App.svelte
+msgid "مثال: 8567"
+msgstr "مثال: 8567"
+
+#: src/entrypoints/popup/App.svelte
+msgid "روابط الكتاب (سطر لكل رابط)"
+msgstr "روابط الكتاب (سطر لكل رابط)"
+
+#: src/entrypoints/popup/App.svelte
+msgid "مثال: https://shamela.ws/book/8567"
+msgstr "مثال: https://shamela.ws/book/8567"
+
+#: src/entrypoints/popup/App.svelte
+msgid "الخيارات"
+msgstr "الخيارات"
+
+#: src/entrypoints/popup/App.svelte
+msgid "تحسين الهوامش"
+msgstr "تحسين الهوامش"
+
+#: src/entrypoints/popup/App.svelte
+msgid "تحويل الهوامش إلى نوافذ منبثقة لسهولة التنقل منها وإليها."
+msgstr "تحويل الهوامش إلى نوافذ منبثقة لسهولة التنقل منها وإليها."
+
+#: src/entrypoints/popup/App.svelte
+msgid "تسطيح فهرس الموضوعات"
+msgstr "تسطيح فهرس الموضوعات"
+
+#: src/entrypoints/popup/App.svelte
+msgid "يُجعل فهرس الموضوعات في مستوى واحد."
+msgstr "يُجعل فهرس الموضوعات في مستوى واحد."
+
+#: src/entrypoints/popup/App.svelte
+msgid "الجزء (اختياري)"
+msgstr "الجزء (اختياري)"
+
+#: src/entrypoints/popup/App.svelte
+msgid "مثال: 2"
+msgstr "مثال: 2"
+
+#: src/entrypoints/popup/App.svelte
+msgid "التقدّم"
+msgstr "التقدّم"
+
+#. placeholder {0}: current_job.book_id
+#: src/entrypoints/popup/App.svelte
+msgid "المهمة {0}"
+msgstr "المهمة {0}"
+
+#: src/entrypoints/popup/App.svelte
+msgid "منتَظَر بدء المهمة."
+msgstr "منتَظَر بدء المهمة."
+
+#. placeholder {0}: status_label(current_job?.status)
+#: src/entrypoints/popup/App.svelte
+msgid "الحالة: {0}"
+msgstr "الحالة: {0}"
+
+#. placeholder {0}: current_job?.progress.current ?? 0
+#. placeholder {1}: current_job?.progress.total ?? 0
+#: src/entrypoints/popup/App.svelte
+msgid "{0} / {1} صفحة"
+msgstr "{0} / {1} صفحة"
+
+#: src/entrypoints/popup/App.svelte
+msgid "قائمة الانتظار"
+msgstr "قائمة الانتظار"
+
+#: src/entrypoints/popup/App.svelte
+msgid "قائمة الانتظار خالية."
+msgstr "قائمة الانتظار خالية."
+
+#: src/entrypoints/popup/App.svelte
+msgid "بدء"
+msgstr "بدء"
+
+#: src/entrypoints/popup/App.svelte
+msgid "إلغاء"
+msgstr "إلغاء"
+
+#: src/entrypoints/popup/App.svelte
+msgid "تفريغ"
+msgstr "تفريغ"
 
 #: src/entrypoints/background.ts
 msgid "أُلغيت المهمة."
@@ -168,50 +170,3 @@ msgstr "خطأ في الاستخلاص"
 #: src/entrypoints/content.ts
 msgid "الكتاب {0}"
 msgstr "الكتاب {0}"
-
-#~ msgid "أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء العمل."
-#~ msgstr "أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء العمل."
-
-#: src/entrypoints/job/App.svelte
-msgid "الكتب"
-msgstr "الكتب"
-
-#: src/entrypoints/job/App.svelte
-msgid "ألصق الروابط أو أضف معرّف كتاب واحد."
-msgstr "ألصق الروابط أو أضف معرّف كتاب واحد."
-
-#: src/entrypoints/job/App.svelte
-msgid "تحسينات الكتاب المنشيء."
-msgstr "تحسينات الكتاب المنشيء."
-
-#: src/entrypoints/job/App.svelte
-msgid "تحويل الهوامش إلى نوافذ منبثقة لسهولة التنقل منها وإليها."
-msgstr "تحويل الهوامش إلى نوافذ منبثقة لسهولة التنقل منها وإليها."
-
-#: src/entrypoints/job/App.svelte
-msgid "تحميل مجلد أو جزء محدد من الكتاب."
-msgstr "تحميل مجلد أو جزء محدد من الكتاب."
-
-#: src/entrypoints/job/App.svelte
-msgid "منتَظَر بدء المهمة."
-msgstr "منتَظَر بدء المهمة."
-
-#: src/entrypoints/job/App.svelte
-msgid "جاهز"
-msgstr "جاهز"
-
-#: src/entrypoints/job/App.svelte
-msgid "تسطيح فهرس الموضوعات"
-msgstr "تسطيح فهرس الموضوعات"
-
-#: src/entrypoints/job/App.svelte
-msgid "يُجعل فهرس الموضوعات في مستوى واحد."
-msgstr "يُجعل فهرس الموضوعات في مستوى واحد."
-
-#: src/entrypoints/job/App.svelte
-msgid ""
-"أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء\n"
-"العمل."
-msgstr ""
-"أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء\n"
-"العمل."
