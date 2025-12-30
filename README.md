@@ -12,10 +12,10 @@ Browser extension that scrapes Shamela book pages and builds an EPUB on-device.
 ## Architecture components
 
 - Popup UI: entrypoint for starting jobs and setting options
-- Background: job queue, tab orchestration, progress state
+- Background: job queue, tab orchestration, progress state, EPUB build + download
 - Content script: HTML scraping + metadata extraction
 - EPUB builder: converts pages + metadata into `epub` zip
-- Storage: persisted job state for the job page
+- Storage: persisted job state for the popup
 
 ## Flow (ASCII)
 
@@ -32,7 +32,7 @@ Content Script  --->  Shamela Book Tab
 Pages + Meta
    |
    v
-EPUB Builder
+EPUB Builder (background)
    |
    v
 Download (.epub)
