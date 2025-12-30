@@ -136,6 +136,14 @@ export default defineBackground(() => {
         download_urls.delete(delta.id)
     })
 
+    browser.tabs.onRemoved.addListener(tab_id => {
+        for (const [job_id, runtime] of job_runtime.entries()) {
+            if (runtime.tab_id !== tab_id) continue
+            void cancel_job(job_id)
+            return
+        }
+    })
+
     browser.runtime.onMessage.addListener(async (message: RuntimeMessage) => {
         if (!message || typeof message.type !== 'string') return
 
