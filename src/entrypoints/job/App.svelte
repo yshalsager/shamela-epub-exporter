@@ -94,12 +94,10 @@
                     </div>
                     <div class="grid gap-2">
                         <Label for="volume">الجزء (اختياري)</Label>
+                        <span class="text-xs text-muted-foreground"
+                            >تحميل مجلد أو جزء محدد من الكتاب.</span
+                        >
                         <Input id="volume" placeholder="مثال: 2" bind:value={volume} />
-                    </div>
-                    <div
-                        class="rounded-lg border border-dashed border-border bg-muted/40 px-3 py-3 text-xs text-muted-foreground"
-                    >
-                        تحميل مجلد أو جزء محدد من الكتاب.
                     </div>
                 </CardContent>
             </Card>
