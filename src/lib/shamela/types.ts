@@ -3,6 +3,7 @@ export type JobStatus = 'queued' | 'running' | 'done' | 'error' | 'canceled'
 export type JobOptions = {
   volume?: string
   update_hamesh?: boolean
+  flatten_toc?: boolean
 }
 
 export type JobProgress = {

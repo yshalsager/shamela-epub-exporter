@@ -46,4 +46,21 @@ describe('build_epub', () => {
     expect(nav).toContain('Intro')
     expect(page).toContain('Page 1')
   })
+
+  it('flattens toc when option enabled', async () => {
+    const nested = await build_epub(info, pages, { flatten_toc: false })
+    const flat = await build_epub(info, pages, { flatten_toc: true })
+
+    const nested_zip = await JSZip.loadAsync(await nested.blob.arrayBuffer())
+    const flat_zip = await JSZip.loadAsync(await flat.blob.arrayBuffer())
+
+    const nested_nav = await nested_zip.file('OEBPS/nav.xhtml')?.async('string')
+    const flat_nav = await flat_zip.file('OEBPS/nav.xhtml')?.async('string')
+
+    const nested_count = (nested_nav?.match(/<ol>/g) ?? []).length
+    const flat_count = (flat_nav?.match(/<ol>/g) ?? []).length
+
+    expect(nested_count).toBeGreaterThan(1)
+    expect(flat_count).toBe(1)
+  })
 })

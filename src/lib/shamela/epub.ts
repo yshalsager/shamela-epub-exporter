@@ -217,6 +217,23 @@ const replace_titles_with_headers = (
   return updated
 }
 
+const flatten_toc = (toc: TocTree): TocTree => {
+  const items: TocTree = []
+  const walk = (nodes: TocTree) => {
+    nodes.forEach((item) => {
+      if (Array.isArray(item)) {
+        const [entry, children] = item
+        items.push(entry)
+        walk(children)
+        return
+      }
+      items.push(item)
+    })
+  }
+  walk(toc)
+  return items
+}
+
 const get_page_volume = (volumes: Record<string, [number, number]> | undefined, page: number) => {
   if (!volumes) return { index: 1, name: '' }
   const entries = Object.entries(volumes)
@@ -372,8 +389,9 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
 `
   )
 
-  const toc_html = info.toc?.length
-    ? render_nav_items(info.toc, page_map)
+  const toc_source = info.toc?.length ? (options.flatten_toc ? flatten_toc(info.toc) : info.toc) : null
+  const toc_html = toc_source?.length
+    ? render_nav_items(toc_source, page_map)
     : render_nav_pages(sorted_pages, page_map)
   const info_link = '<li><a href="info.xhtml">بطاقة الكتاب</a></li>'
   const nav_link = '<li><a href="nav.xhtml">فهرس الموضوعات</a></li>'
@@ -397,12 +415,12 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
       ${nav_items}
     </nav>
   </body>
-</html>
+  </html>
 `
   )
 
-  const ncx_toc: TocTree = info.toc?.length
-    ? info.toc
+  const ncx_toc: TocTree = toc_source?.length
+    ? toc_source
     : sorted_pages.map((page) => ({
         page: page.page_number,
         text: `صفحة ${page.page}`,

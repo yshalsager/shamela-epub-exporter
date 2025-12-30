@@ -16,6 +16,7 @@
   let urls = $state('')
   let volume = $state('')
   let update_hamesh = $state(false)
+  let flatten_toc = $state(false)
   let is_building = $state(false)
   let last_download = $state<{ url: string; filename: string } | null>(null)
   let selected_job_id = $state<string | null>(null)
@@ -89,6 +90,7 @@
     const options: JobOptions = {
       volume: volume.trim() || undefined,
       update_hamesh,
+      flatten_toc,
     }
 
     for (const id of ids) {
@@ -217,6 +219,13 @@
               <p class='text-xs text-muted-foreground'>تحويل الهوامش إلى نوافذ منبثقة لسهولة التنقل منها وإليها.</p>
             </div>
             <Switch bind:checked={update_hamesh} />
+          </div>
+          <div class='flex items-center justify-between gap-4 rounded-lg border border-border bg-background/60 px-3 py-3'>
+            <div class='space-y-1'>
+              <p class='text-sm font-medium text-foreground'>تسطيح فهرس الموضوعات</p>
+              <p class='text-xs text-muted-foreground'>يُجعل فهرس الموضوعات في مستوى واحد.</p>
+            </div>
+            <Switch bind:checked={flatten_toc} />
           </div>
           <div class='grid gap-2'>
             <Label for='volume'>الجزء (اختياري)</Label>

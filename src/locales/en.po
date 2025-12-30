@@ -200,3 +200,11 @@ msgstr "Waiting for the job to start."
 #: src/entrypoints/job/App.svelte
 msgid "جاهز"
 msgstr "Ready"
+
+#: src/entrypoints/job/App.svelte
+msgid "تسطيح فهرس الموضوعات"
+msgstr "Flatten the table of contents"
+
+#: src/entrypoints/job/App.svelte
+msgid "يُجعل فهرس الموضوعات في مستوى واحد."
+msgstr "Make the table of contents a single level."
