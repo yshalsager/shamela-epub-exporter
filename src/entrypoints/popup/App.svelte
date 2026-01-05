@@ -38,57 +38,61 @@
             </div>
         </div>
         <p class="text-xs text-muted-foreground">
-            أضف معرّف كتاب أو قائمة روابط، ثم ابدأ المهمة واترَك تبويب الشاملة مفتوحًا أثناء العمل.
+            أدخل معرّف/رابط، أو اترك فارغًا لاستخدام التبويب الحالي.
         </p>
     </div>
 
     <Card>
-        <CardHeader class="pb-2">
+        <CardHeader class="pb-3">
             <CardTitle>الكتب</CardTitle>
-            <CardDescription>ألصق الروابط أو أضف معرّف كتاب واحد.</CardDescription>
+            <CardDescription>أدخل معرّفًا أو روابط، أو اترك فارغًا للتبويب الحالي.</CardDescription>
         </CardHeader>
         <CardContent class="space-y-3">
             <div class="grid gap-2">
-                <Label for="book_id">معرّف الكتاب</Label>
-                <Input id="book_id" placeholder="مثال: 8567" bind:value={book_id} />
+                <Label for="book_id">معرّف الكتاب أو الرابط</Label>
+                <Input
+                    id="book_id"
+                    placeholder="مثال: 8567 أو https://shamela.ws/book/8567"
+                    bind:value={book_id}
+                />
             </div>
-            <div class="grid gap-2">
-                <Label for="urls">روابط الكتاب (سطر لكل رابط)</Label>
-                <textarea
-                    id="urls"
-                    rows="4"
-                    bind:value={urls}
-                    class="min-h-[96px] w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40"
-                    placeholder="مثال: https://shamela.ws/book/8567"
-                ></textarea>
-            </div>
-            <div class="space-y-2 border-t border-border/60 pt-3">
-                <div class="text-xs font-semibold text-foreground">الخيارات</div>
-                <div
-                    class="flex items-center justify-between gap-4 rounded-lg border border-border bg-background/60 px-3 py-3"
+            <details class="group">
+                <summary
+                    class="flex cursor-pointer list-none items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground"
                 >
-                    <div class="space-y-1">
-                        <p class="text-sm font-medium text-foreground">تحسين الهوامش</p>
-                        <p class="text-xs text-muted-foreground">
-                            تحويل الهوامش إلى نوافذ منبثقة لسهولة التنقل منها وإليها.
-                        </p>
-                    </div>
-                    <Switch bind:checked={update_hamesh} />
+                    <span class="transition-transform group-open:rotate-90">▶</span>
+                    روابط متعددة (سطر لكل رابط)
+                </summary>
+                <div class="mt-2 grid gap-2">
+                    <textarea
+                        id="urls"
+                        rows="3"
+                        bind:value={urls}
+                        class="min-h-[72px] w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40"
+                        placeholder="مثال:&#10;https://shamela.ws/book/8567&#10;https://shamela.ws/book/1234"
+                    ></textarea>
+                </div>
+            </details>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div
+                    class="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/60 px-3 py-2"
+                >
+                    <Label for="update_hamesh" class="cursor-pointer text-sm font-medium"
+                        >تحسين الهوامش</Label
+                    >
+                    <Switch id="update_hamesh" bind:checked={update_hamesh} />
                 </div>
                 <div
-                    class="flex items-center justify-between gap-4 rounded-lg border border-border bg-background/60 px-3 py-3"
+                    class="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/60 px-3 py-2"
                 >
-                    <div class="space-y-1">
-                        <p class="text-sm font-medium text-foreground">تسطيح فهرس الموضوعات</p>
-                        <p class="text-xs text-muted-foreground">
-                            يُجعل فهرس الموضوعات في مستوى واحد.
-                        </p>
-                    </div>
-                    <Switch bind:checked={flatten_toc} />
+                    <Label for="flatten_toc" class="cursor-pointer text-sm font-medium"
+                        >تسطيح الفهرس</Label
+                    >
+                    <Switch id="flatten_toc" bind:checked={flatten_toc} />
                 </div>
-                <div class="grid gap-2">
-                    <Label for="volume">الجزء (اختياري)</Label>
-                    <Input id="volume" placeholder="مثال: 2" bind:value={volume} />
+                <div class="grid gap-1">
+                    <Label for="volume" class="text-sm font-medium">الجزء</Label>
+                    <Input id="volume" placeholder="مثال: 2" bind:value={volume} class="h-8" />
                 </div>
             </div>
         </CardContent>
@@ -209,10 +213,27 @@ let progress_percent = $derived(
 )
 let current_locale_label = $derived.by(() => {
     const current = $locale
-    return $available_locales.find(option => option.locale === current)?.name ?? current
+    return (
+        $available_locales.find(
+            (option: {locale: string; name: string}) => option.locale === current,
+        )?.name ?? current
+    )
 })
 
-const parse_ids = () => {
+const get_active_tab_book_id = async (): Promise<number | null> => {
+    try {
+        const [tab] = await browser.tabs.query({active: true, currentWindow: true})
+        if (tab?.url) {
+            const match = tab.url.match(/shamela\.ws\/book\/(\d+)/)
+            if (match) return Number.parseInt(match[1], 10)
+        }
+    } catch {
+        // Ignore errors
+    }
+    return null
+}
+
+const parse_ids = async () => {
     const ids: number[] = []
     const direct_id = Number.parseInt(book_id.trim(), 10)
     if (!Number.isNaN(direct_id)) ids.push(direct_id)
@@ -224,6 +245,12 @@ const parse_ids = () => {
             const match = value.match(/shamela\.ws\/book\/(\d+)/)
             if (match) ids.push(Number.parseInt(match[1], 10))
         })
+
+    // If no explicit IDs, try to get from current active tab
+    if (!ids.length) {
+        const active_id = await get_active_tab_book_id()
+        if (active_id) ids.push(active_id)
+    }
 
     const unique: number[] = []
     ids.forEach(id => {
@@ -259,7 +286,7 @@ const status_label = (status?: string) =>
     status_labels[status ?? 'idle'] ?? status ?? status_labels.idle
 
 const start_jobs = async () => {
-    const ids = parse_ids()
+    const ids = await parse_ids()
     if (!ids.length) return
 
     const options: JobOptions = {
@@ -292,7 +319,10 @@ onMount(() => {
     void init_locale()
     const handler = (message: RuntimeMessage) => {
         if (message.type === 'job/toast' && message.payload) {
-            push_toast(message.payload.level, message.payload.message)
+            push_toast(
+                (message.payload as {level: 'info' | 'success' | 'error'}).level,
+                (message.payload as {message: string}).message,
+            )
         }
     }
 
