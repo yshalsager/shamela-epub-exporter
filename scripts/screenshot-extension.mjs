@@ -9,7 +9,7 @@ const screenshot_dir = path.resolve('assets')
 const context = await chromium.launchPersistentContext(user_data_dir, {
     headless: false,
     args: [`--disable-extensions-except=${extension_path}`, `--load-extension=${extension_path}`],
-    viewport: {width: 360, height: 900},
+    viewport: {width: 360, height: 360},
     deviceScaleFactor: 2,
 })
 
