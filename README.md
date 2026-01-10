@@ -18,16 +18,18 @@
 
 **Disclaimer:**
 
-* This software is freeware and open source and is only intended for personal or educational use.
+- This software is freeware and open source and is only intended for personal or educational use.
 
 ## Features
 
-* Creates an [EPUB3](https://www.w3.org/publishing/epub3/epub-spec.html) RTL standard book.
-* Automatically adds a page for book information.
-* Table of contents with nested chapters (or a flat option).
-* Adds volume and page number footer per page.
-* Sanitizes book HTML and converts inline colors to CSS classes.
-* Optional footnote (hamesh) popup conversion for easier navigation.
+- Creates an [EPUB3](https://www.w3.org/publishing/epub3/epub-spec.html) RTL standard book.
+- **Bulk Downloading**: Queue multiple books at once.
+- Automatically adds a page for book information.
+- Table of contents with nested chapters (or a flat option).
+- Adds volume and page number footer per page.
+- Sanitizes book HTML and converts inline colors to CSS classes.
+- Optional footnote (hamesh) popup conversion for easier navigation.
+- **Smart Background Processing**: Handles tab limits and notifies you when finished.
 
 ## Installation
 
@@ -58,9 +60,10 @@ Load the extension from:
 ## Usage
 
 1. Open the extension popup.
-2. Paste a book URL or enter a book ID.
-3. Click **بدء** and keep the Shamela tab open while it runs.
-4. The EPUB downloads automatically when the job finishes.
+2. Paste book URLs or IDs (one per line).
+3. Click **بدء** (Start).
+4. The extension will queue and process them one by one.
+5. You'll receive a system notification when each download completes.
 
 ## Development
 
@@ -76,22 +79,22 @@ mise x pnpm -- pnpm run dev
 
 ## Technology Stack
 
-* TypeScript + Svelte 5 (UI)
-* WXT + Vite (extension tooling)
-* Tailwind CSS (styles)
-* JSZip (EPUB packaging)
-* Wuchale (i18n)
+- TypeScript + Svelte 5 (UI)
+- WXT + Vite (extension tooling)
+- Tailwind CSS (styles)
+- JSZip (EPUB packaging)
+- Wuchale (i18n)
 
 ## Acknowledgements
 
 This project relies on several open-source tools:
 
-* [Svelte](https://svelte.dev/)
-* [WXT](https://wxt.dev/)
-* [Vite](https://vitejs.dev/)
-* [Tailwind CSS](https://tailwindcss.com/)
-* [JSZip](https://stuk.github.io/jszip/)
-* [Wuchale](https://github.com/wuchalejs/wuchale)
+- [Svelte](https://svelte.dev/)
+- [WXT](https://wxt.dev/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [JSZip](https://stuk.github.io/jszip/)
+- [Wuchale](https://github.com/wuchalejs/wuchale)
 
 ## Privacy
 
