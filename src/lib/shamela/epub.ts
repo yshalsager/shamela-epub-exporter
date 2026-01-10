@@ -3,7 +3,7 @@ import JSZip from 'jszip'
 import type {BookInfo, BookPage, JobOptions, TocBranch, TocItem, TocTree} from './types'
 
 const HAMESH_CONTINUATION_PATTERN = /(?<=>)(=.+?)(?=<br>|<\/p>)/s
-const HAMESH_PATTERN = /(\([\u0660-\u0669]+\))(.+?)(?:<\/?br\/?>(?=\([\u0660-\u0669]+\))|<\/p>)/gs
+const HAMESH_PATTERN = /([\u0660-\u0669]+\))(.+?)(?:<\/?br\/?>(?=\([\u0660-\u0669]+\))|<\/p>)/gs
 const ARABIC_NUMBER_BETWEEN_BRACKETS_PATTERN = /\([\u0660-\u0669]+\)/g
 const ARABIC_NUMBER_BETWEEN_CURLY_BRACES_PATTERN = /{.+?\([\u0660-\u0669]+\).+?}/
 const AYAH_PATTERN = /﴿[\s\S]+?﴾/g
@@ -31,14 +31,20 @@ const SPECIAL_CHARACTERS_PATTERN = new RegExp(Object.keys(SPECIAL_CHARACTERS).jo
 
 const EPUB_NS = 'http://www.idpf.org/2007/ops'
 
+const VALID_CSS_CLASSES = new Set(['text-center', 'hamesh', 'fn', 'nu'])
+const CLASS_ATTR_PATTERN = /class="([^"]*)"/g
+
 const BASE_CSS = `
 *{direction: rtl}
 body{line-height:1.7;margin:1.5rem;color:#1f1f1f}
 .text-center,h1,h2,h3{text-align:center}
 `
 
-const HAMESH_CSS = `
+const HAMESH_BASE_CSS = `
 .hamesh{font-size:smaller}
+`
+
+const HAMESH_FOOTNOTE_CSS = `
 .fn{font-size:x-small;vertical-align:super;color:inherit}
 .nu{text-decoration:none}
 .hamesh .nu{color:#008000}
@@ -184,6 +190,14 @@ const replace_color_styles_with_class = (
 
 const replace_special_characters = (html: string) =>
     html.replace(SPECIAL_CHARACTERS_PATTERN, match => SPECIAL_CHARACTERS[match] ?? match)
+
+const strip_unused_classes = (html: string, valid_classes: Set<string>) =>
+    html.replace(CLASS_ATTR_PATTERN, (match, classes: string) => {
+        const kept = classes
+            .split(/\s+/)
+            .filter(c => valid_classes.has(c) || c.startsWith('color-'))
+        return kept.length ? `class="${kept.join(' ')}"` : ''
+    })
 
 const XHTML_VOID_ELEMENTS_PATTERN =
     /<(br|hr|img|input|meta|link|area|base|col|embed|source|track|wbr)(\s[^>]*)?\/?>/gi
@@ -348,6 +362,7 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
             text = replace_titles_with_headers(chapters_in_page, text, toc_depth_map)
         }
         if (options.update_hamesh) text = update_hamesh_html(text)
+        text = strip_unused_classes(text, VALID_CSS_CLASSES)
         text = sanitize_html_for_xhtml(text)
 
         const volume = get_page_volume(info.volumes, page.page_number)
@@ -368,7 +383,13 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
     const page_map = new Map<number, string>()
     page_entries.forEach(entry => page_map.set(entry.page.page_number, `text/${entry.file_name}`))
 
-    const styles = `${BASE_CSS}\n${HAMESH_CSS}${color_css.value}`
+    const has_hamesh = page_entries.some(e => e.content_html.includes('class="hamesh"'))
+    const has_footnotes =
+        options.update_hamesh && page_entries.some(e => e.content_html.includes('class="fn'))
+    let styles = BASE_CSS
+    if (has_hamesh) styles += `\n${HAMESH_BASE_CSS}`
+    if (has_footnotes) styles += `\n${HAMESH_FOOTNOTE_CSS}`
+    styles += color_css.value
     zip.folder('OEBPS')?.file('styles.css', styles.trim())
 
     const text_folder = zip.folder('OEBPS')?.folder('text')
@@ -380,7 +401,9 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
         )
     })
 
-    const info_body = sanitize_html_for_xhtml(info.about ?? '')
+    const info_body = sanitize_html_for_xhtml(
+        strip_unused_classes(info.about ?? '', VALID_CSS_CLASSES),
+    )
     zip.folder('OEBPS')?.file(
         'info.xhtml',
         `<?xml version="1.0" encoding="utf-8"?>
@@ -512,7 +535,12 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
 `,
     )
 
-    const blob = await zip.generateAsync({type: 'blob', mimeType: 'application/epub+zip'})
+    const blob = await zip.generateAsync({
+        type: 'blob',
+        mimeType: 'application/epub+zip',
+        compression: 'DEFLATE',
+        compressionOptions: {level: 9},
+    })
 
     return {blob, filename}
 }
