@@ -14,7 +14,7 @@
     <header class="flex items-center justify-between gap-3">
         <div class="flex items-center gap-2">
             <div
-                class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-md"
+                class="flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br from-primary to-primary/70 text-primary-foreground shadow-md"
             >
                 <BookOpen class="h-5 w-5" />
             </div>
@@ -114,7 +114,7 @@
 
     {#if current_job || jobs.length}
         <Card
-            class="overflow-hidden border-border/60 bg-gradient-to-br from-card to-muted/30 p-2.5 shadow-sm"
+            class="overflow-hidden border-border/60 bg-linear-to-br from-card to-muted/30 p-2.5 shadow-sm"
         >
             {#if current_job}
                 <div class="space-y-2">
@@ -144,7 +144,7 @@
                         </div>
                         <div class="h-2 w-full overflow-hidden rounded-full bg-muted shadow-inner">
                             <div
-                                class="h-full rounded-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-300 ease-out"
+                                class="h-full rounded-full bg-linear-to-r from-primary to-primary/80 transition-all duration-300 ease-out"
                                 style={`width: ${progress_percent}%`}
                             ></div>
                         </div>
