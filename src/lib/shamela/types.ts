@@ -56,6 +56,12 @@ export type Job = {
     error?: string
 }
 
+export type JobStartPayload = {
+    book_id: number
+    options?: JobOptions
+    tab_id?: number
+}
+
 export type RuntimeMessage = {
     type: string
     job_id?: string

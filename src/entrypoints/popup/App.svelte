@@ -38,7 +38,8 @@
             </div>
         </div>
         <p class="text-xs text-muted-foreground">
-            أدخل معرّف/رابط، أو اترك فارغًا لاستخدام التبويب الحالي.
+            أضف معرّف كتاب أو قائمة روابط، أو اترك فارغًا لاستخدام التبويب الحالي، ثم ابدأ المهمة
+            واترَك تبويب الشاملة مفتوحًا أثناء العمل.
         </p>
     </div>
 
@@ -49,45 +50,40 @@
         </CardHeader>
         <CardContent class="space-y-3">
             <div class="grid gap-2">
-                <Label for="book_id">معرّف الكتاب أو الرابط</Label>
-                <Input
-                    id="book_id"
-                    placeholder="مثال: 8567 أو https://shamela.ws/book/8567"
-                    bind:value={book_id}
-                />
+                <Label for="input">معرّفات أو روابط الكتب</Label>
+                <textarea
+                    id="input"
+                    rows="2"
+                    bind:value={input}
+                    class="min-h-[56px] w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40"
+                    placeholder="مثال: 8567 أو https://shamela.ws/book/8567&#10;يمكن إدخال عدة معرّفات/روابط (سطر لكل واحد)"
+                ></textarea>
             </div>
-            <details class="group">
-                <summary
-                    class="flex cursor-pointer list-none items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground"
-                >
-                    <span class="transition-transform group-open:rotate-90">▶</span>
-                    روابط متعددة (سطر لكل رابط)
-                </summary>
-                <div class="mt-2 grid gap-2">
-                    <textarea
-                        id="urls"
-                        rows="3"
-                        bind:value={urls}
-                        class="min-h-[72px] w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40"
-                        placeholder="مثال:&#10;https://shamela.ws/book/8567&#10;https://shamela.ws/book/1234"
-                    ></textarea>
-                </div>
-            </details>
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div
                     class="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/60 px-3 py-2"
                 >
-                    <Label for="update_hamesh" class="cursor-pointer text-sm font-medium"
-                        >تحسين الهوامش</Label
-                    >
+                    <div class="grid gap-0.5">
+                        <Label for="update_hamesh" class="cursor-pointer text-sm font-medium"
+                            >تحسين الهوامش</Label
+                        >
+                        <p class="text-[10px] leading-tight text-muted-foreground">
+                            تحويل الهوامش إلى نوافذ منبثقة لسهولة التنقل.
+                        </p>
+                    </div>
                     <Switch id="update_hamesh" bind:checked={update_hamesh} />
                 </div>
                 <div
                     class="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/60 px-3 py-2"
                 >
-                    <Label for="flatten_toc" class="cursor-pointer text-sm font-medium"
-                        >تسطيح الفهرس</Label
-                    >
+                    <div class="grid gap-0.5">
+                        <Label for="flatten_toc" class="cursor-pointer text-sm font-medium"
+                            >تسطيح الفهرس</Label
+                        >
+                        <p class="text-[10px] leading-tight text-muted-foreground">
+                            يُجعل فهرس الموضوعات في مستوى واحد.
+                        </p>
+                    </div>
                     <Switch id="flatten_toc" bind:checked={flatten_toc} />
                 </div>
                 <div class="grid gap-1">
@@ -192,8 +188,7 @@ import {job_state} from '@/lib/job-state.svelte'
 import type {JobOptions, RuntimeMessage} from '@/lib/shamela/types'
 import {apply_locale, available_locales, init_locale, locale} from '@/locales/locale'
 
-let book_id = $state('')
-let urls = $state('')
+let input = $state('')
 let volume = $state('')
 let update_hamesh = $state(false)
 let flatten_toc = $state(false)
@@ -220,12 +215,12 @@ let current_locale_label = $derived.by(() => {
     )
 })
 
-const get_active_tab_book_id = async (): Promise<number | null> => {
+const get_active_shamela_tab = async (): Promise<{book_id: number; tab_id: number} | null> => {
     try {
         const [tab] = await browser.tabs.query({active: true, currentWindow: true})
-        if (tab?.url) {
+        if (tab?.url && tab.id != null) {
             const match = tab.url.match(/shamela\.ws\/book\/(\d+)/)
-            if (match) return Number.parseInt(match[1], 10)
+            if (match) return {book_id: Number.parseInt(match[1], 10), tab_id: tab.id}
         }
     } catch {
         // Ignore errors
@@ -233,30 +228,37 @@ const get_active_tab_book_id = async (): Promise<number | null> => {
     return null
 }
 
-const parse_ids = async () => {
+const parse_ids = async (): Promise<{ids: number[]; tab_id?: number}> => {
     const ids: number[] = []
-    const direct_id = Number.parseInt(book_id.trim(), 10)
-    if (!Number.isNaN(direct_id)) ids.push(direct_id)
+    let use_current_tab_id: number | undefined
 
-    urls.split(/\s+/)
+    input
+        .split(/[\s\n]+/)
         .map(value => value.trim())
         .filter(Boolean)
         .forEach(value => {
-            const match = value.match(/shamela\.ws\/book\/(\d+)/)
-            if (match) ids.push(Number.parseInt(match[1], 10))
+            const url_match = value.match(/shamela\.ws\/book\/(\d+)/)
+            if (url_match) {
+                ids.push(Number.parseInt(url_match[1], 10))
+                return
+            }
+            const direct_id = Number.parseInt(value, 10)
+            if (!Number.isNaN(direct_id)) ids.push(direct_id)
         })
 
-    // If no explicit IDs, try to get from current active tab
     if (!ids.length) {
-        const active_id = await get_active_tab_book_id()
-        if (active_id) ids.push(active_id)
+        const active_tab = await get_active_shamela_tab()
+        if (active_tab) {
+            ids.push(active_tab.book_id)
+            use_current_tab_id = active_tab.tab_id
+        }
     }
 
     const unique: number[] = []
     ids.forEach(id => {
         if (!unique.includes(id)) unique.push(id)
     })
-    return unique
+    return {ids: unique, tab_id: use_current_tab_id}
 }
 
 const push_toast = (level: 'info' | 'success' | 'error', message: string) => {
@@ -286,7 +288,7 @@ const status_label = (status?: string) =>
     status_labels[status ?? 'idle'] ?? status ?? status_labels.idle
 
 const start_jobs = async () => {
-    const ids = await parse_ids()
+    const {ids, tab_id} = await parse_ids()
     if (!ids.length) return
 
     const options: JobOptions = {
@@ -298,7 +300,7 @@ const start_jobs = async () => {
     for (const id of ids) {
         await browser.runtime.sendMessage({
             type: 'job/start',
-            payload: {book_id: id, options},
+            payload: {book_id: id, options, tab_id: ids.length === 1 ? tab_id : undefined},
         })
     }
 }

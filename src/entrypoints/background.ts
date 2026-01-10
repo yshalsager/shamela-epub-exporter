@@ -1,6 +1,13 @@
 import {job_store} from '@/lib/job-store'
 import {build_epub} from '@/lib/shamela/epub'
-import type {BookInfo, BookPage, Job, JobOptions, RuntimeMessage} from '@/lib/shamela/types'
+import type {
+    BookInfo,
+    BookPage,
+    Job,
+    JobOptions,
+    JobStartPayload,
+    RuntimeMessage,
+} from '@/lib/shamela/types'
 
 const job_runtime = new Map<
     string,
@@ -66,7 +73,7 @@ const wait_for_tab_ready = (tab_id: number) =>
         browser.tabs.onUpdated.addListener(on_updated)
     })
 
-const start_job = async (book_id: number, options: JobOptions = {}) => {
+const start_job = async (book_id: number, options: JobOptions = {}, existing_tab_id?: number) => {
     const job_id = crypto.randomUUID()
     const url = `https://shamela.ws/book/${book_id}`
 
@@ -84,13 +91,21 @@ const start_job = async (book_id: number, options: JobOptions = {}) => {
         jobs.push(job)
     })
 
-    const tab = await browser.tabs.create({url, active: true})
-    const tab_id = tab.id
-    if (tab_id == null) return
+    let tab_id: number | undefined
+
+    if (existing_tab_id != null) {
+        await browser.tabs.update(existing_tab_id, {url, active: true})
+        tab_id = existing_tab_id
+        await wait_for_tab_ready(tab_id)
+    } else {
+        const tab = await browser.tabs.create({url, active: true})
+        tab_id = tab.id
+        if (tab_id == null) return
+        if (tab.status !== 'complete') await wait_for_tab_ready(tab_id)
+    }
 
     job_runtime.set(job_id, {pages: [], options, tab_id})
 
-    if (tab.status !== 'complete') await wait_for_tab_ready(tab_id)
     await update_jobs(jobs => {
         const index = jobs.findIndex(job => job.job_id === job_id)
         if (index === -1) return
@@ -148,9 +163,10 @@ export default defineBackground(() => {
         if (!message || typeof message.type !== 'string') return
 
         if (message.type === 'job/start') {
-            const {book_id, options} = message.payload || {}
+            const payload = (message.payload || {}) as JobStartPayload
+            const {book_id, options, tab_id} = payload
             if (!book_id) return
-            start_job(Number(book_id), options)
+            start_job(Number(book_id), options, tab_id)
             return
         }
 
