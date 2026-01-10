@@ -112,73 +112,115 @@
         >
     </div>
 
-    {#if current_job || jobs.length}
+    {#if jobs.length}
         <Card
-            class="overflow-hidden border-border/60 bg-linear-to-br from-card to-muted/30 p-2.5 shadow-sm"
+            class="overflow-hidden border-border/60 bg-linear-to-br from-card to-muted/30 shadow-sm"
         >
-            {#if current_job}
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div
-                                class="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary"
-                            >
-                                <BookOpen class="h-3.5 w-3.5 animate-pulse" />
+            <div class="max-h-[300px] space-y-2 overflow-y-auto p-2.5">
+                {#each [...jobs].reverse() as job (job.job_id)}
+                    <div
+                        class="rounded-lg border border-border/50 bg-background/50 p-2 shadow-sm transition-all hover:bg-background/80"
+                    >
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 overflow-hidden">
+                                <div
+                                    class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"
+                                >
+                                    {#if job.status === 'running'}
+                                        <BookOpen class="h-3.5 w-3.5 animate-pulse" />
+                                    {:else if job.status === 'done'}
+                                        <BookOpen class="h-3.5 w-3.5" />
+                                    {:else}
+                                        <BookOpen class="h-3.5 w-3.5 opacity-50" />
+                                    {/if}
+                                </div>
+                                <div class="flex flex-col overflow-hidden">
+                                    <div class="flex items-center gap-1">
+                                        <span
+                                            class="truncate text-xs font-semibold"
+                                            title={job.result?.title || `Book #${job.book_id}`}
+                                        >
+                                            {job.result?.title || `الكتاب #${job.book_id}`}
+                                        </span>
+                                        <a
+                                            href={`https://shamela.ws/book/${job.book_id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="text-muted-foreground hover:text-primary"
+                                            title="فتح الكتاب في تبويب جديد"
+                                        >
+                                            <ExternalLink class="h-3 w-3" />
+                                        </a>
+                                    </div>
+                                    {#if job.result?.author}
+                                        <span
+                                            class="truncate text-[10px] text-muted-foreground/80"
+                                            title={job.result.author}
+                                        >
+                                            {job.result.author}
+                                        </span>
+                                    {/if}
+                                    <div
+                                        class="flex items-center gap-1 text-[10px] text-muted-foreground"
+                                    >
+                                        <span>{status_label(job.status)}</span>
+                                        {#if job.options?.volume}
+                                            <span class="px-0.5 opacity-50">•</span>
+                                            <span>جـ{job.options.volume}</span>
+                                        {/if}
+                                    </div>
+                                </div>
                             </div>
-                            <span class="text-sm font-semibold">#{current_job.book_id}</span>
+
+                            {#if job.status === 'running' || job.status === 'queued'}
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    class="h-6 w-6 shrink-0 text-muted-foreground hover:text-destructive"
+                                    onclick={() => cancel_job_id(job.job_id)}
+                                    title="إلغاء"
+                                >
+                                    <span class="sr-only">إلغاء</span>
+                                    <X class="h-3.5 w-3.5" />
+                                </Button>
+                            {/if}
                         </div>
-                        <span
-                            class="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary"
-                        >
-                            {status_label(current_job.status)}
-                        </span>
-                    </div>
-                    <div class="space-y-1">
-                        <div
-                            class="flex items-center justify-between text-[10px] text-muted-foreground"
-                        >
-                            <span>التقدّم</span>
-                            <span class="font-medium"
-                                >{current_job.progress.current}/{current_job.progress.total ?? '?'} صفحة</span
-                            >
-                        </div>
-                        <div class="h-2 w-full overflow-hidden rounded-full bg-muted shadow-inner">
+
+                        {#if job.status === 'running'}
+                            <div class="mt-2 space-y-1">
+                                <div
+                                    class="flex items-center justify-between text-[10px] text-muted-foreground"
+                                >
+                                    <span>التقدم</span>
+                                    <span>{job.progress.current}/{job.progress.total ?? '?'}</span>
+                                </div>
+                                <div
+                                    class="h-1.5 w-full overflow-hidden rounded-full bg-muted shadow-inner"
+                                >
+                                    <div
+                                        class="h-full rounded-full bg-primary transition-all duration-300"
+                                        style={`width: ${job.progress.total ? Math.round((job.progress.current / job.progress.total) * 100) : 0}%`}
+                                    ></div>
+                                </div>
+                            </div>
+                        {/if}
+
+                        {#if job.error}
                             <div
-                                class="h-full rounded-full bg-linear-to-r from-primary to-primary/80 transition-all duration-300 ease-out"
-                                style={`width: ${progress_percent}%`}
-                            ></div>
-                        </div>
-                    </div>
-                    {#if current_job.error}
-                        <div
-                            class="rounded-md bg-destructive/10 px-2 py-1 text-[10px] text-destructive"
-                        >
-                            {current_job.error}
-                        </div>
-                    {/if}
-                </div>
-            {/if}
-            {#if jobs.length > 1}
-                {#if current_job}<Separator class="my-2 bg-border/40" />{/if}
-                <div class="space-y-1">
-                    <p class="text-[10px] font-medium text-muted-foreground">قائمة الانتظار</p>
-                    <div class="flex flex-wrap gap-1.5">
-                        {#each jobs.filter(j => j.job_id !== current_job?.job_id) as job (job.job_id)}
-                            <span
-                                class="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium shadow-sm"
+                                class="mt-1.5 rounded-md bg-destructive/10 px-2 py-1 text-[10px] text-destructive"
                             >
-                                #{job.book_id}
-                            </span>
-                        {/each}
+                                {job.error}
+                            </div>
+                        {/if}
                     </div>
-                </div>
-            {/if}
+                {/each}
+            </div>
         </Card>
     {/if}
 </main>
 
 <script lang="ts">
-import {BookOpen, Play} from '@lucide/svelte'
+import {BookOpen, ExternalLink, Play, X} from '@lucide/svelte'
 import {onMount} from 'svelte'
 
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
@@ -202,14 +244,6 @@ let toasts = $state<Array<{id: string; level: 'info' | 'success' | 'error'; mess
 let jobs = $derived(job_state.state.jobs)
 let current_job = $derived(
     jobs.find(job => job.status === 'running') ?? jobs[jobs.length - 1] ?? null,
-)
-let progress_percent = $derived(
-    current_job && current_job.progress.total
-        ? Math.min(
-              100,
-              Math.round((current_job.progress.current / current_job.progress.total) * 100),
-          )
-        : 0,
 )
 let current_locale_label = $derived.by(() => {
     const current = $locale
@@ -308,12 +342,16 @@ const start_jobs = async () => {
     })
 }
 
-const cancel_job = async () => {
-    if (!current_job) return
+const cancel_job_id = async (job_id: string) => {
     await browser.runtime.sendMessage({
         type: 'job/cancel',
-        job_id: current_job.job_id,
+        job_id,
     })
+}
+
+const cancel_job = async () => {
+    if (!current_job) return
+    await cancel_job_id(current_job.job_id)
 }
 
 const clear_jobs = async () => {

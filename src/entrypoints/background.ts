@@ -5,6 +5,7 @@ import type {
     BookPage,
     Job,
     JobOptions,
+    JobProgress,
     JobStartPayload,
     RuntimeMessage,
 } from '@/lib/shamela/types'
@@ -66,7 +67,7 @@ const wait_for_tab_ready = (tab_id: number) =>
         const timeout = setTimeout(() => {
             browser.tabs.onUpdated.removeListener(on_updated)
             resolve()
-        }, 15000)
+        }, 30000)
 
         const on_updated = (updated_tab_id: number, change_info: browser.tabs.TabChangeInfo) => {
             if (updated_tab_id !== tab_id) return
@@ -170,6 +171,19 @@ const cancel_job = async (job_id: string) => {
 
 const clear_jobs = async () => {
     await update_jobs(() => job_store.fallback.jobs)
+
+    pending_queue.length = 0
+
+    for (const runtime of job_runtime.values()) {
+        if (runtime.tab_id != null) {
+            try {
+                browser.tabs.remove(runtime.tab_id).catch(() => {})
+            } catch {
+                // Ignore
+            }
+        }
+    }
+
     job_runtime.clear()
 }
 
@@ -251,20 +265,22 @@ export default defineBackground(() => {
         }
 
         if (message.type === 'scrape/progress') {
+            const progress = message.payload as JobProgress
             update_jobs(jobs => {
                 const index = jobs.findIndex(job => job.job_id === message.job_id)
                 if (index === -1) return
                 jobs[index] = {
                     ...jobs[index],
                     status: 'running',
-                    progress: message.payload,
+                    progress,
                 }
             })
             return
         }
 
         if (message.type === 'scrape/error') {
-            const error_message = message.payload?.message ?? 'خطأ في الاستخلاص'
+            const payload = message.payload as {message?: string} | undefined
+            const error_message = payload?.message ?? 'خطأ في الاستخلاص'
             update_jobs(jobs => {
                 const index = jobs.findIndex(job => job.job_id === message.job_id)
                 if (index === -1) return

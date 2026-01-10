@@ -47,13 +47,7 @@ msgid "تحسين الهوامش"
 msgstr "Improve footnotes"
 
 #: src/entrypoints/popup/App.svelte
-msgid "التقدّم"
-msgstr "Progress"
-
 #: src/entrypoints/popup/App.svelte
-msgid "قائمة الانتظار"
-msgstr "Queue"
-
 #: src/entrypoints/popup/App.svelte
 msgid "إلغاء"
 msgstr "Cancel"
@@ -119,8 +113,25 @@ msgstr "ID or URL (one per line) - leave empty to use current tab"
 msgid "<0/> بدء"
 msgstr "<0/> Start"
 
-#. placeholder {0}: current_job.progress.current
-#. placeholder {1}: current_job.progress.total ?? '?'
+#. placeholder {0}: job.book_id
 #: src/entrypoints/popup/App.svelte
-msgid "{0}/{1} صفحة"
-msgstr "{0}/{1} pages"
+msgid "Book #{0}"
+msgstr "Book #{0}"
+
+#. placeholder {0}: job.book_id
+#: src/entrypoints/popup/App.svelte
+msgid "الكتاب #{0}"
+msgstr "Book #{0}"
+
+#: src/entrypoints/popup/App.svelte
+msgid "التقدم"
+msgstr "Progress"
+
+#. placeholder {0}: job.options.volume
+#: src/entrypoints/popup/App.svelte
+msgid "جـ{0}"
+msgstr "Vol. {0}"
+
+#: src/entrypoints/popup/App.svelte
+msgid "فتح الكتاب في تبويب جديد"
+msgstr "Open book in new tab"
