@@ -1,10 +1,8 @@
-<main
-    class="max-h-[560px] w-[360px] space-y-3 overflow-y-auto rounded-xl border border-border bg-card/80 p-3 shadow-sm backdrop-blur"
->
-    <div class="pointer-events-none fixed top-3 right-3 z-50 flex w-64 flex-col gap-2">
+<main class="w-[360px] space-y-3 p-4">
+    <div class="pointer-events-none fixed top-3 right-3 z-50 flex w-60 flex-col gap-2">
         {#each toasts as toast (toast.id)}
             <Alert
-                class="pointer-events-auto text-xs shadow-lg"
+                class="animate-in fade-in slide-in-from-top-2 pointer-events-auto text-xs shadow-xl backdrop-blur-sm duration-300"
                 variant={toast.level === 'error' ? 'destructive' : 'default'}
             >
                 <AlertTitle>{toast_title(toast.level)}</AlertTitle>
@@ -13,176 +11,183 @@
         {/each}
     </div>
 
-    <div class="space-y-1">
-        <div class="flex items-start justify-between gap-3">
-            <div class="space-y-1">
-                <p class="text-xs tracking-[0.3em] text-muted-foreground uppercase">الشاملة</p>
-                <h1 class="text-lg font-semibold text-foreground">مُحمل الكتب</h1>
+    <header class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+            <div
+                class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-md"
+            >
+                <BookOpen class="h-5 w-5" />
             </div>
-            <div class="w-[120px] space-y-1">
-                <Label for="locale-select">اللغة</Label>
-                <Select
-                    type="single"
-                    value={$locale}
-                    onValueChange={value => void apply_locale(String(value))}
-                >
-                    <SelectTrigger id="locale-select" class="h-8 w-full text-xs">
-                        <span data-slot="select-value">{current_locale_label}</span>
-                    </SelectTrigger>
-                    <SelectContent>
-                        {#each $available_locales as option (option.locale)}
-                            <SelectItem value={option.locale}>{option.name}</SelectItem>
-                        {/each}
-                    </SelectContent>
-                </Select>
+            <div>
+                <h1 class="text-base leading-tight font-bold text-foreground">مُحمِّل الكتب</h1>
+                <p class="text-[10px] text-muted-foreground">المكتبة الشاملة</p>
             </div>
         </div>
-        <p class="text-xs text-muted-foreground">
-            أضف معرّف كتاب أو قائمة روابط، أو اترك فارغًا لاستخدام التبويب الحالي، ثم ابدأ المهمة
-            واترَك تبويب الشاملة مفتوحًا أثناء العمل.
-        </p>
-    </div>
+        <Select
+            type="single"
+            value={$locale}
+            onValueChange={value => void apply_locale(String(value))}
+        >
+            <SelectTrigger class="h-8 w-[85px] text-xs shadow-sm">
+                <span data-slot="select-value">{current_locale_label}</span>
+            </SelectTrigger>
+            <SelectContent>
+                {#each $available_locales as option (option.locale)}
+                    <SelectItem value={option.locale}>{option.name}</SelectItem>
+                {/each}
+            </SelectContent>
+        </Select>
+    </header>
 
-    <Card>
-        <CardHeader class="pb-3">
-            <CardTitle>الكتب</CardTitle>
-            <CardDescription>أدخل معرّفًا أو روابط، أو اترك فارغًا للتبويب الحالي.</CardDescription>
-        </CardHeader>
-        <CardContent class="space-y-3">
-            <div class="grid gap-2">
-                <Label for="input">معرّفات أو روابط الكتب</Label>
+    <Card class="overflow-hidden border-border/60 p-2.5 shadow-sm">
+        <div class="space-y-2">
+            <div class="space-y-1.5">
+                <Label for="input" class="text-xs font-medium">معرّفات أو روابط الكتب</Label>
                 <textarea
                     id="input"
                     rows="2"
                     bind:value={input}
-                    class="min-h-[56px] w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40"
-                    placeholder="مثال: 8567 أو https://shamela.ws/book/8567&#10;يمكن إدخال عدة معرّفات/روابط (سطر لكل واحد)"
+                    class="w-full resize-none rounded-lg border border-input bg-background/50 px-3 py-2 text-sm shadow-inner transition-all outline-none placeholder:text-muted-foreground/70 focus:bg-background focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
+                    placeholder="معرّف أو رابط (سطر لكل كتاب)&#10;اتركه فارغًا لاستخدام التبويب الحالي"
                 ></textarea>
             </div>
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+
+            <Separator class="bg-border/50" />
+
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
                 <div
-                    class="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/60 px-3 py-2"
+                    class="flex items-center gap-2 rounded-md bg-muted/50 px-2 py-1 transition-colors hover:bg-muted"
                 >
-                    <div class="grid gap-0.5">
-                        <Label for="update_hamesh" class="cursor-pointer text-sm font-medium"
-                            >تحسين الهوامش</Label
-                        >
-                        <p class="text-[10px] leading-tight text-muted-foreground">
-                            تحويل الهوامش إلى نوافذ منبثقة لسهولة التنقل.
-                        </p>
-                    </div>
                     <Switch id="update_hamesh" bind:checked={update_hamesh} />
+                    <Label
+                        for="update_hamesh"
+                        class="cursor-pointer text-xs font-medium"
+                        title="تحويل الهوامش إلى نوافذ منبثقة">تحسين الهوامش</Label
+                    >
                 </div>
                 <div
-                    class="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/60 px-3 py-2"
+                    class="flex items-center gap-2 rounded-md bg-muted/50 px-2 py-1 transition-colors hover:bg-muted"
                 >
-                    <div class="grid gap-0.5">
-                        <Label for="flatten_toc" class="cursor-pointer text-sm font-medium"
-                            >تسطيح الفهرس</Label
-                        >
-                        <p class="text-[10px] leading-tight text-muted-foreground">
-                            يُجعل فهرس الموضوعات في مستوى واحد.
-                        </p>
-                    </div>
                     <Switch id="flatten_toc" bind:checked={flatten_toc} />
+                    <Label
+                        for="flatten_toc"
+                        class="cursor-pointer text-xs font-medium"
+                        title="يُجعل فهرس الموضوعات في مستوى واحد">تسطيح الفهرس</Label
+                    >
                 </div>
-                <div class="grid gap-1">
-                    <Label for="volume" class="text-sm font-medium">الجزء</Label>
-                    <Input id="volume" placeholder="مثال: 2" bind:value={volume} class="h-8" />
+                <div class="flex items-center gap-2">
+                    <Label for="volume" class="text-xs font-medium text-muted-foreground"
+                        >الجزء:</Label
+                    >
+                    <Input
+                        id="volume"
+                        placeholder="الكل"
+                        bind:value={volume}
+                        class="h-7 w-16 px-2 text-xs shadow-sm"
+                    />
                 </div>
             </div>
-        </CardContent>
+        </div>
     </Card>
 
-    <Card>
-        <CardHeader class="pb-2">
-            <CardTitle>التقدّم</CardTitle>
-            <CardDescription
-                >{current_job
-                    ? `المهمة ${current_job.book_id}`
-                    : 'منتَظَر بدء المهمة.'}</CardDescription
-            >
-        </CardHeader>
-        <CardContent class="space-y-3">
-            {#if current_job?.error}
-                <div
-                    class="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive"
-                >
-                    {current_job.error}
-                </div>
-            {/if}
-            <div class="flex items-center justify-between text-xs text-muted-foreground">
-                <span>الحالة: {status_label(current_job?.status)}</span>
-                <span>
-                    {current_job?.progress.current ?? 0}
-                    /
-                    {current_job?.progress.total ?? 0}
-                    صفحة
-                </span>
-            </div>
-            <div class="h-2 w-full overflow-hidden rounded-full bg-muted">
-                <div
-                    class="h-full rounded-full bg-primary transition-all"
-                    style={`width: ${progress_percent}%`}
-                ></div>
-            </div>
-        </CardContent>
-    </Card>
-
-    <Card>
-        <CardHeader class="pb-2">
-            <CardTitle>قائمة الانتظار</CardTitle>
-        </CardHeader>
-        <CardContent class="space-y-2">
-            {#if jobs.length}
-                <ul class="space-y-2 text-xs text-muted-foreground">
-                    {#each jobs as job (job.job_id)}
-                        <li>
-                            <div
-                                class={`flex w-full items-center justify-between gap-2 rounded-md border px-3 py-2 text-left transition ${
-                                    current_job?.job_id === job.job_id
-                                        ? 'border-primary/50 bg-primary/10 text-foreground'
-                                        : 'border-border/60'
-                                }`}
-                            >
-                                <span class="font-medium text-foreground">#{job.book_id}</span>
-                                <span
-                                    class="text-[10px] tracking-[0.2em] text-muted-foreground uppercase"
-                                    >{status_label(job.status)}</span
-                                >
-                            </div>
-                        </li>
-                    {/each}
-                </ul>
-            {:else}
-                <p class="text-xs text-muted-foreground">قائمة الانتظار خالية.</p>
-            {/if}
-        </CardContent>
-    </Card>
-
-    <div class="flex flex-wrap gap-2">
-        <Button onclick={start_jobs} class="flex-1">بدء</Button>
+    <div class="flex gap-2">
+        <Button
+            onclick={start_jobs}
+            class="h-9 flex-1 gap-1.5 text-sm font-semibold shadow-md transition-all hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]"
+        >
+            <Play class="h-4 w-4" />
+            بدء
+        </Button>
         <Button
             variant="secondary"
             onclick={cancel_job}
-            class="flex-1"
+            class="h-9 px-4 text-sm shadow-sm transition-all hover:shadow-md"
             disabled={!current_job || current_job.status !== 'running'}>إلغاء</Button
         >
-        <Button variant="outline" onclick={clear_jobs} class="flex-1" disabled={!jobs.length}
-            >تفريغ</Button
+        <Button
+            variant="outline"
+            onclick={clear_jobs}
+            class="h-9 px-4 text-sm shadow-sm transition-all hover:shadow-md"
+            disabled={!jobs.length}>تفريغ</Button
         >
     </div>
+
+    {#if current_job || jobs.length}
+        <Card
+            class="overflow-hidden border-border/60 bg-gradient-to-br from-card to-muted/30 p-2.5 shadow-sm"
+        >
+            {#if current_job}
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary"
+                            >
+                                <BookOpen class="h-3.5 w-3.5 animate-pulse" />
+                            </div>
+                            <span class="text-sm font-semibold">#{current_job.book_id}</span>
+                        </div>
+                        <span
+                            class="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary"
+                        >
+                            {status_label(current_job.status)}
+                        </span>
+                    </div>
+                    <div class="space-y-1">
+                        <div
+                            class="flex items-center justify-between text-[10px] text-muted-foreground"
+                        >
+                            <span>التقدّم</span>
+                            <span class="font-medium"
+                                >{current_job.progress.current}/{current_job.progress.total ?? '?'} صفحة</span
+                            >
+                        </div>
+                        <div class="h-2 w-full overflow-hidden rounded-full bg-muted shadow-inner">
+                            <div
+                                class="h-full rounded-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-300 ease-out"
+                                style={`width: ${progress_percent}%`}
+                            ></div>
+                        </div>
+                    </div>
+                    {#if current_job.error}
+                        <div
+                            class="rounded-md bg-destructive/10 px-2 py-1 text-[10px] text-destructive"
+                        >
+                            {current_job.error}
+                        </div>
+                    {/if}
+                </div>
+            {/if}
+            {#if jobs.length > 1}
+                {#if current_job}<Separator class="my-2 bg-border/40" />{/if}
+                <div class="space-y-1">
+                    <p class="text-[10px] font-medium text-muted-foreground">قائمة الانتظار</p>
+                    <div class="flex flex-wrap gap-1.5">
+                        {#each jobs.filter(j => j.job_id !== current_job?.job_id) as job (job.job_id)}
+                            <span
+                                class="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium shadow-sm"
+                            >
+                                #{job.book_id}
+                            </span>
+                        {/each}
+                    </div>
+                </div>
+            {/if}
+        </Card>
+    {/if}
 </main>
 
 <script lang="ts">
+import {BookOpen, Play} from '@lucide/svelte'
 import {onMount} from 'svelte'
 
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
 import {Button} from '@/components/ui/button'
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
+import {Card} from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
 import {Select, SelectContent, SelectItem, SelectTrigger} from '@/components/ui/select'
+import {Separator} from '@/components/ui/separator'
 import {Switch} from '@/components/ui/switch'
 import {job_state} from '@/lib/job-state.svelte'
 import type {JobOptions, RuntimeMessage} from '@/lib/shamela/types'
