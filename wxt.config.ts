@@ -12,8 +12,20 @@ export default defineConfig({
         default_locale: 'ar',
         permissions: ['tabs', 'scripting', 'storage', 'downloads', 'notifications'],
         host_permissions: ['https://shamela.ws/*'],
+        browser_specific_settings: {
+            gecko: {
+                id: 'shamela_epub_exporter@yshalsager',
+                // @ts-expect-error - WXT doesn't support this field yet
+                data_collection_permissions: {
+                    required: ['none'],
+                },
+            },
+        },
     },
     vite: () => ({
         plugins: [wuchale(), tailwindcss()],
     }),
+    zip: {
+        excludeSources: ['docs/**', 'tmp/**'],
+    },
 })
