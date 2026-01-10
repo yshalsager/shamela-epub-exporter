@@ -33,7 +33,7 @@ const EPUB_NS = 'http://www.idpf.org/2007/ops'
 
 const BASE_CSS = `
 *{direction: rtl}
-body{font-family: 'Noto Naskh Arabic','Amiri',serif;line-height:1.7;margin:1.5rem;color:#1f1f1f}
+body{line-height:1.7;margin:1.5rem;color:#1f1f1f}
 .text-center,h1,h2,h3{text-align:center}
 `
 
