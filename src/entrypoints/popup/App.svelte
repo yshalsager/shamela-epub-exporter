@@ -31,7 +31,7 @@
             <SelectTrigger class="h-8 w-[85px] text-xs shadow-sm">
                 <span data-slot="select-value">{current_locale_label}</span>
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent preventScroll={false}>
                 {#each $available_locales as option (option.locale)}
                     <SelectItem value={option.locale}>{option.name}</SelectItem>
                 {/each}
