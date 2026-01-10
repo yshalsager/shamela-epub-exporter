@@ -10,7 +10,7 @@ export default defineConfig({
         name: '__MSG_extName__',
         description: '__MSG_extDescription__',
         default_locale: 'ar',
-        permissions: ['tabs', 'scripting', 'storage', 'downloads'],
+        permissions: ['tabs', 'scripting', 'storage', 'downloads', 'notifications'],
         host_permissions: ['https://shamela.ws/*'],
     },
     vite: () => ({

@@ -299,6 +299,15 @@ export default defineBackground(() => {
                 },
             })
 
+            if (error_message !== 'canceled') {
+                browser.notifications.create({
+                    type: 'basic',
+                    iconUrl: '/icon/128.png',
+                    title: 'خطأ في التنزيل',
+                    message: `فشل تنزيل الكتاب #${runtime?.info?.id || 'غير معروف'}: ${error_message}`,
+                })
+            }
+
             // Close tab for failed job
             if (runtime?.tab_id) {
                 try {
@@ -343,6 +352,12 @@ export default defineBackground(() => {
                     type: 'job/toast',
                     job_id: message.job_id,
                     payload: {level: 'success', message: 'أُعِدَّ ملف EPUB للتنزيل.'},
+                })
+                browser.notifications.create({
+                    type: 'basic',
+                    iconUrl: '/icon/128.png',
+                    title: 'اكتمل التنزيل',
+                    message: `نُزل الكتاب: ${info.title}`,
                 })
             }
 
