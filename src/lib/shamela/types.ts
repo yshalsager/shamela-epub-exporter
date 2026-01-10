@@ -57,7 +57,8 @@ export type Job = {
 }
 
 export type JobStartPayload = {
-    book_id: number
+    book_id?: number
+    book_ids?: number[]
     options?: JobOptions
     tab_id?: number
 }

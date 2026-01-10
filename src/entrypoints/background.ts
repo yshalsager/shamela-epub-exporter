@@ -63,9 +63,15 @@ const download_blob = async (blob: Blob, filename: string) => {
 
 const wait_for_tab_ready = (tab_id: number) =>
     new Promise<void>(resolve => {
+        const timeout = setTimeout(() => {
+            browser.tabs.onUpdated.removeListener(on_updated)
+            resolve()
+        }, 15000)
+
         const on_updated = (updated_tab_id: number, change_info: browser.tabs.TabChangeInfo) => {
             if (updated_tab_id !== tab_id) return
             if (change_info.status !== 'complete') return
+            clearTimeout(timeout)
             browser.tabs.onUpdated.removeListener(on_updated)
             resolve()
         }
@@ -73,24 +79,16 @@ const wait_for_tab_ready = (tab_id: number) =>
         browser.tabs.onUpdated.addListener(on_updated)
     })
 
-const start_job = async (book_id: number, options: JobOptions = {}, existing_tab_id?: number) => {
-    const job_id = crypto.randomUUID()
+const MAX_CONCURRENT_JOBS = 3
+const pending_queue: {job_id: string; book_id: number; options: JobOptions; tab_id?: number}[] = []
+
+const run_job = async (
+    job_id: string,
+    book_id: number,
+    options: JobOptions,
+    existing_tab_id?: number,
+) => {
     const url = `https://shamela.ws/book/${book_id}`
-
-    const job: Job = {
-        job_id,
-        book_id,
-        url,
-        started_at: Date.now(),
-        status: 'queued',
-        progress: {current: 0},
-        options,
-    }
-
-    await update_jobs(jobs => {
-        jobs.push(job)
-    })
-
     let tab_id: number | undefined
 
     if (existing_tab_id != null) {
@@ -111,11 +109,45 @@ const start_job = async (book_id: number, options: JobOptions = {}, existing_tab
         if (index === -1) return
         jobs[index] = {...jobs[index], status: 'running'}
     })
+
     await send_to_tab(tab_id, {
         type: 'scrape/start',
         job_id,
         payload: {book_id, options},
     })
+}
+
+const process_queue = async () => {
+    const running_count = Array.from(job_runtime.values()).filter(r => r.tab_id != null).length
+    if (running_count >= MAX_CONCURRENT_JOBS) return
+
+    const next_job = pending_queue.shift()
+    if (!next_job) return
+
+    await run_job(next_job.job_id, next_job.book_id, next_job.options, next_job.tab_id)
+    void process_queue()
+}
+
+const start_job = async (book_id: number, options: JobOptions = {}, existing_tab_id?: number) => {
+    const job_id = crypto.randomUUID()
+    const url = `https://shamela.ws/book/${book_id}`
+
+    const job: Job = {
+        job_id,
+        book_id,
+        url,
+        started_at: Date.now(),
+        status: 'queued',
+        progress: {current: 0},
+        options,
+    }
+
+    await update_jobs(jobs => {
+        jobs.push(job)
+    })
+
+    pending_queue.push({job_id, book_id, options, tab_id: existing_tab_id})
+    void process_queue()
 }
 
 const cancel_job = async (job_id: string) => {
@@ -164,9 +196,19 @@ export default defineBackground(() => {
 
         if (message.type === 'job/start') {
             const payload = (message.payload || {}) as JobStartPayload
-            const {book_id, options, tab_id} = payload
-            if (!book_id) return
-            start_job(Number(book_id), options, tab_id)
+            const {book_id, book_ids, options, tab_id} = payload
+
+            if (book_ids?.length) {
+                const use_tab_id = book_ids.length === 1 ? tab_id : undefined
+                for (const id of book_ids) {
+                    await start_job(Number(id), options, use_tab_id)
+                }
+                return
+            }
+
+            if (book_id) {
+                await start_job(Number(book_id), options, tab_id)
+            }
             return
         }
 
@@ -240,6 +282,18 @@ export default defineBackground(() => {
                     message: error_message === 'canceled' ? 'أُلغي الاستخلاص.' : error_message,
                 },
             })
+
+            // Close tab for failed job
+            if (runtime?.tab_id) {
+                try {
+                    browser.tabs.remove(runtime.tab_id).catch(() => {})
+                } catch {
+                    // Ignore
+                }
+            }
+            job_runtime.delete(message.job_id)
+            void process_queue()
+
             return
         }
 
@@ -275,7 +329,17 @@ export default defineBackground(() => {
                     payload: {level: 'success', message: 'أُعِدَّ ملف EPUB للتنزيل.'},
                 })
             }
+
+            // Close tab for completed job
+            if (runtime?.tab_id) {
+                try {
+                    browser.tabs.remove(runtime.tab_id).catch(() => {})
+                } catch {
+                    // Ignore
+                }
+            }
             job_runtime.delete(message.job_id)
+            void process_queue()
         }
     })
 })

@@ -302,12 +302,10 @@ const start_jobs = async () => {
         flatten_toc,
     }
 
-    for (const id of ids) {
-        await browser.runtime.sendMessage({
-            type: 'job/start',
-            payload: {book_id: id, options, tab_id: ids.length === 1 ? tab_id : undefined},
-        })
-    }
+    await browser.runtime.sendMessage({
+        type: 'job/start',
+        payload: {book_ids: ids, options, tab_id: ids.length === 1 ? tab_id : undefined},
+    })
 }
 
 const cancel_job = async () => {
