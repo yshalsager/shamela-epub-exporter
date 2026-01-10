@@ -185,6 +185,11 @@ const replace_color_styles_with_class = (
 const replace_special_characters = (html: string) =>
     html.replace(SPECIAL_CHARACTERS_PATTERN, match => SPECIAL_CHARACTERS[match] ?? match)
 
+const XHTML_VOID_ELEMENTS_PATTERN =
+    /<(br|hr|img|input|meta|link|area|base|col|embed|source|track|wbr)(\s[^>]*)?\/?>/gi
+const sanitize_html_for_xhtml = (html: string) =>
+    html.replace(XHTML_VOID_ELEMENTS_PATTERN, '<$1$2 />')
+
 const create_toc_depth_map = (toc: TocTree, depth_map: Record<string, number> = {}, depth = 1) => {
     toc.forEach(item => {
         if (Array.isArray(item)) {
@@ -240,7 +245,7 @@ const get_page_volume = (volumes: Record<string, [number, number]> | undefined, 
     const entries = Object.entries(volumes)
     for (let index = 0; index < entries.length; index += 1) {
         const [name, range] = entries[index]
-        if (range[0] <= page && page <= range[1]) return {index, name}
+        if (range[0] <= page && page <= range[1]) return {index: index + 1, name}
     }
     return {index: 1, name: ''}
 }
@@ -265,20 +270,17 @@ const render_nav_items = (toc: TocTree, page_map: Map<number, string>): string =
 }
 
 const render_ncx_items = (toc: TocTree, page_map: Map<number, string>) => {
-    let sep_index = 0
+    let nav_index = 0
     const render_item = (item: TocItem | TocBranch): string => {
+        const id = `nav_${nav_index++}`
         if (Array.isArray(item)) {
             const [entry, children] = item
             const href = page_map.get(entry.page) ?? page_file_name(entry.page)
-            const id = `sep_${sep_index}`
-            sep_index += 1
             return `<navPoint id="${id}"><navLabel><text>${escape_xml(entry.text)}</text></navLabel><content src="${href}"/>${children
                 .map(render_item)
                 .join('')}</navPoint>`
         }
         const href = page_map.get(item.page) ?? page_file_name(item.page)
-        const base = href.split('/').pop() ?? ''
-        const id = base.replace('.xhtml', '') || `page_${item.page}`
         return `<navPoint id="${id}"><navLabel><text>${escape_xml(item.text)}</text></navLabel><content src="${href}"/></navPoint>`
     }
 
@@ -346,6 +348,7 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
             text = replace_titles_with_headers(chapters_in_page, text, toc_depth_map)
         }
         if (options.update_hamesh) text = update_hamesh_html(text)
+        text = sanitize_html_for_xhtml(text)
 
         const volume = get_page_volume(info.volumes, page.page_number)
         const file_name = `${volume.name ? 'page_' : 'page'}${volume.index}_${String(page.page_number).padStart(zfill_length, '0')}.xhtml`
@@ -377,7 +380,7 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
         )
     })
 
-    const info_body = info.about ?? ''
+    const info_body = sanitize_html_for_xhtml(info.about ?? '')
     zip.folder('OEBPS')?.file(
         'info.xhtml',
         `<?xml version="1.0" encoding="utf-8"?>
