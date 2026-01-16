@@ -1,4 +1,4 @@
-<main class="w-[360px] space-y-3 p-4">
+<main class="mx-auto flex w-full max-w-sm flex-col gap-3 p-3">
     <div class="pointer-events-none fixed top-3 right-3 z-50 flex w-60 flex-col gap-2">
         {#each toasts as toast (toast.id)}
             <Alert
@@ -11,16 +11,18 @@
         {/each}
     </div>
 
-    <header class="flex items-center justify-between gap-3">
+    <header class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2">
             <div
-                class="flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br from-primary to-primary/70 text-primary-foreground shadow-md"
+                class="flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br from-primary to-primary/70 text-primary-foreground shadow-md md:h-10 md:w-10"
             >
-                <BookOpen class="h-5 w-5" />
+                <BookOpen class="h-5 w-5 md:h-6 md:w-6" />
             </div>
             <div>
-                <h1 class="text-base leading-tight font-bold text-foreground">مُحمِّل الكتب</h1>
-                <p class="text-[10px] text-muted-foreground">المكتبة الشاملة</p>
+                <h1 class="text-base leading-tight font-bold text-foreground md:text-lg">
+                    مُحمِّل الكتب
+                </h1>
+                <p class="text-[10px] text-muted-foreground md:text-xs">المكتبة الشاملة</p>
             </div>
         </div>
         <Select
@@ -39,15 +41,17 @@
         </Select>
     </header>
 
-    <Card class="overflow-hidden border-border/60 p-2.5 shadow-sm">
-        <div class="space-y-2">
+    <Card class="overflow-hidden border-border/60 p-2.5 shadow-sm md:p-3 md:shadow-md">
+        <div class="space-y-2 md:space-y-3">
             <div class="space-y-1.5">
-                <Label for="input" class="text-xs font-medium">معرّفات أو روابط الكتب</Label>
+                <Label for="input" class="text-xs font-medium md:text-sm"
+                    >معرّفات أو روابط الكتب</Label
+                >
                 <textarea
                     id="input"
                     rows="2"
                     bind:value={input}
-                    class="w-full resize-none rounded-lg border border-input bg-background/50 px-3 py-2 text-sm shadow-inner transition-all outline-none placeholder:text-muted-foreground/70 focus:bg-background focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
+                    class="w-full resize-none rounded-lg border border-input bg-background/50 px-3 py-2 text-sm shadow-inner transition-all outline-none placeholder:text-muted-foreground/70 focus:bg-background focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20 md:min-h-[100px]"
                     placeholder="معرّف أو رابط (سطر لكل كتاب)&#10;اتركه فارغًا لاستخدام التبويب الحالي"
                 ></textarea>
             </div>
@@ -93,30 +97,30 @@
     <div class="flex gap-2">
         <Button
             onclick={start_jobs}
-            class="h-9 flex-1 gap-1.5 text-sm font-semibold shadow-md transition-all hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]"
+            class="h-9 flex-1 gap-1.5 text-sm font-semibold shadow-md transition-all hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] md:h-10 md:text-base"
         >
-            <Play class="h-4 w-4" />
+            <Play class="h-4 w-4 md:h-5 md:w-5" />
             بدء
         </Button>
         <Button
             variant="secondary"
             onclick={cancel_job}
-            class="h-9 px-4 text-sm shadow-sm transition-all hover:shadow-md"
+            class="h-9 px-4 text-sm shadow-sm transition-all hover:shadow-md md:h-10 md:text-base"
             disabled={!current_job || current_job.status !== 'running'}>إلغاء</Button
         >
         <Button
             variant="outline"
             onclick={clear_jobs}
-            class="h-9 px-4 text-sm shadow-sm transition-all hover:shadow-md"
+            class="h-9 px-4 text-sm shadow-sm transition-all hover:shadow-md md:h-10 md:text-base"
             disabled={!jobs.length}>تفريغ</Button
         >
     </div>
 
     {#if jobs.length}
         <Card
-            class="overflow-hidden border-border/60 bg-linear-to-br from-card to-muted/30 shadow-sm"
+            class="overflow-hidden border-border/60 bg-linear-to-br from-card to-muted/30 shadow-sm md:shadow-md"
         >
-            <div class="max-h-[300px] space-y-2 overflow-y-auto p-2.5">
+            <div class="max-h-[300px] space-y-2 overflow-y-auto p-2.5 md:p-3">
                 {#each [...jobs].reverse() as job (job.job_id)}
                     <div
                         class="rounded-lg border border-border/50 bg-background/50 p-2 shadow-sm transition-all hover:bg-background/80"
@@ -231,7 +235,9 @@ import {Label} from '@/components/ui/label'
 import {Select, SelectContent, SelectItem, SelectTrigger} from '@/components/ui/select'
 import {Separator} from '@/components/ui/separator'
 import {Switch} from '@/components/ui/switch'
+import {create_job_manager, type JobManager} from '@/lib/job-manager'
 import {job_state} from '@/lib/job-state.svelte'
+import {is_extension, is_tauri} from '@/lib/platform'
 import type {JobOptions, RuntimeMessage} from '@/lib/shamela/types'
 import {apply_locale, available_locales, init_locale, locale} from '@/locales/locale'
 
@@ -240,6 +246,7 @@ let volume = $state('')
 let update_hamesh = $state(false)
 let flatten_toc = $state(false)
 let toasts = $state<Array<{id: string; level: 'info' | 'success' | 'error'; message: string}>>([])
+let job_manager: JobManager | null = $state(null)
 
 let jobs = $derived(job_state.state.jobs)
 let current_job = $derived(
@@ -255,6 +262,7 @@ let current_locale_label = $derived.by(() => {
 })
 
 const get_active_shamela_tab = async (): Promise<{book_id: number; tab_id: number} | null> => {
+    if (!is_extension()) return null
     try {
         const [tab] = await browser.tabs.query({active: true, currentWindow: true})
         if (tab?.url && tab.id != null) {
@@ -285,7 +293,7 @@ const parse_ids = async (): Promise<{ids: number[]; tab_id?: number}> => {
             if (!Number.isNaN(direct_id)) ids.push(direct_id)
         })
 
-    if (!ids.length) {
+    if (!ids.length && is_extension()) {
         const active_tab = await get_active_shamela_tab()
         if (active_tab) {
             ids.push(active_tab.book_id)
@@ -293,11 +301,8 @@ const parse_ids = async (): Promise<{ids: number[]; tab_id?: number}> => {
         }
     }
 
-    const unique: number[] = []
-    ids.forEach(id => {
-        if (!unique.includes(id)) unique.push(id)
-    })
-    return {ids: unique, tab_id: use_current_tab_id}
+    const unique_ids = Array.from(new Set(ids))
+    return {ids: unique_ids, tab_id: use_current_tab_id}
 }
 
 const push_toast = (level: 'info' | 'success' | 'error', message: string) => {
@@ -336,17 +341,25 @@ const start_jobs = async () => {
         flatten_toc,
     }
 
-    await browser.runtime.sendMessage({
-        type: 'job/start',
-        payload: {book_ids: ids, options, tab_id: ids.length === 1 ? tab_id : undefined},
-    })
+    if (is_tauri() && job_manager) {
+        await job_manager.start_jobs(ids, options)
+    } else if (is_extension()) {
+        await browser.runtime.sendMessage({
+            type: 'job/start',
+            payload: {book_ids: ids, options, tab_id: ids.length === 1 ? tab_id : undefined},
+        })
+    }
 }
 
 const cancel_job_id = async (job_id: string) => {
-    await browser.runtime.sendMessage({
-        type: 'job/cancel',
-        job_id,
-    })
+    if (is_tauri() && job_manager) {
+        await job_manager.cancel_job(job_id)
+    } else if (is_extension()) {
+        await browser.runtime.sendMessage({
+            type: 'job/cancel',
+            job_id,
+        })
+    }
 }
 
 const cancel_job = async () => {
@@ -355,21 +368,43 @@ const cancel_job = async () => {
 }
 
 const clear_jobs = async () => {
-    await browser.runtime.sendMessage({type: 'job/clear'})
+    if (is_tauri() && job_manager) {
+        await job_manager.clear_jobs()
+    } else if (is_extension()) {
+        await browser.runtime.sendMessage({type: 'job/clear'})
+    }
+}
+
+const init_tauri = async () => {
+    const {get_platform} = await import('@/lib/platform')
+    const {create_platform_job_store} = await import('@/lib/job-store')
+
+    const platform = await get_platform()
+    const store = await create_platform_job_store()
+
+    job_manager = create_job_manager(platform, store, {
+        on_toast: (_job_id, level, message) => push_toast(level, message),
+    })
 }
 
 onMount(() => {
     void init_locale()
-    const handler = (message: RuntimeMessage) => {
-        if (message.type === 'job/toast' && message.payload) {
-            push_toast(
-                (message.payload as {level: 'info' | 'success' | 'error'}).level,
-                (message.payload as {message: string}).message,
-            )
-        }
-    }
+    void job_state.init()
 
-    browser.runtime.onMessage.addListener(handler)
-    return () => browser.runtime.onMessage.removeListener(handler)
+    if (is_tauri()) {
+        void init_tauri()
+    } else if (is_extension()) {
+        const handler = (message: RuntimeMessage) => {
+            if (message.type === 'job/toast' && message.payload) {
+                push_toast(
+                    (message.payload as {level: 'info' | 'success' | 'error'}).level,
+                    (message.payload as {message: string}).message,
+                )
+            }
+        }
+
+        browser.runtime.onMessage.addListener(handler)
+        return () => browser.runtime.onMessage.removeListener(handler)
+    }
 })
 </script>

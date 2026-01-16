@@ -30,5 +30,7 @@ src/locales/data.js
 *.sln
 *.sw?
 
+.mise.local.toml
 docs/
 tmp/
+dist-tauri/

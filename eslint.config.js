@@ -11,7 +11,7 @@ import globals from 'globals'
 import ts_eslint from 'typescript-eslint'
 
 export default defineConfig([
-    {ignores: ['.output/**', '.wuchale/**', '.wxt/**']},
+    {ignores: ['.output/**', '.wuchale/**', '.wxt/**', 'src-tauri/target/**']},
     {
         files: ['**/*.{js,mjs,cjs,ts,mts,cts,svelte}'],
         extends: [

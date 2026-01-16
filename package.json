@@ -26,7 +26,12 @@
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "format": "prettier --write .",
         "lint": "prettier --check . && eslint . --fix",
-        "postinstall": "wxt prepare"
+        "postinstall": "wxt prepare",
+        "tauri": "tauri",
+        "tauri:dev": "vite --config vite.config.ts",
+        "tauri:build": "vite build --config vite.config.ts",
+        "desktop": "tauri dev",
+        "desktop:build": "tauri build"
     },
     "devDependencies": {
         "@eslint/css": "^0.14.1",
@@ -35,9 +40,16 @@
         "@eslint/markdown": "^7.5.1",
         "@internationalized/date": "^3.10.1",
         "@lucide/svelte": "^0.562.0",
+        "@sveltejs/vite-plugin-svelte": "^6.0.0",
         "@tailwindcss/forms": "^0.5.11",
         "@tailwindcss/typography": "^0.5.19",
         "@tailwindcss/vite": "^4.1.18",
+        "@tauri-apps/api": "^2.9.1",
+        "@tauri-apps/cli": "^2.9.6",
+        "@tauri-apps/plugin-dialog": "^2.5.0",
+        "@tauri-apps/plugin-fs": "^2.4.5",
+        "@tauri-apps/plugin-notification": "^2.3.3",
+        "@tauri-apps/plugin-store": "^2.4.2",
         "@tsconfig/svelte": "^5.0.6",
         "@wuchale/svelte": "^0.18.1",
         "@wuchale/vite-plugin": "^0.16.3",
@@ -66,6 +78,7 @@
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.52.0",
         "vitest": "^4.0.16",
+        "vite": "^7.3.0",
         "wuchale": "^0.19.4",
         "wxt": "^0.20.13"
     }

@@ -1,17 +1,21 @@
+import {create_platform_job_store, job_store, type JobStore} from '@/lib/job-store'
 import type {Job} from '@/lib/shamela/types'
 
-import {job_store} from './job-store'
+const FALLBACK = {jobs: [] as Job[]}
 
 class JobState {
-    state = $state(job_store.fallback)
+    state = $state(FALLBACK)
+    private store: JobStore = job_store
 
-    constructor() {
-        job_store.getValue().then(this.update)
-        job_store.watch(this.update)
+    async init() {
+        this.store = await create_platform_job_store()
+        const initial = await this.store.get_value()
+        this.update(initial)
+        this.store.watch(this.update)
     }
 
     update = (new_state: {jobs: Job[]} | null) => {
-        this.state = new_state ?? job_store.fallback
+        this.state = new_state ?? FALLBACK
     }
 }
 

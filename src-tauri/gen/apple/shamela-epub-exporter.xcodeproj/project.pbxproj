@@ -1,0 +1,458 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2965F37075739DDCD5B44A36 /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF7EB9AD75075CBAC5446E86 /* libapp.a */; };
+		3005C8535DB9877329E0CBE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A31F092B6E397B9C2078FE39 /* Assets.xcassets */; };
+		4C24AF47822284851F106A99 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56E8E8015E95C328265AF35D /* LaunchScreen.storyboard */; };
+		521B1EC67DDE8BF4667845D9 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC1655F40176A35D7292D51F /* Security.framework */; };
+		5BEE15B5708CD830A629DB2E /* assets in Resources */ = {isa = PBXBuildFile; fileRef = EB0AEFF8B4B15C1477EED6CD /* assets */; };
+		751A2B47696100653EAD77AD /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 36266DF0358F7B7353A38C4C /* main.mm */; };
+		856B4AD394483CEF5711ACF0 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D395A9ED7D18E7EE21012A /* MetalKit.framework */; };
+		91EF7B08C3A380A890AA4CFE /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6017B57963CE3529EA472C4F /* WebKit.framework */; };
+		C19C0187B82F2DDA8068F85C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 237E1775E5CDF17D76DEF46D /* UIKit.framework */; };
+		CA3B683FDFD379AFA8AF574D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5213ECE4DC25AF4BF23998D8 /* CoreGraphics.framework */; };
+		D9CFCC63A15AD78762893061 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1E7876EE4DF75CF8226A8B /* Metal.framework */; };
+		E34488D25AAC791E9F70E239 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F46C4E8F8D42BBAD0090A4B9 /* QuartzCore.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		237E1775E5CDF17D76DEF46D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		36266DF0358F7B7353A38C4C /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		4267705D47F266B98C125C8E /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
+		5212D2C9FD5B6E2C7588A2EA /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+		5213ECE4DC25AF4BF23998D8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		56E8E8015E95C328265AF35D /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6017B57963CE3529EA472C4F /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		85D395A9ED7D18E7EE21012A /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		9E344883C743011F3128F4A5 /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		A31F092B6E397B9C2078FE39 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AC1E7876EE4DF75CF8226A8B /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		CC2CA333B90C8BAAF4CDF6A9 /* shamela-epub-exporter_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "shamela-epub-exporter_iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF7EB9AD75075CBAC5446E86 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		D62C30870A22569213CCA136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E8FA582C51B49FEB66470E4E /* shamela-epub-exporter_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "shamela-epub-exporter_iOS.entitlements"; sourceTree = "<group>"; };
+		EB0AEFF8B4B15C1477EED6CD /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		F46C4E8F8D42BBAD0090A4B9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		FC1655F40176A35D7292D51F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1D3D9AA1443AE3AB00228C7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2965F37075739DDCD5B44A36 /* libapp.a in Frameworks */,
+				CA3B683FDFD379AFA8AF574D /* CoreGraphics.framework in Frameworks */,
+				D9CFCC63A15AD78762893061 /* Metal.framework in Frameworks */,
+				856B4AD394483CEF5711ACF0 /* MetalKit.framework in Frameworks */,
+				E34488D25AAC791E9F70E239 /* QuartzCore.framework in Frameworks */,
+				521B1EC67DDE8BF4667845D9 /* Security.framework in Frameworks */,
+				C19C0187B82F2DDA8068F85C /* UIKit.framework in Frameworks */,
+				91EF7B08C3A380A890AA4CFE /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2483191B1E7540EDE1509140 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		33ED1D575A4E055D50684F94 /* shamela-epub-exporter */ = {
+			isa = PBXGroup;
+			children = (
+				36266DF0358F7B7353A38C4C /* main.mm */,
+				85D3679C65E24B132513428B /* bindings */,
+			);
+			path = "shamela-epub-exporter";
+			sourceTree = "<group>";
+		};
+		553BC854A08676590087ADCB /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				33ED1D575A4E055D50684F94 /* shamela-epub-exporter */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		5BDFC71BCA12FAD165FF49D2 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				9E344883C743011F3128F4A5 /* lib.rs */,
+				4267705D47F266B98C125C8E /* main.rs */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		5C94A658EFCFE62C78DCB62E = {
+			isa = PBXGroup;
+			children = (
+				EB0AEFF8B4B15C1477EED6CD /* assets */,
+				A31F092B6E397B9C2078FE39 /* Assets.xcassets */,
+				56E8E8015E95C328265AF35D /* LaunchScreen.storyboard */,
+				2483191B1E7540EDE1509140 /* Externals */,
+				DCB6604781F0F0F34C495FA7 /* shamela-epub-exporter_iOS */,
+				553BC854A08676590087ADCB /* Sources */,
+				5BDFC71BCA12FAD165FF49D2 /* src */,
+				C2CE6BFD1F2F9C95C188E8E8 /* Frameworks */,
+				8EEAAD9DFF1C48A34891D3EE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		85D3679C65E24B132513428B /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				5212D2C9FD5B6E2C7588A2EA /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		8EEAAD9DFF1C48A34891D3EE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CC2CA333B90C8BAAF4CDF6A9 /* shamela-epub-exporter_iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C2CE6BFD1F2F9C95C188E8E8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5213ECE4DC25AF4BF23998D8 /* CoreGraphics.framework */,
+				CF7EB9AD75075CBAC5446E86 /* libapp.a */,
+				AC1E7876EE4DF75CF8226A8B /* Metal.framework */,
+				85D395A9ED7D18E7EE21012A /* MetalKit.framework */,
+				F46C4E8F8D42BBAD0090A4B9 /* QuartzCore.framework */,
+				FC1655F40176A35D7292D51F /* Security.framework */,
+				237E1775E5CDF17D76DEF46D /* UIKit.framework */,
+				6017B57963CE3529EA472C4F /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DCB6604781F0F0F34C495FA7 /* shamela-epub-exporter_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				D62C30870A22569213CCA136 /* Info.plist */,
+				E8FA582C51B49FEB66470E4E /* shamela-epub-exporter_iOS.entitlements */,
+			);
+			path = "shamela-epub-exporter_iOS";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C7F99017095F36EC00C9124F /* shamela-epub-exporter_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC06D7D37ECBB5C820F4DC13 /* Build configuration list for PBXNativeTarget "shamela-epub-exporter_iOS" */;
+			buildPhases = (
+				EA011888412D7E6737D1C248 /* Build Rust Code */,
+				6F28F9A26A475010A533715B /* Sources */,
+				8D30706A2FE532A14D489E57 /* Resources */,
+				A1D3D9AA1443AE3AB00228C7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "shamela-epub-exporter_iOS";
+			packageProductDependencies = (
+			);
+			productName = "shamela-epub-exporter_iOS";
+			productReference = CC2CA333B90C8BAAF4CDF6A9 /* shamela-epub-exporter_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		261CEF730E63D37FC947C5D5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = 9F241893EBC2ACE094B4EE29 /* Build configuration list for PBXProject "shamela-epub-exporter" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 5C94A658EFCFE62C78DCB62E;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C7F99017095F36EC00C9124F /* shamela-epub-exporter_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D30706A2FE532A14D489E57 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3005C8535DB9877329E0CBE3 /* Assets.xcassets in Resources */,
+				4C24AF47822284851F106A99 /* LaunchScreen.storyboard in Resources */,
+				5BEE15B5708CD830A629DB2E /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		EA011888412D7E6737D1C248 /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pnpm tauri ios xcode-script -v --platform ${PLATFORM_DISPLAY_NAME:?} --sdk-root ${SDKROOT:?} --framework-search-paths \"${FRAMEWORK_SEARCH_PATHS:?}\" --header-search-paths \"${HEADER_SEARCH_PATHS:?}\" --gcc-preprocessor-definitions \"${GCC_PREPROCESSOR_DEFINITIONS:-}\" --configuration ${CONFIGURATION:?} ${FORCE_COLOR} ${ARCHS:?}";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6F28F9A26A475010A533715B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				751A2B47696100653EAD77AD /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		055B01972AC4298C0A890C2B /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+		9FA05EAB116AC67E90A57FB7 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+		A5EADB73CBCD6CFB26B286F3 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "shamela-epub-exporter_iOS/shamela-epub-exporter_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "shamela-epub-exporter_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yshalsager.shamela-epub-exporter;
+				PRODUCT_NAME = "Shamela EPUB Exporter";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = debug;
+		};
+		E7960681F92B838CAF86FF2C /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "shamela-epub-exporter_iOS/shamela-epub-exporter_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "shamela-epub-exporter_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yshalsager.shamela-epub-exporter;
+				PRODUCT_NAME = "Shamela EPUB Exporter";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9F241893EBC2ACE094B4EE29 /* Build configuration list for PBXProject "shamela-epub-exporter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				055B01972AC4298C0A890C2B /* debug */,
+				9FA05EAB116AC67E90A57FB7 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		FC06D7D37ECBB5C820F4DC13 /* Build configuration list for PBXNativeTarget "shamela-epub-exporter_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5EADB73CBCD6CFB26B286F3 /* debug */,
+				E7960681F92B838CAF86FF2C /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 261CEF730E63D37FC947C5D5 /* Project object */;
+}

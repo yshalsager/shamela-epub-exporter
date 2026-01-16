@@ -1,3 +1,5 @@
+import {resolve} from 'node:path'
+
 import tailwindcss from '@tailwindcss/vite'
 import {wuchale} from '@wuchale/vite-plugin'
 import {defineConfig} from 'wxt'
@@ -24,8 +26,14 @@ export default defineConfig({
     },
     vite: () => ({
         plugins: [wuchale(), tailwindcss()],
+        resolve: {
+            alias: {
+                '@/lib/platform': resolve(__dirname, 'src/lib/platform/index.wxt.ts'),
+                '@/lib/job-store': resolve(__dirname, 'src/lib/job-store.wxt.ts'),
+            },
+        },
     }),
     zip: {
-        excludeSources: ['docs/**', 'tmp/**'],
+        excludeSources: ['docs/**', 'tmp/**', 'src-tauri'],
     },
 })

@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest'
 
-import {cut_toc, get_number_from_url, get_start_end_pages} from '../src/lib/shamela/scrape-utils'
-import type {TocTree} from '../src/lib/shamela/types'
+import {cut_toc, get_number_from_url, get_start_end_pages} from '../lib/shamela/scrape-utils'
+import type {TocTree} from '../lib/shamela/types'
 
 describe('scrape utils', () => {
     it('extracts numbers from urls', () => {

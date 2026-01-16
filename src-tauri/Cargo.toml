@@ -1,0 +1,25 @@
+[package]
+name = "shamela-epub-exporter"
+version = "1.0.0"
+description = "Export Shamela Library books to EPUB"
+authors = ["yshalsager <contact@yshalsager.com>"]
+license = "GPL-3.0"
+repository = "https://github.com/yshalsager/shamela-epub-exporter"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "shamela_epub_exporter_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-fs = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-store = "2"
+tauri-plugin-log = "2"
+log = "0.4"

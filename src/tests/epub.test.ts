@@ -1,8 +1,8 @@
 import JSZip from 'jszip'
 import {describe, expect, it} from 'vitest'
 
-import {build_epub} from '../src/lib/shamela/epub'
-import type {BookInfo, BookPage} from '../src/lib/shamela/types'
+import {build_epub} from '../lib/shamela/epub'
+import type {BookInfo, BookPage} from '../lib/shamela/types'
 
 const info: BookInfo = {
     id: 42,

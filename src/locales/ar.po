@@ -13,49 +13,63 @@ msgstr ""
 "Source-Language: ar\n"
 "MIME-Version: 1.0\n"
 
+#: ../entrypoints/popup/App.svelte
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "خطأ"
 msgstr "خطأ"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "اكتمل"
 msgstr "اكتمل"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "معلومة"
 msgstr "معلومة"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "في قائمة الانتظار"
 msgstr "في قائمة الانتظار"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "جارٍ التنفيذ"
 msgstr "جارٍ التنفيذ"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "مكتملة"
 msgstr "مكتملة"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "مُلغاة"
 msgstr "مُلغاة"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "جاهز"
 msgstr "جاهز"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "تحسين الهوامش"
 msgstr "تحسين الهوامش"
 
+#: ../entrypoints/popup/App.svelte
+#: ../entrypoints/popup/App.svelte
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "إلغاء"
 msgstr "إلغاء"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "تفريغ"
 msgstr "تفريغ"
@@ -68,70 +82,86 @@ msgstr "أُلغيت المهمة."
 msgid "خطأ في الاستخلاص"
 msgstr "خطأ في الاستخلاص"
 
-#. placeholder {0}: book_id
-#: src/entrypoints/content.ts
-msgid "الكتاب {0}"
-msgstr "الكتاب {0}"
+#~ msgid "الكتاب {0}"
+#~ msgstr "الكتاب {0}"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "تسطيح الفهرس"
 msgstr "تسطيح الفهرس"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "معرّفات أو روابط الكتب"
 msgstr "معرّفات أو روابط الكتب"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "تحويل الهوامش إلى نوافذ منبثقة"
 msgstr "تحويل الهوامش إلى نوافذ منبثقة"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "يُجعل فهرس الموضوعات في مستوى واحد"
 msgstr "يُجعل فهرس الموضوعات في مستوى واحد"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "الجزء:"
 msgstr "الجزء:"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "الكل"
 msgstr "الكل"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "مُحمِّل الكتب"
 msgstr "مُحمِّل الكتب"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "المكتبة الشاملة"
 msgstr "المكتبة الشاملة"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "معرّف أو رابط (سطر لكل كتاب) اتركه فارغًا لاستخدام التبويب الحالي"
 msgstr "معرّف أو رابط (سطر لكل كتاب) اتركه فارغًا لاستخدام التبويب الحالي"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "<0/> بدء"
 msgstr "<0/> بدء"
 
 #. placeholder {0}: job.book_id
+#. placeholder {0}: job.book_id
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "Book #{0}"
 msgstr "Book #{0}"
 
 #. placeholder {0}: job.book_id
+#. placeholder {0}: job.book_id
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "الكتاب #{0}"
 msgstr "الكتاب #{0}"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "التقدم"
 msgstr "التقدم"
 
 #. placeholder {0}: job.options.volume
+#. placeholder {0}: job.options.volume
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "جـ{0}"
 msgstr "جـ{0}"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "فتح الكتاب في تبويب جديد"
 msgstr "فتح الكتاب في تبويب جديد"

@@ -265,7 +265,7 @@ const get_page_volume = (volumes: Record<string, [number, number]> | undefined, 
 }
 
 const render_nav_items = (toc: TocTree, page_map: Map<number, string>): string => {
-    const render_item = (item: TocItem | TocBranch) => {
+    const render_item = (item: TocItem | TocBranch): string => {
         if (Array.isArray(item)) {
             const [entry, children] = item
             const href = page_map.get(entry.page) ?? page_file_name(entry.page)
@@ -275,7 +275,7 @@ const render_nav_items = (toc: TocTree, page_map: Map<number, string>): string =
         return `<li><a href="${href}">${escape_xml(item.text)}</a></li>`
     }
 
-    const render_list = (items: TocTree) => {
+    const render_list = (items: TocTree): string => {
         if (!items.length) return ''
         return `<ol>${items.map(render_item).join('')}</ol>`
     }

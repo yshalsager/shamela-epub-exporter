@@ -13,45 +13,58 @@ msgstr ""
 "Source-Language: ar\n"
 "MIME-Version: 1.0\n"
 
+#: ../entrypoints/popup/App.svelte
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "خطأ"
 msgstr "Error"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "اكتمل"
 msgstr "Done"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "معلومة"
 msgstr "Info"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "في قائمة الانتظار"
 msgstr "Queued"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "جارٍ التنفيذ"
 msgstr "Running"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "مكتملة"
 msgstr "Completed"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "مُلغاة"
 msgstr "Canceled"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "تحسين الهوامش"
 msgstr "Improve footnotes"
 
+#: ../entrypoints/popup/App.svelte
+#: ../entrypoints/popup/App.svelte
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "إلغاء"
 msgstr "Cancel"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "تفريغ"
 msgstr "Clear"
@@ -64,74 +77,91 @@ msgstr "Job canceled."
 msgid "خطأ في الاستخلاص"
 msgstr "Scrape error."
 
-#. placeholder {0}: book_id
-#: src/entrypoints/content.ts
-msgid "الكتاب {0}"
-msgstr "Book {0}"
+#~ msgid "الكتاب {0}"
+#~ msgstr "Book {0}"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "جاهز"
 msgstr "Ready"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "تسطيح الفهرس"
 msgstr "Flatten TOC"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "معرّفات أو روابط الكتب"
 msgstr "Book IDs or URLs"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "تحويل الهوامش إلى نوافذ منبثقة"
 msgstr "Convert footnotes to popups"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "يُجعل فهرس الموضوعات في مستوى واحد"
 msgstr "Flatten table of contents to single level"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "الجزء:"
 msgstr "Volume:"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "الكل"
 msgstr "All"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "مُحمِّل الكتب"
 msgstr "Book Downloader"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "المكتبة الشاملة"
 msgstr "Shamela Library"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "معرّف أو رابط (سطر لكل كتاب) اتركه فارغًا لاستخدام التبويب الحالي"
 msgstr "ID or URL (one per line) - leave empty to use current tab"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "<0/> بدء"
 msgstr "<0/> Start"
 
 #. placeholder {0}: job.book_id
+#. placeholder {0}: job.book_id
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "Book #{0}"
 msgstr "Book #{0}"
 
 #. placeholder {0}: job.book_id
+#. placeholder {0}: job.book_id
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "الكتاب #{0}"
 msgstr "Book #{0}"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "التقدم"
 msgstr "Progress"
 
 #. placeholder {0}: job.options.volume
+#. placeholder {0}: job.options.volume
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "جـ{0}"
 msgstr "Vol. {0}"
 
+#: ../entrypoints/popup/App.svelte
 #: src/entrypoints/popup/App.svelte
 msgid "فتح الكتاب في تبويب جديد"
 msgstr "Open book in new tab"

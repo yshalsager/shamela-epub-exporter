@@ -24,9 +24,9 @@ let job_write = Promise.resolve()
 
 const update_jobs = (handler: (jobs: Job[]) => Job[] | void | Promise<Job[] | void>) => {
     job_write = job_write.then(async () => {
-        const jobs = (await job_store.getValue())?.jobs ?? []
+        const jobs = (await job_store.get_value())?.jobs ?? []
         const next = await handler(jobs)
-        await job_store.setValue({jobs: next ?? jobs})
+        await job_store.set_value({jobs: next ?? jobs})
     })
     return job_write
 }
@@ -69,7 +69,7 @@ const wait_for_tab_ready = (tab_id: number) =>
             resolve()
         }, 30000)
 
-        const on_updated = (updated_tab_id: number, change_info: browser.tabs.TabChangeInfo) => {
+        const on_updated = (updated_tab_id: number, change_info: {status?: string}) => {
             if (updated_tab_id !== tab_id) return
             if (change_info.status !== 'complete') return
             clearTimeout(timeout)
