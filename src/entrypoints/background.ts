@@ -169,6 +169,36 @@ const cancel_job = async (job_id: string) => {
     job_runtime.delete(job_id)
 }
 
+const retry_job = async (job_id: string) => {
+    let next_job: {job_id: string; book_id: number; options: JobOptions; tab_id?: number} | null =
+        null
+
+    await update_jobs(jobs => {
+        const index = jobs.findIndex(job => job.job_id === job_id)
+        if (index === -1) return
+        const job = jobs[index]
+        if (job.status !== 'error') return
+        jobs[index] = {
+            ...job,
+            status: 'queued',
+            progress: {current: 0},
+            error: undefined,
+            started_at: Date.now(),
+        }
+        next_job = {job_id, book_id: job.book_id, options: job.options ?? {}}
+    })
+
+    if (!next_job) return
+
+    const queue_index = pending_queue.findIndex(item => item.job_id === job_id)
+    if (queue_index !== -1) {
+        pending_queue.splice(queue_index, 1)
+    }
+
+    pending_queue.push(next_job)
+    void process_queue()
+}
+
 const clear_jobs = async () => {
     await update_jobs(() => job_store.fallback.jobs)
 
@@ -228,6 +258,11 @@ export default defineBackground(() => {
 
         if (message.type === 'job/cancel' && message.job_id) {
             cancel_job(message.job_id)
+            return
+        }
+
+        if (message.type === 'job/retry' && message.job_id) {
+            retry_job(message.job_id)
             return
         }
 

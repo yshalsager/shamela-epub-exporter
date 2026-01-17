@@ -165,3 +165,8 @@ msgstr "Vol. {0}"
 #: src/entrypoints/popup/App.svelte
 msgid "فتح الكتاب في تبويب جديد"
 msgstr "Open book in new tab"
+
+#: ../entrypoints/popup/App.svelte
+#: ../entrypoints/popup/App.svelte
+msgid "إعادة المحاولة"
+msgstr "Retry"

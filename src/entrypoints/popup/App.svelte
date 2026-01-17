@@ -187,6 +187,17 @@
                                     <span class="sr-only">إلغاء</span>
                                     <X class="h-3.5 w-3.5" />
                                 </Button>
+                            {:else if job.status === 'error'}
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    class="h-6 w-6 shrink-0 text-muted-foreground hover:text-primary"
+                                    onclick={() => retry_job_id(job.job_id)}
+                                    title="إعادة المحاولة"
+                                >
+                                    <span class="sr-only">إعادة المحاولة</span>
+                                    <RotateCcw class="h-3.5 w-3.5" />
+                                </Button>
                             {/if}
                         </div>
 
@@ -224,7 +235,7 @@
 </main>
 
 <script lang="ts">
-import {BookOpen, ExternalLink, Play, X} from '@lucide/svelte'
+import {BookOpen, ExternalLink, Play, RotateCcw, X} from '@lucide/svelte'
 import {onMount} from 'svelte'
 
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
@@ -357,6 +368,17 @@ const cancel_job_id = async (job_id: string) => {
     } else if (is_extension()) {
         await browser.runtime.sendMessage({
             type: 'job/cancel',
+            job_id,
+        })
+    }
+}
+
+const retry_job_id = async (job_id: string) => {
+    if (is_tauri() && job_manager) {
+        await job_manager.retry_job(job_id)
+    } else if (is_extension()) {
+        await browser.runtime.sendMessage({
+            type: 'job/retry',
             job_id,
         })
     }

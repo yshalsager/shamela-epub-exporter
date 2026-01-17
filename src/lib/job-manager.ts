@@ -223,6 +223,35 @@ export class JobManager {
         }
     }
 
+    retry_job = async (job_id: string) => {
+        let next_job: {job_id: string; book_id: number; options: JobOptions} | null = null
+
+        await this.update_jobs(jobs => {
+            const index = jobs.findIndex(job => job.job_id === job_id)
+            if (index === -1) return
+            const job = jobs[index]
+            if (job.status !== 'error') return
+            jobs[index] = {
+                ...job,
+                status: 'queued',
+                progress: {current: 0},
+                error: undefined,
+                started_at: Date.now(),
+            }
+            next_job = {job_id, book_id: job.book_id, options: job.options ?? {}}
+        })
+
+        if (!next_job) return
+
+        const queue_index = this.pending_queue.findIndex(item => item.job_id === job_id)
+        if (queue_index !== -1) {
+            this.pending_queue.splice(queue_index, 1)
+        }
+
+        this.pending_queue.push(next_job)
+        void this.process_queue()
+    }
+
     clear_jobs = async () => {
         await this.update_jobs(() => this.store.fallback.jobs)
 
