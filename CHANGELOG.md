@@ -1,6 +1,25 @@
 # Changelog
 
 
+## v1.1.1
+
+[compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.1.0...v1.1.1)
+
+### 🏡 Chore
+
+- Update CHANGELOG for v1.1.0 ([520fa01](https://github.com/yshalsager/shamela-epub-exporter/commit/520fa01))
+
+### 🤖 CI
+
+- **release:** Enhance release workflow with skip tag jobs logic ([d218d5c](https://github.com/yshalsager/shamela-epub-exporter/commit/d218d5c))
+- **release:** Guard manual version bump on dispatch only ([fcbaee4](https://github.com/yshalsager/shamela-epub-exporter/commit/fcbaee4))
+- **release:** Use matrix target in artifact name ([8e1bbb3](https://github.com/yshalsager/shamela-epub-exporter/commit/8e1bbb3))
+- **release:** Add windows targets and pass matrix target ([5bfee42](https://github.com/yshalsager/shamela-epub-exporter/commit/5bfee42))
+
+### ❤️ Contributors
+
+- Yshalsager <ysh-alsager@hotmail.com>
+
 ## v1.0.0...v1.1.0
 
 [compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.0.0...v1.1.0)
