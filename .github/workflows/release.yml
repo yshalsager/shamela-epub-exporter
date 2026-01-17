@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
         inputs:
             dry_run:
-                description: 'Dry run (skip store submission)'
+                description: 'Dry run (skip release + store submission)'
                 required: true
                 default: true
                 type: boolean
@@ -24,21 +24,18 @@ jobs:
             contents: write
         outputs:
             version: ${{ steps.bump.outputs.version || steps.version_tag.outputs.version || steps.version_pkg.outputs.version }}
-            clean_version: ${{ steps.bump.outputs.version || steps.version_tag.outputs.clean_version || steps.version_pkg.outputs.clean_version }}
-            bumped_version: ${{ steps.bump.outputs.version }}
+            skip_tag_jobs: ${{ steps.skip_tag_jobs.outputs.skip_tag_jobs }}
         steps:
             - uses: actions/checkout@v4
               with:
                   fetch-depth: 0
                   fetch-tags: true
+                  token: ${{ secrets.RELEASE_TOKEN || github.token }}
 
             - uses: jdx/mise-action@v3
               with:
                   cache: true
                   cache_key_prefix: 'mise-v1'
-
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
 
             - name: Bump version (for manual release)
               if: ${{ inputs.release }}
@@ -86,7 +83,6 @@ jobs:
                     VERSION="$TAG"
                   fi
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
-                  echo "clean_version=$VERSION" >> $GITHUB_OUTPUT
                   echo "Extracted version: $VERSION"
 
             - name: Extract version from package.json (manual dry run)
@@ -95,7 +91,6 @@ jobs:
               run: |
                   VERSION=$(node -p "require('./package.json').version")
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
-                  echo "clean_version=$VERSION" >> $GITHUB_OUTPUT
                   echo "Using package.json version: $VERSION"
 
             - name: Validate version files
@@ -127,6 +122,21 @@ jobs:
                   }
                   NODE
 
+            - name: Decide whether to skip tag jobs
+              id: skip_tag_jobs
+              run: |
+                  SKIP=false
+                  if [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" == refs/tags/* ]]; then
+                    COMMIT=$(git rev-list -n 1 "$GITHUB_REF")
+                    AUTHOR_NAME=$(git show -s --format=%an "$COMMIT")
+                    AUTHOR_EMAIL=$(git show -s --format=%ae "$COMMIT")
+                    if [[ "$AUTHOR_NAME" == "github-actions[bot]" || "$AUTHOR_EMAIL" == "github-actions@users.noreply.github.com" ]]; then
+                      SKIP=true
+                    fi
+                  fi
+                  echo "skip_tag_jobs=$SKIP" >> $GITHUB_OUTPUT
+                  echo "Skip tag jobs: $SKIP"
+
             - name: Generate changelog
               if: ${{ inputs.release }}
               run: pnpm dlx changelogen
@@ -150,7 +160,7 @@ jobs:
 
     build-wxt:
         needs: version
-        if: ${{ !inputs.release }}
+        if: ${{ !needs.version.outputs.skip_tag_jobs }}
         runs-on: ubuntu-latest
         outputs:
             chrome-zip: ${{ steps.artifacts.outputs.chrome }}
@@ -158,6 +168,10 @@ jobs:
             sources-zip: ${{ steps.artifacts.outputs.sources }}
         steps:
             - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  fetch-tags: true
+                  ref: ${{ inputs.release && format('v{0}', needs.version.outputs.version) || github.ref }}
 
             - uses: jdx/mise-action@v3
               with:
@@ -198,7 +212,7 @@ jobs:
 
     build-tauri-desktop:
         needs: version
-        if: ${{ !inputs.release }}
+        if: ${{ !needs.version.outputs.skip_tag_jobs }}
         strategy:
             fail-fast: false
             matrix:
@@ -218,6 +232,10 @@ jobs:
         runs-on: ${{ matrix.platform }}
         steps:
             - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  fetch-tags: true
+                  ref: ${{ inputs.release && format('v{0}', needs.version.outputs.version) || github.ref }}
 
             - uses: jdx/mise-action@v3
               with:
@@ -256,7 +274,7 @@ jobs:
 
     build-tauri-android:
         needs: version
-        if: ${{ !inputs.release }}
+        if: ${{ !needs.version.outputs.skip_tag_jobs }}
         strategy:
             fail-fast: false
             matrix:
@@ -270,6 +288,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  fetch-tags: true
+                  ref: ${{ inputs.release && format('v{0}', needs.version.outputs.version) || github.ref }}
 
             - uses: jdx/mise-action@v3
               with:
@@ -315,7 +337,7 @@ jobs:
 
     create-release:
         needs: [version, build-wxt, build-tauri-desktop, build-tauri-android]
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        if: ${{ !needs.version.outputs.skip_tag_jobs && (startsWith(github.ref, 'refs/tags/') || (inputs.release && !inputs.dry_run)) }}
         permissions:
             contents: write
         runs-on: ubuntu-latest
@@ -339,7 +361,7 @@ jobs:
 
             - name: Generate release notes (tag to tag)
               run: |
-                  CURRENT_TAG="${{ github.ref_name }}"
+                  CURRENT_TAG="${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('v{0}', needs.version.outputs.version) }}"
                   PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v' | grep -v "^${CURRENT_TAG}$" | head -n 1)
                   if [ -n "$PREV_TAG" ]; then
                     pnpm dlx changelogen --from "$PREV_TAG" --to "$CURRENT_TAG" --no-output > release_notes.md
@@ -374,7 +396,7 @@ jobs:
 
     submit-stores:
         needs: [version, build-wxt, create-release]
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        if: ${{ !needs.version.outputs.skip_tag_jobs && (startsWith(github.ref, 'refs/tags/') || (inputs.release && !inputs.dry_run)) }}
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
