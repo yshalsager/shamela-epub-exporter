@@ -36,16 +36,16 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Bump version (for manual release)
-              if: ${{ inputs.release == 'true' }}
+              if: ${{ inputs.release }}
               id: bump
               run: |
-                  pnpm exec changelogen --bump
+                  pnpm dlx changelogen --bump
                   VERSION=$(node -p "require('./package.json').version")
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
                   echo "Bumped version: $VERSION"
 
             - name: Sync version files (manual release)
-              if: ${{ inputs.release == 'true' }}
+              if: ${{ inputs.release }}
               run: |
                   VERSION=$(node -p "require('./package.json').version")
                   export VERSION
@@ -70,7 +70,7 @@ jobs:
                   NODE
 
             - name: Extract version from tag (tag trigger)
-              if: ${{ inputs.release != 'true' && startsWith(github.ref, 'refs/tags/') }}
+              if: ${{ !inputs.release && startsWith(github.ref, 'refs/tags/') }}
               id: version_tag
               run: |
                   TAG="${GITHUB_REF#refs/tags/}"
@@ -85,7 +85,7 @@ jobs:
                   echo "Extracted version: $VERSION"
 
             - name: Extract version from package.json (manual dry run)
-              if: ${{ inputs.release != 'true' && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
+              if: ${{ !inputs.release && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
               id: version_pkg
               run: |
                   VERSION=$(node -p "require('./package.json').version")
@@ -94,7 +94,7 @@ jobs:
                   echo "Using package.json version: $VERSION"
 
             - name: Validate version files
-              if: ${{ inputs.release != 'true' }}
+              if: ${{ !inputs.release }}
               run: |
                   VERSION="${{ steps.version_tag.outputs.version || steps.version_pkg.outputs.version }}"
                   export VERSION
@@ -123,11 +123,11 @@ jobs:
                   NODE
 
             - name: Generate changelog
-              if: ${{ inputs.release == 'true' }}
-              run: pnpm exec changelogen
+              if: ${{ inputs.release }}
+              run: pnpm dlx changelogen
 
             - name: Commit version bump and changelog
-              if: ${{ inputs.release == 'true' && inputs.dry_run == 'false' }}
+              if: ${{ inputs.release }}
               env:
                   VERSION: ${{ steps.bump.outputs.version }}
               run: |
@@ -138,13 +138,14 @@ jobs:
                   git tag v$VERSION
 
             - name: Push changes
-              if: ${{ inputs.release == 'true' && inputs.dry_run == 'false' }}
+              if: ${{ inputs.release }}
               run: |
                   git push
                   git push --tags
 
     build-wxt:
         needs: version
+        if: ${{ !inputs.release }}
         runs-on: ubuntu-latest
         outputs:
             chrome-zip: ${{ steps.artifacts.outputs.chrome }}
@@ -192,6 +193,7 @@ jobs:
 
     build-tauri-desktop:
         needs: version
+        if: ${{ !inputs.release }}
         strategy:
             fail-fast: false
             matrix:
@@ -249,6 +251,7 @@ jobs:
 
     build-tauri-android:
         needs: version
+        if: ${{ !inputs.release }}
         strategy:
             fail-fast: false
             matrix:
@@ -307,6 +310,7 @@ jobs:
 
     create-release:
         needs: [version, build-wxt, build-tauri-desktop, build-tauri-android]
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         permissions:
             contents: write
         runs-on: ubuntu-latest
@@ -360,7 +364,7 @@ jobs:
 
     submit-stores:
         needs: [version, build-wxt, create-release]
-        if: ${{ github.event.inputs.dry_run == 'false' }}
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -381,7 +385,7 @@ jobs:
               run: |
                   VERSION="${{ needs.version.outputs.version }}"
                   CHROME_ZIP=$(find .output -name "*-$VERSION-chrome.zip")
-                  pnpm wxt submit --chrome-zip "$CHROME_ZIP"
+                  pnpm dlx wxt submit --chrome-zip "$CHROME_ZIP"
               env:
                   CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
                   CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
@@ -394,7 +398,7 @@ jobs:
                   VERSION="${{ needs.version.outputs.version }}"
                   FIREFOX_ZIP=$(find .output -name "*-$VERSION-firefox.zip")
                   SOURCES_ZIP=$(find .output -name "*-$VERSION-sources.zip")
-                  pnpm wxt submit \
+                  pnpm dlx wxt submit \
                     --firefox-zip "$FIREFOX_ZIP" \
                     --firefox-sources-zip "$SOURCES_ZIP"
               env:
