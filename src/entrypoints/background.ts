@@ -22,11 +22,34 @@ const job_runtime = new Map<
 
 let job_write = Promise.resolve()
 
+const update_badge = async (jobs: Job[]) => {
+    const active_count = jobs.filter(
+        job => job.status === 'running' || job.status === 'queued',
+    ).length
+    const error_count = jobs.filter(job => job.status === 'error').length
+
+    if (active_count > 0) {
+        await browser.action.setBadgeText({text: String(active_count)})
+        await browser.action.setBadgeBackgroundColor({color: '#2563eb'})
+        return
+    }
+
+    if (error_count > 0) {
+        await browser.action.setBadgeText({text: '!'})
+        await browser.action.setBadgeBackgroundColor({color: '#ef4444'})
+        return
+    }
+
+    await browser.action.setBadgeText({text: ''})
+}
+
 const update_jobs = (handler: (jobs: Job[]) => Job[] | void | Promise<Job[] | void>) => {
     job_write = job_write.then(async () => {
         const jobs = (await job_store.get_value())?.jobs ?? []
         const next = await handler(jobs)
-        await job_store.set_value({jobs: next ?? jobs})
+        const updated_jobs = next ?? jobs
+        await job_store.set_value({jobs: updated_jobs})
+        await update_badge(updated_jobs)
     })
     return job_write
 }
@@ -218,6 +241,8 @@ const clear_jobs = async () => {
 }
 
 export default defineBackground(() => {
+    void job_store.get_value().then(value => update_badge(value?.jobs ?? []))
+
     browser.downloads.onChanged.addListener(delta => {
         const state = delta.state?.current
         if (!state || (state !== 'complete' && state !== 'interrupted')) return
