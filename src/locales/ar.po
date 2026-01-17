@@ -168,5 +168,7 @@ msgstr "فتح الكتاب في تبويب جديد"
 
 #: ../entrypoints/popup/App.svelte
 #: ../entrypoints/popup/App.svelte
+#: src/entrypoints/popup/App.svelte
+#: src/entrypoints/popup/App.svelte
 msgid "إعادة المحاولة"
 msgstr "إعادة المحاولة"

@@ -187,7 +187,7 @@
                                     <span class="sr-only">إلغاء</span>
                                     <X class="h-3.5 w-3.5" />
                                 </Button>
-                            {:else if job.status === 'error'}
+                            {:else if job.status === 'error' || job.status === 'canceled'}
                                 <Button
                                     variant="ghost"
                                     size="icon"
