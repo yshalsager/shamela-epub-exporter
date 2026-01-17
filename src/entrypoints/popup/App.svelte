@@ -1,4 +1,9 @@
-<main class="mx-auto flex w-full max-w-sm flex-col gap-3 p-3">
+<main
+    class={[
+        'mx-auto flex w-full max-w-sm flex-col gap-3',
+        is_tauri_app ? 'h-full min-h-0 p-3' : '',
+    ]}
+>
     <div class="pointer-events-none fixed top-3 right-3 z-50 flex w-60 flex-col gap-2">
         {#each toasts as toast (toast.id)}
             <Alert
@@ -118,9 +123,17 @@
 
     {#if jobs.length}
         <Card
-            class="overflow-hidden border-border/60 bg-linear-to-br from-card to-muted/30 shadow-sm md:shadow-md"
+            class={[
+                'overflow-hidden border-border/60 bg-linear-to-br from-card to-muted/30 shadow-sm',
+                `md:shadow-md${is_tauri_app ? ' min-h-0 flex-1' : ''}`,
+            ]}
         >
-            <div class="max-h-[300px] space-y-2 overflow-y-auto p-2.5 md:p-3">
+            <div
+                class={[
+                    'space-y-2 overflow-y-auto p-2.5',
+                    `md:p-3${is_tauri_app ? ' min-h-0 flex-1' : ''}`,
+                ]}
+            >
                 {#each [...jobs].reverse() as job (job.job_id)}
                     <div
                         class="rounded-lg border border-border/50 bg-background/50 p-2 shadow-sm transition-all hover:bg-background/80"
@@ -258,6 +271,7 @@ let update_hamesh = $state(false)
 let flatten_toc = $state(false)
 let toasts = $state<Array<{id: string; level: 'info' | 'success' | 'error'; message: string}>>([])
 let job_manager: JobManager | null = $state(null)
+const is_tauri_app = is_tauri()
 
 let jobs = $derived(job_state.state.jobs)
 let current_job = $derived(

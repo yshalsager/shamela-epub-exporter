@@ -33,7 +33,6 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
   font-family: var(--font-sans);
   color: var(--color-foreground);
   background:
@@ -44,4 +43,22 @@ body {
 
 #app {
   min-width: 320px;
+}
+
+html[data-platform='wxt'] {
+  width: 24rem;
+}
+
+html[data-platform='wxt'] body {
+  padding: 0.75rem;
+}
+
+html[data-platform='tauri'],
+html[data-platform='tauri'] body,
+html[data-platform='tauri'] #app {
+  height: 100%;
+}
+
+html[data-platform='tauri'] body {
+  overflow: hidden;
 }
