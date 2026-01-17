@@ -38,7 +38,7 @@ jobs:
                   cache_key_prefix: 'mise-v1'
 
             - name: Bump version (for manual release)
-              if: ${{ inputs.release }}
+              if: ${{ inputs.release && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
               id: bump
               run: |
                   pnpm dlx changelogen --bump
@@ -47,7 +47,7 @@ jobs:
                   echo "Bumped version: $VERSION"
 
             - name: Sync version files (manual release)
-              if: ${{ inputs.release }}
+              if: ${{ inputs.release && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
               run: |
                   VERSION=$(node -p "require('./package.json').version")
                   export VERSION
@@ -138,7 +138,7 @@ jobs:
                   echo "Skip tag jobs: $SKIP"
 
             - name: Generate changelog
-              if: ${{ inputs.release }}
+              if: ${{ inputs.release && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
               run: pnpm dlx changelogen
 
             - name: Commit version bump and changelog
