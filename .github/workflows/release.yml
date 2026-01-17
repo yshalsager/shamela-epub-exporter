@@ -21,8 +21,8 @@ jobs:
     version:
         runs-on: ubuntu-latest
         outputs:
-            version: ${{ steps.version.outputs.version }}
-            clean_version: ${{ steps.version.outputs.clean_version }}
+            version: ${{ steps.bump.outputs.version || steps.version.outputs.version }}
+            clean_version: ${{ steps.bump.outputs.version || steps.version.outputs.clean_version }}
             bumped_version: ${{ steps.bump.outputs.version }}
         steps:
             - uses: actions/checkout@v4
@@ -44,6 +44,31 @@ jobs:
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
                   echo "Bumped version: $VERSION"
 
+            - name: Sync version files (manual release)
+              if: ${{ inputs.release == 'true' }}
+              run: |
+                  VERSION=$(node -p "require('./package.json').version")
+                  export VERSION
+                  node - <<'NODE'
+                  const fs = require('fs')
+                  const version = process.env.VERSION
+
+                  const tauri_path = 'src-tauri/tauri.conf.json'
+                  const tauri_data = JSON.parse(fs.readFileSync(tauri_path, 'utf8'))
+                  tauri_data.version = version
+                  fs.writeFileSync(tauri_path, JSON.stringify(tauri_data, null, 4) + '\n')
+
+                  const cargo_path = 'src-tauri/Cargo.toml'
+                  const cargo_lines = fs.readFileSync(cargo_path, 'utf8').split('\n')
+                  let in_package = false
+                  const next_lines = cargo_lines.map((line) => {
+                      if (line.startsWith('[')) in_package = line === '[package]'
+                      if (in_package && line.startsWith('version = ')) return 'version = "' + version + '"'
+                      return line
+                  })
+                  fs.writeFileSync(cargo_path, next_lines.join('\n'))
+                  NODE
+
             - name: Extract version from tag (for tag trigger)
               if: ${{ inputs.release != 'true' }}
               id: version
@@ -59,6 +84,35 @@ jobs:
                   echo "clean_version=$VERSION" >> $GITHUB_OUTPUT
                   echo "Extracted version: $VERSION"
 
+            - name: Validate version files (tag trigger)
+              if: ${{ inputs.release != 'true' }}
+              run: |
+                  VERSION="${{ steps.version.outputs.version }}"
+                  export VERSION
+                  node - <<'NODE'
+                  const fs = require('fs')
+                  const version = process.env.VERSION
+
+                  const pkg_version = JSON.parse(fs.readFileSync('package.json', 'utf8')).version
+                  const tauri_version = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json', 'utf8')).version
+                  const cargo_match = fs.readFileSync('src-tauri/Cargo.toml', 'utf8').match(/^version = "(.+)"$/m)
+                  const cargo_version = cargo_match ? cargo_match[1] : ''
+
+                  const mismatches = [
+                      ['package.json', pkg_version],
+                      ['src-tauri/tauri.conf.json', tauri_version],
+                      ['src-tauri/Cargo.toml', cargo_version],
+                  ].filter(([, file_version]) => file_version !== version)
+
+                  if (mismatches.length) {
+                      console.error('Version mismatch for tag ' + version)
+                      for (const [file, file_version] of mismatches) {
+                          console.error(file + ': ' + file_version)
+                      }
+                      process.exit(1)
+                  }
+                  NODE
+
             - name: Generate changelog
               if: ${{ inputs.release == 'true' }}
               run: pnpm exec changelogen
@@ -70,7 +124,7 @@ jobs:
               run: |
                   git config user.name "github-actions"
                   git config user.email "github-actions@users.noreply.github.com"
-                  git add package.json CHANGELOG.md
+                  git add package.json src-tauri/Cargo.toml src-tauri/tauri.conf.json CHANGELOG.md
                   git commit -m "chore(release): v$VERSION"
                   git tag v$VERSION
 
