@@ -3,6 +3,11 @@ name: Release
 on:
     workflow_dispatch:
         inputs:
+            create_tag:
+                description: 'Create and push a release tag'
+                required: true
+                default: true
+                type: boolean
             dry_run:
                 description: 'Dry run (skip release + store submission)'
                 required: true
@@ -25,6 +30,7 @@ jobs:
         outputs:
             version: ${{ steps.bump.outputs.version || steps.version_tag.outputs.version || steps.version_pkg.outputs.version }}
             skip_tag_jobs: ${{ steps.skip_tag_jobs.outputs.skip_tag_jobs }}
+            checkout_ref: ${{ steps.checkout_ref.outputs.ref }}
         steps:
             - uses: actions/checkout@v4
               with:
@@ -38,7 +44,7 @@ jobs:
                   cache_key_prefix: 'mise-v1'
 
             - name: Bump version (for manual release)
-              if: ${{ inputs.release && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
+              if: ${{ inputs.release && inputs.create_tag && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
               id: bump
               run: |
                   pnpm dlx changelogen --bump
@@ -47,7 +53,7 @@ jobs:
                   echo "Bumped version: $VERSION"
 
             - name: Sync version files (manual release)
-              if: ${{ inputs.release && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
+              if: ${{ inputs.release && inputs.create_tag && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
               run: |
                   VERSION=$(node -p "require('./package.json').version")
                   export VERSION
@@ -85,8 +91,8 @@ jobs:
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
                   echo "Extracted version: $VERSION"
 
-            - name: Extract version from package.json (manual dry run)
-              if: ${{ !inputs.release && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
+            - name: Extract version from package.json (manual run without tag)
+              if: ${{ github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') && (!inputs.release || !inputs.create_tag) }}
               id: version_pkg
               run: |
                   VERSION=$(node -p "require('./package.json').version")
@@ -138,11 +144,11 @@ jobs:
                   echo "Skip tag jobs: $SKIP"
 
             - name: Generate changelog
-              if: ${{ inputs.release && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
+              if: ${{ inputs.release && inputs.create_tag && github.event_name == 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/') }}
               run: pnpm dlx changelogen
 
             - name: Commit version bump and changelog
-              if: ${{ inputs.release }}
+              if: ${{ inputs.release && inputs.create_tag }}
               env:
                   VERSION: ${{ steps.bump.outputs.version }}
               run: |
@@ -153,14 +159,35 @@ jobs:
                   git tag v$VERSION
 
             - name: Push changes
-              if: ${{ inputs.release }}
+              if: ${{ inputs.release && inputs.create_tag }}
               run: |
                   git push
                   git push --tags
 
+            - name: Decide checkout ref
+              id: checkout_ref
+              env:
+                  VERSION: ${{ steps.bump.outputs.version || steps.version_tag.outputs.version || steps.version_pkg.outputs.version }}
+              run: |
+                  REF="$GITHUB_REF"
+                  if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+                    REF="$GITHUB_REF"
+                  elif [[ "${{ inputs.release }}" == "true" && "${{ inputs.create_tag }}" == "true" ]]; then
+                    REF="refs/tags/v$VERSION"
+                  elif [[ "${{ inputs.release }}" == "true" && "${{ inputs.create_tag }}" != "true" ]]; then
+                    TAG="v$VERSION"
+                    if git rev-parse "$TAG" >/dev/null 2>&1; then
+                      REF="refs/tags/$TAG"
+                    else
+                      echo "Tag $TAG not found. Create it first or run with create_tag=true."
+                      exit 1
+                    fi
+                  fi
+                  echo "ref=$REF" >> $GITHUB_OUTPUT
+
     build-wxt:
         needs: version
-        if: ${{ !needs.version.outputs.skip_tag_jobs }}
+        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' }}
         runs-on: ubuntu-latest
         outputs:
             chrome-zip: ${{ steps.artifacts.outputs.chrome }}
@@ -171,7 +198,7 @@ jobs:
               with:
                   fetch-depth: 0
                   fetch-tags: true
-                  ref: ${{ inputs.release && format('v{0}', needs.version.outputs.version) || github.ref }}
+                  ref: ${{ needs.version.outputs.checkout_ref }}
 
             - uses: jdx/mise-action@v3
               with:
@@ -212,7 +239,7 @@ jobs:
 
     build-tauri-desktop:
         needs: version
-        if: ${{ !needs.version.outputs.skip_tag_jobs }}
+        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' }}
         strategy:
             fail-fast: false
             matrix:
@@ -241,7 +268,7 @@ jobs:
               with:
                   fetch-depth: 0
                   fetch-tags: true
-                  ref: ${{ inputs.release && format('v{0}', needs.version.outputs.version) || github.ref }}
+                  ref: ${{ needs.version.outputs.checkout_ref }}
 
             - uses: jdx/mise-action@v3
               with:
@@ -280,7 +307,7 @@ jobs:
 
     build-tauri-android:
         needs: version
-        if: ${{ !needs.version.outputs.skip_tag_jobs }}
+        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' }}
         strategy:
             fail-fast: false
             matrix:
@@ -297,7 +324,7 @@ jobs:
               with:
                   fetch-depth: 0
                   fetch-tags: true
-                  ref: ${{ inputs.release && format('v{0}', needs.version.outputs.version) || github.ref }}
+                  ref: ${{ needs.version.outputs.checkout_ref }}
 
             - uses: jdx/mise-action@v3
               with:
@@ -343,7 +370,7 @@ jobs:
 
     create-release:
         needs: [version, build-wxt, build-tauri-desktop, build-tauri-android]
-        if: ${{ !needs.version.outputs.skip_tag_jobs && (startsWith(github.ref, 'refs/tags/') || (inputs.release && !inputs.dry_run)) }}
+        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' && (startsWith(github.ref, 'refs/tags/') || (inputs.release && !inputs.dry_run)) }}
         permissions:
             contents: write
         runs-on: ubuntu-latest
@@ -402,7 +429,7 @@ jobs:
 
     submit-stores:
         needs: [version, build-wxt, create-release]
-        if: ${{ !needs.version.outputs.skip_tag_jobs && (startsWith(github.ref, 'refs/tags/') || (inputs.release && !inputs.dry_run)) }}
+        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' && (startsWith(github.ref, 'refs/tags/') || (inputs.release && !inputs.dry_run)) }}
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
