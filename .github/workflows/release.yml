@@ -226,6 +226,12 @@ jobs:
                     - platform: 'windows-latest'
                       target: 'x86_64-pc-windows-msvc'
                       arch: 'x64'
+                    - platform: 'windows-latest'
+                      target: 'i686-pc-windows-msvc'
+                      arch: 'x86'
+                    - platform: 'windows-latest'
+                      target: 'aarch64-pc-windows-msvc'
+                      arch: 'arm64'
                     - platform: 'ubuntu-22.04'
                       target: 'x86_64-unknown-linux-gnu'
                       arch: 'x64'
@@ -260,7 +266,7 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Build Tauri desktop
-              run: pnpm run desktop:build
+              run: pnpm run desktop:build -- --target ${{ matrix.target }}
               env:
                   TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
                   TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
