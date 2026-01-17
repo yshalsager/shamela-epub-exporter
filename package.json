@@ -2,7 +2,7 @@
     "name": "shamela-epub-exporter",
     "description": "Export Shamela books to EPUB locally in your browser.",
     "private": true,
-    "version": "1.0.0",
+    "version": "1.0.1",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/yshalsager/shamela-epub-exporter.git"
