@@ -20,12 +20,17 @@ on:
 jobs:
     version:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         outputs:
             version: ${{ steps.bump.outputs.version || steps.version_tag.outputs.version || steps.version_pkg.outputs.version }}
             clean_version: ${{ steps.bump.outputs.version || steps.version_tag.outputs.clean_version || steps.version_pkg.outputs.clean_version }}
             bumped_version: ${{ steps.bump.outputs.version }}
         steps:
             - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  fetch-tags: true
 
             - uses: jdx/mise-action@v3
               with:
@@ -316,6 +321,14 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  fetch-tags: true
+
+            - uses: jdx/mise-action@v3
+              with:
+                  cache: true
+                  cache_key_prefix: 'mise-v1'
 
             - name: Download all artifacts
               uses: actions/download-artifact@v4
@@ -324,16 +337,14 @@ jobs:
                   pattern: '*'
                   merge-multiple: true
 
-            - name: Get changelog for current version
-              id: changelog
+            - name: Generate release notes (tag to tag)
               run: |
-                  VERSION="${{ needs.version.outputs.version }}"
-                  if [ -f CHANGELOG.md ]; then
-                    # Extract changelog for current version
-                    awk '/^## / { if (p) exit; p=1 } p' CHANGELOG.md > release_notes.md
-                    echo "content_exists=true" >> $GITHUB_OUTPUT
+                  CURRENT_TAG="${{ github.ref_name }}"
+                  PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v' | grep -v "^${CURRENT_TAG}$" | head -n 1)
+                  if [ -n "$PREV_TAG" ]; then
+                    pnpm dlx changelogen --from "$PREV_TAG" --to "$CURRENT_TAG" --no-output > release_notes.md
                   else
-                    echo "## Shamela EPUB Exporter v$VERSION
+                    echo "## Shamela EPUB Exporter ${CURRENT_TAG}
 
                     ### WXT Extension
                     - Chrome: Upload to Chrome Web Store
@@ -349,7 +360,6 @@ jobs:
                     - APKs for ARM64, ARMv7, x86_64 architectures
 
                     See assets below for all downloads." > release_notes.md
-                    echo "content_exists=false" >> $GITHUB_OUTPUT
                   fi
 
             - name: Create GitHub Release using gh CLI
