@@ -92,7 +92,6 @@ jobs:
 
             - uses: jdx/mise-action@v3
               with:
-                  version: latest
                   cache: true
                   cache_key_prefix: 'mise-v1'
 
@@ -152,7 +151,6 @@ jobs:
 
             - uses: jdx/mise-action@v3
               with:
-                  version: latest
                   cache: true
                   cache_key_prefix: 'mise-v1'
 
@@ -204,7 +202,6 @@ jobs:
 
             - uses: jdx/mise-action@v3
               with:
-                  version: latest
                   cache: true
                   cache_key_prefix: 'mise-v1'
 
@@ -307,7 +304,6 @@ jobs:
 
             - uses: jdx/mise-action@v3
               with:
-                  version: latest
                   cache: true
                   cache_key_prefix: 'mise-v1'
 
