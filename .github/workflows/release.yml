@@ -1,0 +1,345 @@
+name: Release
+
+on:
+    workflow_dispatch:
+        inputs:
+            dry_run:
+                description: 'Dry run (skip store submission)'
+                required: true
+                default: true
+                type: boolean
+            release:
+                description: 'Create a new version release'
+                required: false
+                default: false
+                type: boolean
+    push:
+        tags:
+            - 'v*.*.*'
+
+jobs:
+    version:
+        runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.version.outputs.version }}
+            clean_version: ${{ steps.version.outputs.clean_version }}
+            bumped_version: ${{ steps.bump.outputs.version }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: jdx/mise-action@v3
+              with:
+                  version: latest
+                  cache: true
+                  cache_key_prefix: 'mise-v1'
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Bump version (for manual release)
+              if: ${{ inputs.release == 'true' }}
+              id: bump
+              run: |
+                  pnpm exec changelogen --bump
+                  VERSION=$(node -p "require('./package.json').version")
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "Bumped version: $VERSION"
+
+            - name: Extract version from tag (for tag trigger)
+              if: ${{ inputs.release != 'true' }}
+              id: version
+              run: |
+                  TAG="${GITHUB_REF#refs/tags/}"
+                  # Handle both v1.0.0 and 1.0.0 formats
+                  if [[ "$TAG" == v* ]]; then
+                    VERSION="${TAG#v}"
+                  else
+                    VERSION="$TAG"
+                  fi
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "clean_version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "Extracted version: $VERSION"
+
+            - name: Generate changelog
+              if: ${{ inputs.release == 'true' }}
+              run: pnpm exec changelogen
+
+            - name: Commit version bump and changelog
+              if: ${{ inputs.release == 'true' && inputs.dry_run == 'false' }}
+              env:
+                  VERSION: ${{ steps.bump.outputs.version }}
+              run: |
+                  git config user.name "github-actions"
+                  git config user.email "github-actions@users.noreply.github.com"
+                  git add package.json CHANGELOG.md
+                  git commit -m "chore(release): v$VERSION"
+                  git tag v$VERSION
+
+            - name: Push changes
+              if: ${{ inputs.release == 'true' && inputs.dry_run == 'false' }}
+              run: |
+                  git push
+                  git push --tags
+
+    build-wxt:
+        needs: version
+        runs-on: ubuntu-latest
+        outputs:
+            chrome-zip: ${{ steps.artifacts.outputs.chrome }}
+            firefox-zip: ${{ steps.artifacts.outputs.firefox }}
+            sources-zip: ${{ steps.artifacts.outputs.sources }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: jdx/mise-action@v3
+              with:
+                  version: latest
+                  cache: true
+                  cache_key_prefix: 'mise-v1'
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build WXT extensions
+              run: |
+                  pnpm run zip
+                  pnpm run zip:firefox
+
+            - name: List artifacts
+              id: artifacts
+              run: |
+                  VERSION="${{ needs.version.outputs.version }}"
+                  CHROME=$(find .output -name "*-$VERSION-chrome.zip" | head -1)
+                  FIREFOX=$(find .output -name "*-$VERSION-firefox.zip" | head -1)
+                  SOURCES=$(find .output -name "*-$VERSION-sources.zip" | head -1)
+                  echo "chrome=$CHROME" >> $GITHUB_OUTPUT
+                  echo "firefox=$FIREFOX" >> $GITHUB_OUTPUT
+                  echo "sources=$SOURCES" >> $GITHUB_OUTPUT
+                  echo "Chrome: $CHROME"
+                  echo "Firefox: $FIREFOX"
+                  echo "Sources: $SOURCES"
+
+            - name: Upload WXT artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: wxt-zips
+                  path: |
+                      ${{ steps.artifacts.outputs.chrome }}
+                      ${{ steps.artifacts.outputs.firefox }}
+                      ${{ steps.artifacts.outputs.sources }}
+                  if-no-files-found: error
+
+    build-tauri-desktop:
+        needs: version
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - platform: 'macos-latest'
+                      target: 'aarch64-apple-darwin'
+                      arch: 'arm64'
+                    - platform: 'macos-latest'
+                      target: 'x86_64-apple-darwin'
+                      arch: 'x64'
+                    - platform: 'windows-latest'
+                      target: 'x86_64-pc-windows-msvc'
+                      arch: 'x64'
+                    - platform: 'ubuntu-22.04'
+                      target: 'x86_64-unknown-linux-gnu'
+                      arch: 'x64'
+        runs-on: ${{ matrix.platform }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: jdx/mise-action@v3
+              with:
+                  version: latest
+                  cache: true
+                  cache_key_prefix: 'mise-v1'
+
+            - name: Add Rust target
+              run: rustup target add ${{ matrix.target }}
+
+            - name: Rust cache
+              uses: swatinem/rust-cache@v2
+              with:
+                  workspaces: './src-tauri -> target'
+
+            - name: Install system dependencies (ubuntu only)
+              if: matrix.platform == 'ubuntu-22.04'
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build Tauri desktop
+              run: pnpm run desktop:build
+              env:
+                  TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+                  TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+
+            - name: Upload desktop artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: tauri-desktop-${{ matrix.arch }}
+                  path: src-tauri/target/release/bundle/**/*
+                  if-no-files-found: error
+
+    build-tauri-android:
+        needs: version
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - target: aarch64
+                      rust_triple: aarch64-linux-android
+                    - target: armv7
+                      rust_triple: armv7-linux-androideabi
+                    - target: x86_64
+                      rust_triple: x86_64-linux-android
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: jdx/mise-action@v3
+              with:
+                  version: latest
+                  cache: true
+                  cache_key_prefix: 'mise-v1'
+
+            - name: Setup Android SDK
+              uses: android-actions/setup-android@v3
+
+            - name: Install NDK
+              run: sdkmanager "ndk;29.0.13113456"
+
+            - name: Cache Android NDK
+              uses: actions/cache@v4
+              with:
+                  path: /usr/local/lib/android/sdk/ndk/29.0.13113456
+                  key: ndk-${{ runner.os }}-29.0.13113456
+
+            - name: Add Android Rust targets
+              run: rustup target add ${{ matrix.rust_triple }}
+
+            - name: Rust cache
+              uses: swatinem/rust-cache@v2
+              with:
+                  workspaces: './src-tauri -> target'
+                  cache-on-failure: true
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build Tauri Android
+              run: |
+                  export NDK_HOME="$ANDROID_HOME/ndk/29.0.13113456"
+                  export ANDROID_HOME="/usr/local/lib/android/sdk"
+                  pnpm exec tauri android build --target ${{ matrix.target }}
+
+            - name: Upload Android artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: android-apk-${{ matrix.target }}
+                  path: src-tauri/gen/android/app/build/outputs/apk/**/*.apk
+                  if-no-files-found: error
+
+    create-release:
+        needs: [version, build-wxt, build-tauri-desktop, build-tauri-android]
+        permissions:
+            contents: write
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Download all artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  path: ./artifacts
+                  pattern: '*'
+                  merge-multiple: true
+
+            - name: Get changelog for current version
+              id: changelog
+              run: |
+                  VERSION="${{ needs.version.outputs.version }}"
+                  if [ -f CHANGELOG.md ]; then
+                    # Extract changelog for current version
+                    awk '/^## / { if (p) exit; p=1 } p' CHANGELOG.md > release_notes.md
+                    echo "content_exists=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "## Shamela EPUB Exporter v$VERSION
+
+                    ### WXT Extension
+                    - Chrome: Upload to Chrome Web Store
+                    - Firefox: Upload to Firefox Addon Store
+                    - Source code: For Firefox review
+
+                    ### Tauri Desktop
+                    - macOS (ARM64 & Intel): .dmg files
+                    - Windows: .msi and .exe installers
+                    - Linux: .AppImage and .deb packages
+
+                    ### Tauri Android
+                    - APKs for ARM64, ARMv7, x86_64 architectures
+
+                    See assets below for all downloads." > release_notes.md
+                    echo "content_exists=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Create GitHub Release using gh CLI
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  VERSION: ${{ needs.version.outputs.version }}
+              run: |
+                  gh release create v$VERSION \
+                    --title "v$VERSION" \
+                    --notes-file release_notes.md \
+                    ./artifacts/**/*
+
+    submit-stores:
+        needs: [version, build-wxt, create-release]
+        if: ${{ github.event.inputs.dry_run == 'false' }}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: jdx/mise-action@v3
+              with:
+                  version: latest
+                  cache: true
+                  cache_key_prefix: 'mise-v1'
+
+            - name: Download WXT artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: wxt-zips
+                  path: .output
+
+            - name: Submit to Chrome Web Store
+              continue-on-error: true
+              run: |
+                  VERSION="${{ needs.version.outputs.version }}"
+                  CHROME_ZIP=$(find .output -name "*-$VERSION-chrome.zip")
+                  pnpm wxt submit --chrome-zip "$CHROME_ZIP"
+              env:
+                  CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+                  CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+                  CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+                  CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+            - name: Submit to Firefox Addon Store
+              continue-on-error: true
+              run: |
+                  VERSION="${{ needs.version.outputs.version }}"
+                  FIREFOX_ZIP=$(find .output -name "*-$VERSION-firefox.zip")
+                  SOURCES_ZIP=$(find .output -name "*-$VERSION-sources.zip")
+                  pnpm wxt submit \
+                    --firefox-zip "$FIREFOX_ZIP" \
+                    --firefox-sources-zip "$SOURCES_ZIP"
+              env:
+                  FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+                  FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+                  FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
