@@ -293,7 +293,7 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Build Tauri desktop
-              run: pnpm run desktop:build -- --target ${{ matrix.target }}
+              run: pnpm exec tauri build --target ${{ matrix.target }}
               env:
                   TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
                   TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
