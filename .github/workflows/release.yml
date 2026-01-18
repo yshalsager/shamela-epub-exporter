@@ -316,9 +316,16 @@ jobs:
                       rust_triple: aarch64-linux-android
                     - target: armv7
                       rust_triple: armv7-linux-androideabi
+                    - target: i686
+                      rust_triple: i686-linux-android
                     - target: x86_64
                       rust_triple: x86_64-linux-android
         runs-on: ubuntu-latest
+        env:
+            ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+            ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+            ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+            ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         steps:
             - uses: actions/checkout@v4
               with:
@@ -353,7 +360,7 @@ jobs:
                   cache-on-failure: true
 
             - name: Configure Android signing
-              if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+              if: ${{ env.ANDROID_KEYSTORE_BASE64 != '' }}
               run: |
                   printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 -d > src-tauri/gen/android/release.keystore
                   cat > src-tauri/gen/android/key.properties <<'EOF'
@@ -362,11 +369,6 @@ jobs:
                   keyAlias=$ANDROID_KEY_ALIAS
                   keyPassword=$ANDROID_KEY_PASSWORD
                   EOF
-              env:
-                  ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-                  ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-                  ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-                  ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
@@ -375,7 +377,7 @@ jobs:
               run: |
                   export NDK_HOME="$ANDROID_HOME/ndk/29.0.13113456"
                   export ANDROID_HOME="/usr/local/lib/android/sdk"
-                  pnpm exec tauri android build --target ${{ matrix.target }}
+                  pnpm exec tauri android build --split-per-abi --target ${{ matrix.target }}
 
             - name: Upload Android artifacts
               uses: actions/upload-artifact@v4
