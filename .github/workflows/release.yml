@@ -155,8 +155,8 @@ jobs:
               env:
                   VERSION: ${{ steps.bump.outputs.version }}
               run: |
-                  git config user.name "github-actions"
-                  git config user.email "github-actions@users.noreply.github.com"
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
                   git add package.json src-tauri/Cargo.toml src-tauri/tauri.conf.json CHANGELOG.md
                   git commit -m "chore(release): v$VERSION"
                   git tag v$VERSION
