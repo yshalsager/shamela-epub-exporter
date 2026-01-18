@@ -45,7 +45,7 @@ jobs:
             skip_tag_jobs: ${{ steps.skip_tag_jobs.outputs.skip_tag_jobs }}
             checkout_ref: ${{ steps.checkout_ref.outputs.ref }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
               with:
                   fetch-depth: 0
                   fetch-tags: true
@@ -207,7 +207,7 @@ jobs:
             firefox-zip: ${{ steps.artifacts.outputs.firefox }}
             sources-zip: ${{ steps.artifacts.outputs.sources }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
               with:
                   fetch-depth: 0
                   fetch-tags: true
@@ -277,7 +277,7 @@ jobs:
                       arch: 'x64'
         runs-on: ${{ matrix.platform }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
               with:
                   fetch-depth: 0
                   fetch-tags: true
@@ -364,7 +364,7 @@ jobs:
             ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
             ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
               with:
                   fetch-depth: 0
                   fetch-tags: true
@@ -430,7 +430,7 @@ jobs:
             contents: write
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
               with:
                   fetch-depth: 0
                   fetch-tags: true
@@ -494,7 +494,7 @@ jobs:
         env:
             PNPM_CONFIG_ONLY_BUILT_DEPENDENCIES: esbuild,spawn-sync,@tailwindcss/oxide
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
 
             - uses: jdx/mise-action@v3
               with:
