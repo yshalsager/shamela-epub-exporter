@@ -22,6 +22,9 @@ on:
         tags:
             - 'v*.*.*'
 
+env:
+    NDK_VERSION: 29.0.13113456
+
 jobs:
     version:
         runs-on: ubuntu-latest
@@ -298,11 +301,35 @@ jobs:
                   TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
                   TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
 
-            - name: Upload desktop artifacts
+            - name: Upload macOS artifacts
+              if: startsWith(matrix.platform, 'macos-')
               uses: actions/upload-artifact@v4
               with:
                   name: tauri-desktop-${{ matrix.target }}
-                  path: src-tauri/target/release/bundle/**/*
+                  path: |
+                      src-tauri/target/**/bundle/dmg/*.dmg
+                      src-tauri/target/**/bundle/macos/*.app.tar.gz
+                  if-no-files-found: error
+
+            - name: Upload Windows artifacts
+              if: matrix.platform == 'windows-latest'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: tauri-desktop-${{ matrix.target }}
+                  path: |
+                      src-tauri/target/**/bundle/msi/*.msi
+                      src-tauri/target/**/bundle/nsis/*.exe
+                  if-no-files-found: error
+
+            - name: Upload Linux artifacts
+              if: matrix.platform == 'ubuntu-22.04'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: tauri-desktop-${{ matrix.target }}
+                  path: |
+                      src-tauri/target/**/bundle/deb/*.deb
+                      src-tauri/target/**/bundle/rpm/*.rpm
+                      src-tauri/target/**/bundle/appimage/*.AppImage
                   if-no-files-found: error
 
     build-tauri-android:
@@ -342,13 +369,13 @@ jobs:
               uses: android-actions/setup-android@v3
 
             - name: Install NDK
-              run: sdkmanager "ndk;29.0.13113456"
+              run: sdkmanager "ndk;$NDK_VERSION"
 
             - name: Cache Android NDK
               uses: actions/cache@v4
               with:
-                  path: /usr/local/lib/android/sdk/ndk/29.0.13113456
-                  key: ndk-${{ runner.os }}-29.0.13113456
+                  path: /usr/local/lib/android/sdk/ndk/${{ env.NDK_VERSION }}
+                  key: ndk-${{ runner.os }}-${{ env.NDK_VERSION }}
 
             - name: Add Android Rust targets
               run: rustup target add ${{ matrix.rust_triple }}
@@ -375,7 +402,7 @@ jobs:
 
             - name: Build Tauri Android
               run: |
-                  export NDK_HOME="$ANDROID_HOME/ndk/29.0.13113456"
+                  export NDK_HOME="$ANDROID_HOME/ndk/$NDK_VERSION"
                   export ANDROID_HOME="/usr/local/lib/android/sdk"
                   pnpm exec tauri android build --split-per-abi --target ${{ matrix.target }}
 
