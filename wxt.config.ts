@@ -34,6 +34,14 @@ export default defineConfig({
         },
     }),
     zip: {
-        excludeSources: ['docs/**', 'tmp/**', 'src-tauri'],
+        excludeSources: [
+            'docs/**',
+            'tmp/**',
+            'src-tauri/**',
+            'dist-tauri/**',
+            'src/lib/platform/tauri/**',
+            'src/lib/platform/index.tauri.ts',
+            'src/tauri/**',
+        ],
     },
 })
