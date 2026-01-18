@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v1.1.2
+
+[compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.1.1...v1.1.2)
+
+### 🩹 Fixes
+
+- **config:** Update zip excludeSources to include additional directories ([b63e67a](https://github.com/yshalsager/shamela-epub-exporter/commit/b63e67a))
+- **ci:** Correct artifacts paths ([753f389](https://github.com/yshalsager/shamela-epub-exporter/commit/753f389))
+- **style:** Add safe area top padding for tauri ([6545996](https://github.com/yshalsager/shamela-epub-exporter/commit/6545996))
+
+### 🤖 CI
+
+- **release:** Allow manual runs without creating tag ([62b07c6](https://github.com/yshalsager/shamela-epub-exporter/commit/62b07c6))
+- **release:** Use tauri build ([26615f3](https://github.com/yshalsager/shamela-epub-exporter/commit/26615f3))
+- **release:** Support android release signing via secrets ([3fa54ba](https://github.com/yshalsager/shamela-epub-exporter/commit/3fa54ba))
+- **release:** Add android i686 and split per abi ([d3f5ff6](https://github.com/yshalsager/shamela-epub-exporter/commit/d3f5ff6))
+
+### ❤️ Contributors
+
+- Yshalsager <ysh-alsager@hotmail.com>
+
 ## v1.1.1
 
 [compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.1.0...v1.1.1)
