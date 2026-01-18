@@ -61,4 +61,5 @@ html[data-platform='tauri'] #app {
 
 html[data-platform='tauri'] body {
   overflow: hidden;
+  padding-top: calc(env(safe-area-inset-top) + 1rem);
 }
