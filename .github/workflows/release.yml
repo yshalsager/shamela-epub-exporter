@@ -241,7 +241,7 @@ jobs:
                   echo "Sources: $SOURCES"
 
             - name: Upload WXT artifacts
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               with:
                   name: wxt-zips
                   path: |
@@ -313,7 +313,7 @@ jobs:
 
             - name: Upload macOS artifacts
               if: startsWith(matrix.platform, 'macos-')
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               with:
                   name: tauri-desktop-${{ matrix.target }}
                   path: |
@@ -323,7 +323,7 @@ jobs:
 
             - name: Upload Windows artifacts
               if: matrix.platform == 'windows-latest'
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               with:
                   name: tauri-desktop-${{ matrix.target }}
                   path: |
@@ -333,7 +333,7 @@ jobs:
 
             - name: Upload Linux artifacts
               if: matrix.platform == 'ubuntu-22.04'
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               with:
                   name: tauri-desktop-${{ matrix.target }}
                   path: |
@@ -417,7 +417,7 @@ jobs:
                   pnpm exec tauri android build --split-per-abi --target ${{ matrix.target }}
 
             - name: Upload Android artifacts
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               with:
                   name: android-apk-${{ matrix.target }}
                   path: src-tauri/gen/android/app/build/outputs/apk/**/*.apk
@@ -441,7 +441,7 @@ jobs:
                   cache_key_prefix: 'mise-v1'
 
             - name: Download all artifacts
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v7
               with:
                   path: ./artifacts
                   pattern: '*'
@@ -502,7 +502,7 @@ jobs:
                   cache_key_prefix: 'mise-v1'
 
             - name: Download WXT artifacts
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v7
               with:
                   name: wxt-zips
                   path: .output
