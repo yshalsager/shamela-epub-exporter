@@ -13,6 +13,18 @@ val tauriProperties = Properties().apply {
     }
 }
 
+val key_properties = Properties().apply {
+    val key_file = rootProject.file("key.properties")
+    if (key_file.exists()) {
+        key_file.inputStream().use { load(it) }
+    }
+}
+val store_file = key_properties.getProperty("storeFile") ?: System.getenv("ANDROID_KEYSTORE_PATH")
+val store_password = key_properties.getProperty("storePassword") ?: System.getenv("ANDROID_KEYSTORE_PASSWORD")
+val key_alias = key_properties.getProperty("keyAlias") ?: System.getenv("ANDROID_KEY_ALIAS")
+val key_password = key_properties.getProperty("keyPassword") ?: System.getenv("ANDROID_KEY_PASSWORD")
+val has_release_signing = store_file != null && store_password != null && key_alias != null && key_password != null
+
 android {
     compileSdk = 36
     namespace = "com.yshalsager.shamela_epub_exporter"
@@ -23,6 +35,16 @@ android {
         targetSdk = 36
         versionCode = tauriProperties.getProperty("tauri.android.versionCode", "1").toInt()
         versionName = tauriProperties.getProperty("tauri.android.versionName", "1.0")
+    }
+    signingConfigs {
+        create("release") {
+            if (has_release_signing) {
+                storeFile = file(store_file!!)
+                storePassword = store_password
+                keyAlias = key_alias
+                keyPassword = key_password
+            }
+        }
     }
     buildTypes {
         getByName("debug") {
@@ -43,6 +65,9 @@ android {
                     .plus(getDefaultProguardFile("proguard-android-optimize.txt"))
                     .toList().toTypedArray()
             )
+            if (has_release_signing) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     kotlinOptions {

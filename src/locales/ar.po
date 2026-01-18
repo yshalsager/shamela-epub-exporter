@@ -74,10 +74,12 @@ msgstr "إلغاء"
 msgid "تفريغ"
 msgstr "تفريغ"
 
+#: ../entrypoints/background.ts
 #: src/entrypoints/background.ts
 msgid "أُلغيت المهمة."
 msgstr "أُلغيت المهمة."
 
+#: ../entrypoints/background.ts
 #: src/entrypoints/background.ts
 msgid "خطأ في الاستخلاص"
 msgstr "خطأ في الاستخلاص"

@@ -69,10 +69,12 @@ msgstr "Cancel"
 msgid "تفريغ"
 msgstr "Clear"
 
+#: ../entrypoints/background.ts
 #: src/entrypoints/background.ts
 msgid "أُلغيت المهمة."
 msgstr "Job canceled."
 
+#: ../entrypoints/background.ts
 #: src/entrypoints/background.ts
 msgid "خطأ في الاستخلاص"
 msgstr "Scrape error."
