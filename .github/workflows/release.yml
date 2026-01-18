@@ -18,6 +18,16 @@ on:
                 required: false
                 default: false
                 type: boolean
+            skip_tauri:
+                description: 'Skip Tauri desktop/android builds'
+                required: true
+                default: false
+                type: boolean
+            submit_stores:
+                description: 'Submit store builds without creating a release'
+                required: true
+                default: false
+                type: boolean
     push:
         tags:
             - 'v*.*.*'
@@ -242,7 +252,7 @@ jobs:
 
     build-tauri-desktop:
         needs: version
-        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' }}
+        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' && !inputs.skip_tauri }}
         strategy:
             fail-fast: false
             matrix:
@@ -334,7 +344,7 @@ jobs:
 
     build-tauri-android:
         needs: version
-        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' }}
+        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' && !inputs.skip_tauri }}
         strategy:
             fail-fast: false
             matrix:
@@ -415,7 +425,7 @@ jobs:
 
     create-release:
         needs: [version, build-wxt, build-tauri-desktop, build-tauri-android]
-        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' && (startsWith(github.ref, 'refs/tags/') || (inputs.release && !inputs.dry_run)) }}
+        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' && (startsWith(github.ref, 'refs/tags/') || (inputs.release && !inputs.dry_run)) && !inputs.skip_tauri }}
         permissions:
             contents: write
         runs-on: ubuntu-latest
@@ -478,9 +488,11 @@ jobs:
                     "${files[@]}"
 
     submit-stores:
-        needs: [version, build-wxt, create-release]
-        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' && (startsWith(github.ref, 'refs/tags/') || (inputs.release && !inputs.dry_run)) }}
+        needs: [version, build-wxt]
+        if: ${{ needs.version.outputs.skip_tag_jobs != 'true' && (startsWith(github.ref, 'refs/tags/') || (inputs.release && !inputs.dry_run) || (inputs.submit_stores && !inputs.dry_run)) }}
         runs-on: ubuntu-latest
+        env:
+            PNPM_CONFIG_ONLY_BUILT_DEPENDENCIES: esbuild,spawn-sync,@tailwindcss/oxide
         steps:
             - uses: actions/checkout@v4
 
