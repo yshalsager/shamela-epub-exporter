@@ -467,10 +467,15 @@ jobs:
                   GH_TOKEN: ${{ github.token }}
                   VERSION: ${{ needs.version.outputs.version }}
               run: |
+                  mapfile -d '' files < <(find ./artifacts -type f -print0)
+                  if [ ${#files[@]} -eq 0 ]; then
+                    echo "No artifacts found to attach"
+                    exit 1
+                  fi
                   gh release create v$VERSION \
                     --title "v$VERSION" \
                     --notes-file release_notes.md \
-                    ./artifacts/**/*
+                    "${files[@]}"
 
     submit-stores:
         needs: [version, build-wxt, create-release]
