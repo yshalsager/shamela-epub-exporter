@@ -4,6 +4,13 @@
 
 [![Available in the Chrome Web Store](./assets/chrome.png)](https://chrome.google.com/webstore/detail/medkbloeipefjhcehnabajepjpikpfhk) [![Get the add-on](./assets/firefox.webp)](https://addons.mozilla.org/firefox/addon/shamela-epub-exporter/)
 
+## التنزيلات
+
+[![ويندوز](https://img.shields.io/badge/Windows-Download-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/yshalsager/shamela-epub-exporter/releases/latest)
+[![ماك](https://img.shields.io/badge/macOS-Download-111111?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/yshalsager/shamela-epub-exporter/releases/latest)
+[![لينكس](https://img.shields.io/badge/Linux-Download-FCC624?style=for-the-badge&logo=linux&logoColor=111111)](https://github.com/yshalsager/shamela-epub-exporter/releases/latest)
+[![أندرويد](https://img.shields.io/badge/Android-Download-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/yshalsager/shamela-epub-exporter/releases/latest)
+
 [![en](https://img.shields.io/badge/README-English-AB8B64.svg)](README.md)
 [![ara](https://img.shields.io/badge/README-Arabic-AB8B64.svg)](README.ar.md)
 
