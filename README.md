@@ -1,6 +1,6 @@
 # Shamela EPUB Exporter
 
-> Browser extension to download books from the [Shamela Library](https://shamela.ws) into EPUB files locally.
+> A tool to download books from the [Shamela Library](https://shamela.ws) into EPUB files locally. Available as browser extenstion, desktop app, and Android app.
 
 [![Available in the Chrome Web Store](./assets/chrome.png)](https://chrome.google.com/webstore/detail/medkbloeipefjhcehnabajepjpikpfhk) [![Get the add-on](./assets/firefox.webp)](https://addons.mozilla.org/firefox/addon/shamela-epub-exporter/)
 
