@@ -1,18 +1,23 @@
 import java.io.File
+import javax.inject.Inject
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
+import org.gradle.process.ExecOperations
 
-open class BuildTask : DefaultTask() {
+abstract class BuildTask : DefaultTask() {
     @Input
     var rootDirRel: String? = null
     @Input
     var target: String? = null
     @Input
     var release: Boolean? = null
+
+    @get:Inject
+    abstract val execOperations: ExecOperations
 
     @TaskAction
     fun assemble() {
@@ -50,7 +55,7 @@ open class BuildTask : DefaultTask() {
         val release = release ?: throw GradleException("release cannot be null")
         val args = listOf("tauri", "android", "android-studio-script");
 
-        project.exec {
+        execOperations.exec {
             workingDir(File(project.projectDir, rootDirRel))
             executable(executable)
             args(args)
