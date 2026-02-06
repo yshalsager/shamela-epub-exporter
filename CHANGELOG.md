@@ -1,5 +1,42 @@
 # Changelog
 
+## v1.2.0
+
+[compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.1.2...v1.2.0)
+
+### 🚀 Enhancements
+
+- Add dark mode support and theme toggle ([7f66237](https://github.com/yshalsager/shamela-epub-exporter/commit/7f66237))
+
+### 🩹 Fixes
+
+- **ci:** Expand android key.properties variables ([de125c3](https://github.com/yshalsager/shamela-epub-exporter/commit/de125c3))
+- **ci:** Ensure artifacts are found before creating release ([0160c47](https://github.com/yshalsager/shamela-epub-exporter/commit/0160c47))
+- **deps:** Update all non-major dependencies ([#10](https://github.com/yshalsager/shamela-epub-exporter/pull/10))
+- **deps:** Update dependency org.jetbrains.kotlin:kotlin-gradle-plugin to v2 ([#16](https://github.com/yshalsager/shamela-epub-exporter/pull/16))
+- **deps:** Update dependency com.android.tools.build:gradle to v9 ([#13](https://github.com/yshalsager/shamela-epub-exporter/pull/13))
+- **deps:** Correct java version of openjdk-25.0.2 ([fc3caf5](https://github.com/yshalsager/shamela-epub-exporter/commit/fc3caf5))
+
+### 📖 Documentation
+
+- Add download section for Windows, macOS, Linux, and Android in README files ([3c9a197](https://github.com/yshalsager/shamela-epub-exporter/commit/3c9a197))
+
+### 🏡 Chore
+
+- **README:** Update description ([253590e](https://github.com/yshalsager/shamela-epub-exporter/commit/253590e))
+- **renovate:** Group non-major updates ([d557b5b](https://github.com/yshalsager/shamela-epub-exporter/commit/d557b5b))
+- Update .prettierignore and eslint configuration; add new lint:fix script ([b84b455](https://github.com/yshalsager/shamela-epub-exporter/commit/b84b455))
+
+### 🤖 CI
+
+- **release:** Update GitHub Actions bot configuration for commits ([96345d6](https://github.com/yshalsager/shamela-epub-exporter/commit/96345d6))
+- **release:** Add flags to skip tauri and submit stores ([6b41d08](https://github.com/yshalsager/shamela-epub-exporter/commit/6b41d08))
+
+### ❤️ Contributors
+
+- Yshalsager <ysh-alsager@hotmail.com>
+- Youssif Shaaban Alsager <ysh-alsager@hotmail.com>
+
 ## v1.1.2
 
 [compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.1.1...v1.1.2)
