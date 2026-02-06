@@ -1,3 +1,4 @@
+<ModeWatcher />
 <main
     class={[
         'mx-auto flex w-full max-w-sm flex-col gap-3',
@@ -30,20 +31,31 @@
                 <p class="text-[10px] text-muted-foreground md:text-xs">المكتبة الشاملة</p>
             </div>
         </div>
-        <Select
-            type="single"
-            value={$locale}
-            onValueChange={value => void apply_locale(String(value))}
-        >
-            <SelectTrigger class="h-8 w-[85px] text-xs shadow-sm">
-                <span data-slot="select-value">{current_locale_label}</span>
-            </SelectTrigger>
-            <SelectContent preventScroll={false}>
-                {#each $available_locales as option (option.locale)}
-                    <SelectItem value={option.locale}>{option.name}</SelectItem>
-                {/each}
-            </SelectContent>
-        </Select>
+        <div class="flex items-center gap-2">
+            <Select
+                type="single"
+                value={$locale}
+                onValueChange={value => void apply_locale(String(value))}
+            >
+                <SelectTrigger class="h-8 w-[85px] text-xs shadow-sm">
+                    <span data-slot="select-value">{current_locale_label}</span>
+                </SelectTrigger>
+                <SelectContent preventScroll={false}>
+                    {#each $available_locales as option (option.locale)}
+                        <SelectItem value={option.locale}>{option.name}</SelectItem>
+                    {/each}
+                </SelectContent>
+            </Select>
+            <Button onclick={toggleMode} variant="outline" size="icon">
+                <Sun
+                    class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all! dark:scale-0 dark:-rotate-90"
+                />
+                <Moon
+                    class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all! dark:scale-100 dark:rotate-0"
+                />
+                <span class="sr-only">تبديل السمة</span>
+            </Button>
+        </div>
     </header>
 
     <Card class="overflow-hidden border-border/60 p-2.5 shadow-sm md:p-3 md:shadow-md">
@@ -248,7 +260,8 @@
 </main>
 
 <script lang="ts">
-import {BookOpen, ExternalLink, Play, RotateCcw, X} from '@lucide/svelte'
+import {BookOpen, ExternalLink, Moon, Play, RotateCcw, Sun, X} from '@lucide/svelte'
+import {ModeWatcher, toggleMode} from 'mode-watcher'
 import {onMount} from 'svelte'
 
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'

@@ -174,3 +174,8 @@ msgstr "Open book in new tab"
 #: src/entrypoints/popup/App.svelte
 msgid "إعادة المحاولة"
 msgstr "Retry"
+
+#: ../entrypoints/popup/App.svelte
+#: src/entrypoints/popup/App.svelte
+msgid "تبديل السمة"
+msgstr "Toggle theme"

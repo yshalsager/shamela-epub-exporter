@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@config '../../../tailwind.config.js';
 @source '../../**/*.{html,js,svelte,ts}';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
@@ -27,18 +28,33 @@
   --font-serif: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
 }
 
-:root {
-  color-scheme: light;
+:root.dark {
+  --color-background: hsl(220 14% 7%);
+  --color-foreground: hsl(0 0% 96%);
+  --color-card: hsl(220 14% 10%);
+  --color-card-foreground: hsl(0 0% 96%);
+  --color-popover: hsl(220 14% 10%);
+  --color-popover-foreground: hsl(0 0% 96%);
+  --color-primary: hsl(24 92% 58%);
+  --color-primary-foreground: hsl(220 14% 7%);
+  --color-secondary: hsl(220 12% 16%);
+  --color-secondary-foreground: hsl(0 0% 94%);
+  --color-muted: hsl(220 12% 14%);
+  --color-muted-foreground: hsl(220 8% 66%);
+  --color-accent: hsl(220 12% 18%);
+  --color-accent-foreground: hsl(0 0% 94%);
+  --color-destructive: hsl(0 72% 56%);
+  --color-destructive-foreground: hsl(0 0% 96%);
+  --color-border: hsl(220 10% 22%);
+  --color-input: hsl(220 10% 20%);
+  --color-ring: hsl(24 92% 58%);
 }
 
 body {
   margin: 0;
   font-family: var(--font-sans);
   color: var(--color-foreground);
-  background:
-    radial-gradient(1200px 600px at 100% -200px, hsl(34 65% 92% / 0.9), transparent),
-    radial-gradient(900px 500px at -200px 120%, hsl(22 45% 88% / 0.8), transparent),
-    var(--color-background);
+  background: var(--color-background);
 }
 
 #app {
