@@ -1,6 +1,5 @@
 # Changelog
 
-
 ## v1.1.2
 
 [compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.1.1...v1.1.2)
@@ -78,4 +77,3 @@
 ### ❤️ Contributors
 
 - Yshalsager <ysh-alsager@hotmail.com>
-

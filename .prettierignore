@@ -1,1 +1,5 @@
 src-tauri/target/
+dist-tauri/
+**/.wuchale/
+**/.wxt/
+.sisyphus/
