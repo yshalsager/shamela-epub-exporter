@@ -21,7 +21,7 @@ abstract class BuildTask : DefaultTask() {
 
     @TaskAction
     fun assemble() {
-        val executable = """pnpm""";
+        val executable = "pnpm"
         try {
             runTauriCli(executable)
         } catch (e: Exception) {
@@ -44,7 +44,7 @@ abstract class BuildTask : DefaultTask() {
                 }
                 throw lastException
             } else {
-                throw e;
+                throw e
             }
         }
     }
@@ -53,21 +53,21 @@ abstract class BuildTask : DefaultTask() {
         val rootDirRel = rootDirRel ?: throw GradleException("rootDirRel cannot be null")
         val target = target ?: throw GradleException("target cannot be null")
         val release = release ?: throw GradleException("release cannot be null")
-        val args = listOf("tauri", "android", "android-studio-script");
+        val args = listOf("tauri", "android", "android-studio-script")
 
-        execOperations.exec {
-            workingDir(File(project.projectDir, rootDirRel))
-            executable(executable)
-            args(args)
+        execOperations.exec { exec_spec ->
+            exec_spec.workingDir(File(project.projectDir, rootDirRel))
+            exec_spec.executable(executable)
+            exec_spec.args(args)
             if (project.logger.isEnabled(LogLevel.DEBUG)) {
-                args("-vv")
+                exec_spec.args("-vv")
             } else if (project.logger.isEnabled(LogLevel.INFO)) {
-                args("-v")
+                exec_spec.args("-v")
             }
             if (release) {
-                args("--release")
+                exec_spec.args("--release")
             }
-            args(listOf("--target", target))
+            exec_spec.args(listOf("--target", target))
         }.assertNormalExitValue()
     }
 }
