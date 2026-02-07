@@ -18,6 +18,7 @@ export default defineConfig([
             '**/.wxt/**',
             '.sisyphus/**',
             'dist-tauri/**',
+            'pnpm-lock.yaml',
             'src-tauri/target/**',
         ],
     },
@@ -50,6 +51,9 @@ export default defineConfig([
                 extraFileExtensions: ['.svelte'],
                 parser: ts_eslint.parser,
             },
+        },
+        rules: {
+            'no-useless-assignment': 'off',
         },
     },
     {
