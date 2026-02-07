@@ -1,7 +1,7 @@
 [tools]
 node = "24"
 rust = "1.93.0"
-java = "openjdk-25.0.2"
+java = "openjdk-21.0.2"
 "aqua:evilmartians/lefthook" = '2'
 "aqua:pnpm/pnpm" = '10'
 
