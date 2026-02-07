@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  wxt@0.20.14:
+    hash: 612a19c7013d2ffab8b760cd61884657c4c069b52a41aab59aa26d265e8c6999
+    path: patches/wxt@0.20.14.patch
+
 importers:
 
   .:
@@ -67,10 +72,10 @@ importers:
         version: 0.16.3
       '@wxt-dev/auto-icons':
         specifier: ^1.1.0
-        version: 1.1.0(wxt@0.20.14(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1))
+        version: 1.1.0(wxt@0.20.14(patch_hash=612a19c7013d2ffab8b760cd61884657c4c069b52a41aab59aa26d265e8c6999)(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1))
       '@wxt-dev/module-svelte':
         specifier: ^2.0.4
-        version: 2.0.4(svelte@5.50.0)(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2))(wxt@0.20.14(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1))
+        version: 2.0.4(svelte@5.50.0)(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2))(wxt@0.20.14(patch_hash=612a19c7013d2ffab8b760cd61884657c4c069b52a41aab59aa26d265e8c6999)(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1))
       bits-ui:
         specifier: ^2.15.4
         version: 2.15.5(@internationalized/date@3.11.0)(svelte@5.50.0)
@@ -113,6 +118,9 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.7.2
         version: 0.7.2(prettier-plugin-svelte@3.4.1(prettier@3.8.1)(svelte@5.50.0))(prettier@3.8.1)
+      publish-browser-extension:
+        specifier: ^4.0.1
+        version: 4.0.1
       svelte:
         specifier: ^5.46.4
         version: 5.50.0
@@ -151,7 +159,7 @@ importers:
         version: 0.19.4
       wxt:
         specifier: ^0.20.13
-        version: 0.20.14(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)
+        version: 0.20.14(patch_hash=612a19c7013d2ffab8b760cd61884657c4c069b52a41aab59aa26d265e8c6999)(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)
 
 packages:
 
@@ -3426,8 +3434,8 @@ packages:
   zip-dir@2.0.0:
     resolution: {integrity: sha512-uhlsJZWz26FLYXOD6WVuq+fIcZ3aBPGo/cFdiLlv3KNwpa52IF3ISV8fLhQLiqVu5No3VhlqlgthN6gehil1Dg==}
 
-  zod@4.3.6:
-    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -4343,23 +4351,23 @@ snapshots:
     dependencies:
       wuchale: 0.19.4
 
-  '@wxt-dev/auto-icons@1.1.0(wxt@0.20.14(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1))':
+  '@wxt-dev/auto-icons@1.1.0(wxt@0.20.14(patch_hash=612a19c7013d2ffab8b760cd61884657c4c069b52a41aab59aa26d265e8c6999)(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1))':
     dependencies:
       defu: 6.1.4
       fs-extra: 11.3.3
       sharp: 0.34.5
-      wxt: 0.20.14(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)
+      wxt: 0.20.14(patch_hash=612a19c7013d2ffab8b760cd61884657c4c069b52a41aab59aa26d265e8c6999)(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)
 
   '@wxt-dev/browser@0.1.36':
     dependencies:
       '@types/filesystem': 0.0.36
       '@types/har-format': 1.2.16
 
-  '@wxt-dev/module-svelte@2.0.4(svelte@5.50.0)(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2))(wxt@0.20.14(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1))':
+  '@wxt-dev/module-svelte@2.0.4(svelte@5.50.0)(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2))(wxt@0.20.14(patch_hash=612a19c7013d2ffab8b760cd61884657c4c069b52a41aab59aa26d265e8c6999)(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1))':
     dependencies:
       '@sveltejs/vite-plugin-svelte': 6.2.4(svelte@5.50.0)(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2))
       svelte: 5.50.0
-      wxt: 0.20.14(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)
+      wxt: 0.20.14(patch_hash=612a19c7013d2ffab8b760cd61884657c4c069b52a41aab59aa26d265e8c6999)(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)
     transitivePeerDependencies:
       - vite
 
@@ -5919,7 +5927,7 @@ snapshots:
       formdata-node: 6.0.3
       listr2: 8.3.3
       ofetch: 1.5.1
-      zod: 4.3.6
+      zod: 3.25.76
 
   punycode@2.3.1: {}
 
@@ -6584,7 +6592,7 @@ snapshots:
       pofile: 1.1.4
       tinyglobby: 0.2.15
 
-  wxt@0.20.14(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1):
+  wxt@0.20.14(patch_hash=612a19c7013d2ffab8b760cd61884657c4c069b52a41aab59aa26d265e8c6999)(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1):
     dependencies:
       '@1natsu/wait-element': 4.1.2
       '@aklinker1/rollup-plugin-visualizer': 5.12.0(rollup@4.57.1)
@@ -6683,6 +6691,6 @@ snapshots:
       async: 3.2.6
       jszip: 3.10.1
 
-  zod@4.3.6: {}
+  zod@3.25.76: {}
 
   zwitch@2.0.4: {}

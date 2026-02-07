@@ -1,0 +1,17 @@
+diff --git a/bin/wxt-publish-extension.cjs b/bin/wxt-publish-extension.cjs
+index 265200caa78233eb1403c3e159c2483e4ebfbea6..d43902ae4f59fd40a66b48b35cab806285d41a60 100755
+--- a/bin/wxt-publish-extension.cjs
++++ b/bin/wxt-publish-extension.cjs
+@@ -4,4 +4,11 @@
+  * `publish-browser-extension` as a direct dependency (like for PNPM, which doesn't link
+  * sub-dependency binaries to "node_modules/.bin")
+  */
+-require('publish-browser-extension/cli');
++;(async () => {
++  try {
++    await import('publish-browser-extension/cli')
++  } catch (error) {
++    console.error(error)
++    process.exitCode = 1
++  }
++})()

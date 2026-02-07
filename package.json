@@ -70,6 +70,7 @@
         "prettier": "3.8.1",
         "prettier-plugin-svelte": "^3.4.1",
         "prettier-plugin-tailwindcss": "^0.7.2",
+        "publish-browser-extension": "^4.0.1",
         "svelte": "^5.46.4",
         "svelte-check": "^4.3.5",
         "tailwind-merge": "^3.4.0",
