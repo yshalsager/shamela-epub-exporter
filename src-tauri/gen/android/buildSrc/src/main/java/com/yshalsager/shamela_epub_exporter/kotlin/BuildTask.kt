@@ -49,25 +49,24 @@ abstract class BuildTask : DefaultTask() {
         }
     }
 
-    fun runTauriCli(executable: String) {
+    fun runTauriCli(exe: String) {
         val rootDirRel = rootDirRel ?: throw GradleException("rootDirRel cannot be null")
         val target = target ?: throw GradleException("target cannot be null")
         val release = release ?: throw GradleException("release cannot be null")
-        val args = listOf("tauri", "android", "android-studio-script")
+        val base_args = listOf("tauri", "android", "android-studio-script")
 
-        execOperations.exec { exec_spec ->
-            exec_spec.workingDir(File(project.projectDir, rootDirRel))
-            exec_spec.executable(executable)
-            exec_spec.args(args)
-            if (project.logger.isEnabled(LogLevel.DEBUG)) {
-                exec_spec.args("-vv")
-            } else if (project.logger.isEnabled(LogLevel.INFO)) {
-                exec_spec.args("-v")
+        execOperations.exec {
+            workingDir = File(project.projectDir, rootDirRel)
+            executable = exe
+            args = buildList {
+                addAll(base_args)
+                when {
+                    project.logger.isEnabled(LogLevel.DEBUG) -> add("-vv")
+                    project.logger.isEnabled(LogLevel.INFO) -> add("-v")
+                }
+                if (release) add("--release")
+                addAll(listOf("--target", target))
             }
-            if (release) {
-                exec_spec.args("--release")
-            }
-            exec_spec.args(listOf("--target", target))
         }.assertNormalExitValue()
     }
 }
