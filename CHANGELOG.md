@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.2.1
+
+[compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.2.0...v1.2.1)
+
+### 🩹 Fixes
+
+- **android:** Update build script for gradle 9 ([c7ec561](https://github.com/yshalsager/shamela-epub-exporter/commit/c7ec561))
+- **android:** Make BuildTask exec gradle9-compatible ([13be081](https://github.com/yshalsager/shamela-epub-exporter/commit/13be081))
+- Pin java version to openjdk-21.0.2 ([4fc7c84](https://github.com/yshalsager/shamela-epub-exporter/commit/4fc7c84))
+
+### 🏡 Chore
+
+- **eslint:** Update configuration to ignore pnpm-lock.yaml ([ee0e18b](https://github.com/yshalsager/shamela-epub-exporter/commit/ee0e18b))
+
+### ❤️ Contributors
+
+- Yshalsager <ysh-alsager@hotmail.com>
+
 ## v1.2.0
 
 [compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.1.2...v1.2.0)
