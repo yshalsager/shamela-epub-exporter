@@ -10,6 +10,16 @@
     },
     packageRules: [
         {
+            matchManagers: ['mise'],
+            matchDepNames: ['java'],
+            enabled: false,
+        },
+        {
+            matchManagers: ['gradle', 'gradle-wrapper'],
+            matchPaths: ['src-tauri/gen/android/**'],
+            enabled: false,
+        },
+        {
             matchUpdateTypes: ['minor', 'patch', 'pin', 'digest'],
             automerge: true,
         },
