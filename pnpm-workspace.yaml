@@ -4,6 +4,3 @@ onlyBuiltDependencies:
   - sharp
   - spawn-sync
   - unrs-resolver
-
-patchedDependencies:
-  wxt@0.20.14: patches/wxt@0.20.14.patch
