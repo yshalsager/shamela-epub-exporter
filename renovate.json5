@@ -1,26 +1,31 @@
 {
-    $schema: 'https://docs.renovatebot.com/renovate-schema.json',
-    extends: ['config:recommended', ':enablePreCommit', ':rebaseStalePrs', 'group:allNonMajor'],
-    labels: ['dependencies'],
-    schedule: ['before 5am on saturday'],
+    $schema: "https://docs.renovatebot.com/renovate-schema.json",
+    extends: [
+        "config:recommended",
+        ":enablePreCommit",
+        ":rebaseStalePrs",
+        "group:allNonMajor",
+    ],
+    labels: ["dependencies"],
+    schedule: ["before 5am on saturday"],
     lockFileMaintenance: {
         enabled: true,
         automerge: true,
-        schedule: ['before 5am on saturday'],
+        schedule: ["before 5am on saturday"],
     },
     packageRules: [
         {
-            matchManagers: ['mise'],
-            matchDepNames: ['java'],
+            matchManagers: ["mise"],
+            matchDepNames: ["java"],
             enabled: false,
         },
         {
-            matchManagers: ['gradle', 'gradle-wrapper'],
-            matchPaths: ['src-tauri/gen/android/**'],
+            matchManagers: ["gradle", "gradle-wrapper"],
+            matchFileNames: ["src-tauri/gen/android/**"],
             enabled: false,
         },
         {
-            matchUpdateTypes: ['minor', 'patch', 'pin', 'digest'],
+            matchUpdateTypes: ["minor", "patch", "pin", "digest"],
             automerge: true,
         },
     ],
