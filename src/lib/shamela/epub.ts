@@ -35,7 +35,6 @@ const VALID_CSS_CLASSES = new Set(['text-center', 'hamesh', 'fn', 'nu'])
 const CLASS_ATTR_PATTERN = /class="([^"]*)"/g
 
 const BASE_CSS = `
-*{direction: rtl}
 body{line-height:1.7;margin:1.5rem;color:#1f1f1f}
 .text-center,h1,h2,h3{text-align:center}
 `
@@ -64,8 +63,6 @@ const sanitize_filename = (value: string) =>
         .replace(/[/:*?"<>|]+/g, '_')
         .replace(/\s+/g, ' ')
         .trim()
-
-const page_file_name = (page_number: number) => `text/page_${page_number}.xhtml`
 
 const create_footnote_link = (footnote_count: number, number: string) =>
     `<a href="#fn${footnote_count}" epub:type="noteref" role="doc-noteref" id="fnref${footnote_count}" class="fn nu">${number}</a>`
@@ -264,14 +261,50 @@ const get_page_volume = (volumes: Record<string, [number, number]> | undefined, 
     return {index: 1, name: ''}
 }
 
-const render_nav_items = (toc: TocTree, page_map: Map<number, string>): string => {
+const collect_toc_anchor_ids = (html: string) => {
+    const ids = new Set<string>()
+    const pattern = /\sid="([^"]+)"/g
+    for (const match of html.matchAll(pattern)) {
+        const id = String(match[1] ?? '').trim()
+        if (!id) continue
+        ids.add(id)
+    }
+    return ids
+}
+
+const resolve_toc_href = (
+    entry: TocItem,
+    page_map: Map<number, string>,
+    page_anchors: Map<number, Set<string>>,
+) => {
+    const page_number =
+        typeof entry.page === 'number'
+            ? entry.page
+            : Number(String((entry as unknown as {page?: unknown}).page ?? ''))
+    if (!Number.isFinite(page_number) || page_number <= 0) return null
+
+    const page_href = page_map.get(page_number)
+    if (!page_href) return null
+    if (!entry.anchor) return page_href
+    const anchors = page_anchors.get(page_number)
+    if (anchors?.has(entry.anchor)) return `${page_href}#${entry.anchor}`
+    return page_href
+}
+
+const render_nav_items = (
+    toc: TocTree,
+    page_map: Map<number, string>,
+    page_anchors: Map<number, Set<string>>,
+): string => {
     const render_item = (item: TocItem | TocBranch): string => {
         if (Array.isArray(item)) {
             const [entry, children] = item
-            const href = page_map.get(entry.page) ?? page_file_name(entry.page)
+            const href = resolve_toc_href(entry, page_map, page_anchors)
+            if (!href) return children.map(render_item).join('')
             return `<li><a href="${href}">${escape_xml(entry.text)}</a>${render_list(children)}</li>`
         }
-        const href = page_map.get(item.page) ?? page_file_name(item.page)
+        const href = resolve_toc_href(item, page_map, page_anchors)
+        if (!href) return ''
         return `<li><a href="${href}">${escape_xml(item.text)}</a></li>`
     }
 
@@ -283,18 +316,24 @@ const render_nav_items = (toc: TocTree, page_map: Map<number, string>): string =
     return render_list(toc)
 }
 
-const render_ncx_items = (toc: TocTree, page_map: Map<number, string>) => {
+const render_ncx_items = (
+    toc: TocTree,
+    page_map: Map<number, string>,
+    page_anchors: Map<number, Set<string>>,
+) => {
     let nav_index = 0
     const render_item = (item: TocItem | TocBranch): string => {
         const id = `nav_${nav_index++}`
         if (Array.isArray(item)) {
             const [entry, children] = item
-            const href = page_map.get(entry.page) ?? page_file_name(entry.page)
+            const href = resolve_toc_href(entry, page_map, page_anchors)
+            if (!href) return children.map(render_item).join('')
             return `<navPoint id="${id}"><navLabel><text>${escape_xml(entry.text)}</text></navLabel><content src="${href}"/>${children
                 .map(render_item)
                 .join('')}</navPoint>`
         }
-        const href = page_map.get(item.page) ?? page_file_name(item.page)
+        const href = resolve_toc_href(item, page_map, page_anchors)
+        if (!href) return ''
         return `<navPoint id="${id}"><navLabel><text>${escape_xml(item.text)}</text></navLabel><content src="${href}"/></navPoint>`
     }
 
@@ -304,7 +343,8 @@ const render_ncx_items = (toc: TocTree, page_map: Map<number, string>) => {
 const render_nav_pages = (pages: BookPage[], page_map: Map<number, string>) => {
     const items = pages
         .map(page => {
-            const href = page_map.get(page.page_number) ?? page_file_name(page.page_number)
+            const href = page_map.get(page.page_number)
+            if (!href) return ''
             return `<li><a href="${href}">صفحة ${page.page}</a></li>`
         })
         .join('')
@@ -327,12 +367,15 @@ const render_page = (page: BookPage, title: string) => `<?xml version="1.0" enco
 
 export const build_epub = async (info: BookInfo, pages: BookPage[], options: JobOptions = {}) => {
     const zip = new JSZip()
-    const title = info.title || `الشاملة ${info.id}`
+    const title = info.title || (info.id ? `الشاملة ${info.id}` : 'كتاب')
     const author = info.author || ''
-    const identifier = `urn:shamela:${info.id}`
-    const filename = sanitize_filename(
-        `${title}${author ? ` - ${author}` : ''} - (${info.id}).epub`,
-    )
+    const identifier =
+        info.local_identifier?.trim() ||
+        (info.id
+            ? `urn:shamela:${info.id}`
+            : `urn:local:${crypto.randomUUID?.() ?? Math.random().toString(16).slice(2)}`)
+    const default_filename = `${title}${author ? ` - ${author}` : ''}${info.id ? ` - (${info.id})` : ''}.epub`
+    const filename = sanitize_filename(info.output_filename?.trim() || default_filename)
 
     zip.file('mimetype', 'application/epub+zip', {compression: 'STORE'})
 
@@ -366,22 +409,36 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
         text = sanitize_html_for_xhtml(text)
 
         const volume = get_page_volume(info.volumes, page.page_number)
-        const file_name = `${volume.name ? 'page_' : 'page'}${volume.index}_${String(page.page_number).padStart(zfill_length, '0')}.xhtml`
+        const has_page_part =
+            typeof page.part === 'number' && Number.isFinite(page.part) && page.part > 0
+        const has_volume_name = !!volume.name
+        const part_index = has_page_part ? page.part : has_volume_name ? volume.index : null
+        const file_name =
+            part_index != null
+                ? `page_${part_index}_${String(page.page_number).padStart(zfill_length, '0')}.xhtml`
+                : `page_${String(page.page_number).padStart(zfill_length, '0')}.xhtml`
 
         let footer = ''
-        if (volume.name) footer += `الجزء: ${volume.name} - `
+        const volume_name = volume.name || (has_page_part ? String(page.part) : '')
+        if (volume_name) footer += `الجزء: ${volume_name} - `
         footer += `الصفحة: ${page.page}`
 
         return {
             page,
             file_name,
             title: chapters_in_page?.[0] ?? '',
-            content_html: `${text}<div class="text-center">${footer}</div>`,
+            content_html: info.page_footer_included
+                ? text
+                : `${text}<div class="text-center">${footer}</div>`,
         }
     })
 
     const page_map = new Map<number, string>()
     page_entries.forEach(entry => page_map.set(entry.page.page_number, `text/${entry.file_name}`))
+    const page_anchors = new Map<number, Set<string>>()
+    page_entries.forEach(entry => {
+        page_anchors.set(entry.page.page_number, collect_toc_anchor_ids(entry.content_html))
+    })
 
     const has_hamesh = page_entries.some(e => e.content_html.includes('class="hamesh"'))
     const has_footnotes =
@@ -426,11 +483,15 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
             ? flatten_toc(info.toc)
             : info.toc
         : null
-    const toc_html = toc_source?.length
-        ? render_nav_items(toc_source, page_map)
+    const include_toc_page = options.include_toc_page !== false
+    const toc_html_from_toc = toc_source?.length
+        ? render_nav_items(toc_source, page_map, page_anchors)
+        : ''
+    const toc_html = toc_html_from_toc.includes('<li>')
+        ? toc_html_from_toc
         : render_nav_pages(sorted_pages, page_map)
     const info_link = '<li><a href="info.xhtml">بطاقة الكتاب</a></li>'
-    const nav_link = '<li><a href="nav.xhtml">فهرس الموضوعات</a></li>'
+    const nav_link = include_toc_page ? '<li><a href="nav.xhtml">فهرس الموضوعات</a></li>' : ''
     const nav_items = toc_html.startsWith('<ol>')
         ? toc_html.replace('<ol>', `<ol>${info_link}${nav_link}`)
         : `<ol>${info_link}${nav_link}</ol>`
@@ -461,8 +522,8 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
               page: page.page_number,
               text: `صفحة ${page.page}`,
           }))
-    const ncx_items = render_ncx_items(ncx_toc, page_map)
-    const ncx_id = crypto.randomUUID()
+    const ncx_items = render_ncx_items(ncx_toc, page_map, page_anchors)
+    const ncx_id = identifier
     zip.folder('OEBPS')?.file(
         'toc.ncx',
         `<?xml version="1.0" encoding="utf-8"?>
@@ -483,12 +544,16 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
       </navLabel>
       <content src="info.xhtml"/>
     </navPoint>
-    <navPoint id="nav">
+    ${
+        include_toc_page
+            ? `<navPoint id="nav">
       <navLabel>
         <text>فهرس الموضوعات</text>
       </navLabel>
       <content src="nav.xhtml"/>
-    </navPoint>
+    </navPoint>`
+            : ''
+    }
     ${ncx_items}
   </navMap>
 </ncx>
@@ -505,6 +570,8 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
     const spine_items = page_entries
         .map(entry => `<itemref idref="p${entry.page.page_number}" />`)
         .join('')
+    const publisher =
+        info.publisher?.trim() || (info.url ? 'https://shamela.ws' : 'Local Conversion')
 
     zip.folder('OEBPS')?.file(
         'content.opf',
@@ -515,9 +582,9 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
     <dc:title>${escape_xml(title)}</dc:title>
     ${author ? `<dc:creator>${escape_xml(author)}</dc:creator>` : ''}
     ${info.url ? `<dc:source>${escape_xml(info.url)}</dc:source>` : ''}
-    <dc:publisher>https://shamela.ws</dc:publisher>
+    <dc:publisher>${escape_xml(publisher)}</dc:publisher>
     <dc:language>ar</dc:language>
-    <meta property="dcterms:modified">${new Date().toISOString()}</meta>
+    <meta property="dcterms:modified">${new Date().toISOString().replace(/\.\d{3}Z$/, 'Z')}</meta>
   </metadata>
   <manifest>
     <item id="info" href="info.xhtml" media-type="application/xhtml+xml" />
@@ -528,7 +595,7 @@ export const build_epub = async (info: BookInfo, pages: BookPage[], options: Job
   </manifest>
   <spine toc="ncx" page-progression-direction="rtl">
     <itemref idref="info" />
-    <itemref idref="nav" />
+    ${include_toc_page ? '<itemref idref="nav" />' : ''}
     ${spine_items}
   </spine>
 </package>
