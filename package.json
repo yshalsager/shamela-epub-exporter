@@ -53,7 +53,7 @@
         "@tauri-apps/plugin-store": "^2.4.2",
         "@tsconfig/svelte": "^5.0.6",
         "@wuchale/svelte": "^0.19.0",
-        "@wuchale/vite-plugin": "^0.17.0",
+        "wuchale": "^0.22.0",
         "@wxt-dev/auto-icons": "^1.1.0",
         "@wxt-dev/module-svelte": "^2.0.4",
         "bits-ui": "^2.15.4",
