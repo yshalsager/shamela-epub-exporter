@@ -1,6 +1,6 @@
 # Shamela EPUB Exporter
 
-> A tool to download books from the [Shamela Library](https://shamela.ws) into EPUB files locally. Available as browser extenstion, desktop app, and Android app.
+> A tool to download books from the [Shamela Library](https://shamela.ws) into EPUB files locally. Available as browser extension, desktop app, and Android app.
 
 [![Available in the Chrome Web Store](./assets/chrome.png)](https://chrome.google.com/webstore/detail/medkbloeipefjhcehnabajepjpikpfhk) [![Get the add-on](./assets/firefox.webp)](https://addons.mozilla.org/firefox/addon/shamela-epub-exporter/)
 
@@ -39,6 +39,12 @@
 - Sanitizes book HTML and converts inline colors to CSS classes.
 - Optional footnote (hamesh) popup conversion for easier navigation.
 - **Smart Background Processing**: Handles tab limits and notifies you when finished.
+- **Local BOK Converter**: Open local `.bok` files directly.
+- Analyze books/volumes and preview content before export.
+- Export `.bok` content to EPUB, PDF, or HTML.
+- Batch convert multiple BOK books in one run.
+- BOK EPUB exports are EPUBCheck-safe and parity-stable.
+- Desktop app save dialog includes ZIP filter support.
 
 ## Installation
 
