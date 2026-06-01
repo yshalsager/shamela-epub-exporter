@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.4.1
+
+[compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.4.0...v1.4.1)
+
+### 🩹 Fixes
+
+- **ci:** Move pnpm overrides to workspace config ([797f8c6](https://github.com/yshalsager/shamela-epub-exporter/commit/797f8c6))
+
+### ❤️ Contributors
+
+- Yshalsager <ysh-alsager@hotmail.com>
+
 ## v1.4.0
 
 [compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.2.1...v1.4.0)
