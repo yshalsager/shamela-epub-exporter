@@ -179,3 +179,56 @@ msgstr "إعادة المحاولة"
 #: src/entrypoints/popup/App.svelte
 msgid "تبديل السمة"
 msgstr "تبديل السمة"
+
+#: ../entrypoints/popup/App.svelte
+#: src/entrypoints/popup/App.svelte
+msgid "محول .bok"
+msgstr "محول .bok"
+
+#: ../entrypoints/popup/App.svelte
+#: src/entrypoints/popup/App.svelte
+msgid "تنزيل من الشاملة"
+msgstr "تنزيل من الشاملة"
+
+#: ../entrypoints/popup/App.svelte
+#: src/entrypoints/popup/App.svelte
+msgid "تحويل .bok محلي"
+msgstr "تحويل .bok محلي"
+
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "أُلغي الاستخلاص."
+msgstr "أُلغي الاستخلاص."
+
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "خطأ في التنزيل"
+msgstr "خطأ في التنزيل"
+
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "غير معروف"
+msgstr "غير معروف"
+
+#. placeholder {0}: runtime?.info?.id || 'غير معروف'
+#. placeholder {1}: error_message
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "فشل تنزيل الكتاب #{0}: {1}"
+msgstr "فشل تنزيل الكتاب #{0}: {1}"
+
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "أُعِدَّ ملف EPUB للتنزيل."
+msgstr "أُعِدَّ ملف EPUB للتنزيل."
+
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "اكتمل التنزيل"
+msgstr "اكتمل التنزيل"
+
+#. placeholder {0}: info.title
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "نُزل الكتاب: {0}"
+msgstr "نُزل الكتاب: {0}"
