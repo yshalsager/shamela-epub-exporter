@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.4.2
+
+[compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.4.1...v1.4.2)
+
+### 🩹 Fixes
+
+- **tauri:** Use Vite 8 baseline build target ([073212a](https://github.com/yshalsager/shamela-epub-exporter/commit/073212a))
+
+### ❤️ Contributors
+
+- Yshalsager <ysh-alsager@hotmail.com>
+
 ## v1.4.1
 
 [compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.4.0...v1.4.1)
