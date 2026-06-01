@@ -1,5 +1,37 @@
 # Changelog
 
+## v1.4.0
+
+[compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.2.1...v1.4.0)
+
+### 🚀 Enhancements
+
+- **bok:** Add local .bok conversion workflow ([446a3f7](https://github.com/yshalsager/shamela-epub-exporter/commit/446a3f7))
+
+### 🩹 Fixes
+
+- **pnpm:** Drop unused wxt patch ([5892be6](https://github.com/yshalsager/shamela-epub-exporter/commit/5892be6))
+- **deps:** Bump rollup and minimatch lockfile versions ([08f23e5](https://github.com/yshalsager/shamela-epub-exporter/commit/08f23e5))
+- **epub:** Make bok exports epubcheck-safe and parity-stable ([465fb9c](https://github.com/yshalsager/shamela-epub-exporter/commit/465fb9c))
+- **tauri:** Support zip filter in save dialog ([8b48180](https://github.com/yshalsager/shamela-epub-exporter/commit/8b48180))
+- **config:** Resolve svelte-check plugin typing issues ([09705cb](https://github.com/yshalsager/shamela-epub-exporter/commit/09705cb))
+- **security:** Update npm and cargo lockfiles for advisories ([66db7fd](https://github.com/yshalsager/shamela-epub-exporter/commit/66db7fd))
+
+### 🏡 Chore
+
+- **renovate:** Ignore android java/gradle updates ([1740d71](https://github.com/yshalsager/shamela-epub-exporter/commit/1740d71))
+- **deps-dev:** Bump vite from 7.3.1 to 7.3.2 ([#38](https://github.com/yshalsager/shamela-epub-exporter/pull/38))
+- **config:** Migrate Renovate config ([#39](https://github.com/yshalsager/shamela-epub-exporter/pull/39))
+- **deps-dev:** Bump svelte from 5.55.4 to 5.55.7 ([#53](https://github.com/yshalsager/shamela-epub-exporter/pull/53))
+- **i18n:** Add missing Bok and download strings ([d2be677](https://github.com/yshalsager/shamela-epub-exporter/commit/d2be677))
+- **tooling:** Bump mise rust and pnpm versions ([9adbccc](https://github.com/yshalsager/shamela-epub-exporter/commit/9adbccc))
+- **pnpm:** Update workspace and lockfile ([13b9965](https://github.com/yshalsager/shamela-epub-exporter/commit/13b9965))
+- **release:** Sync v1.3.0 versions and changelog ([7156e56](https://github.com/yshalsager/shamela-epub-exporter/commit/7156e56))
+
+### ❤️ Contributors
+
+- Yshalsager <ysh-alsager@hotmail.com>
+
 ## v1.3.0
 
 [compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.2.1...v1.3.0)
