@@ -1,8 +1,9 @@
 import {svelte} from '@sveltejs/vite-plugin-svelte'
 import tailwindcss from '@tailwindcss/vite'
-import {wuchale} from '@wuchale/vite-plugin'
 import {resolve} from 'path'
 import {defineConfig} from 'vite'
+import {nodePolyfills} from 'vite-plugin-node-polyfills'
+import {wuchale} from 'wuchale/vite'
 
 const tauri_root = resolve(__dirname, 'src/tauri')
 // keep cwd in sync with Vite root so wuchale computes relative imports correctly
@@ -12,7 +13,18 @@ const host = process.env.TAURI_DEV_HOST
 
 export default defineConfig({
     root: tauri_root,
-    plugins: [wuchale(resolve(__dirname, 'wuchale.config.js')), tailwindcss(), svelte()],
+    plugins: [
+        nodePolyfills({
+            globals: {
+                Buffer: true,
+                global: true,
+                process: true,
+            },
+        }),
+        wuchale(resolve(__dirname, 'wuchale.config.js')),
+        tailwindcss(),
+        svelte(),
+    ],
 
     resolve: {
         alias: {

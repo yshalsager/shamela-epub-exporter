@@ -4,6 +4,7 @@ export type JobOptions = {
     volume?: string
     update_hamesh?: boolean
     flatten_toc?: boolean
+    include_toc_page?: boolean
 }
 
 export type JobProgress = {
@@ -14,6 +15,7 @@ export type JobProgress = {
 export type TocItem = {
     page: number
     text: string
+    anchor?: string
 }
 
 export type TocBranch = [TocItem, TocTree]
@@ -28,11 +30,16 @@ export type BookInfo = {
     toc?: TocTree
     volumes?: Record<string, [number, number]>
     page_chapters?: Record<number, string[]>
+    output_filename?: string
+    local_identifier?: string
+    publisher?: string
+    page_footer_included?: boolean
 }
 
 export type BookPage = {
     page_number: number
     page: number
+    part?: number | null
     text_html: string
 }
 

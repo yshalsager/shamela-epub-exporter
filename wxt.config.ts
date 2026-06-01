@@ -1,7 +1,8 @@
 import {resolve} from 'node:path'
 
 import tailwindcss from '@tailwindcss/vite'
-import {wuchale} from '@wuchale/vite-plugin'
+import {nodePolyfills} from 'vite-plugin-node-polyfills'
+import {wuchale} from 'wuchale/vite'
 import {defineConfig} from 'wxt'
 
 // See https://wxt.dev/api/config.html
@@ -25,7 +26,17 @@ export default defineConfig({
         },
     },
     vite: () => ({
-        plugins: [wuchale(), tailwindcss()],
+        plugins: [
+            nodePolyfills({
+                globals: {
+                    Buffer: true,
+                    global: true,
+                    process: true,
+                },
+            }),
+            wuchale(),
+            tailwindcss(),
+        ],
         resolve: {
             alias: {
                 '@/lib/platform': resolve(__dirname, 'src/lib/platform/index.wxt.ts'),
