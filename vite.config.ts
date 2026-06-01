@@ -14,15 +14,15 @@ const host = process.env.TAURI_DEV_HOST
 export default defineConfig({
     root: tauri_root,
     plugins: [
-        nodePolyfills({
+        ...nodePolyfills({
             globals: {
                 Buffer: true,
                 global: true,
                 process: true,
             },
         }),
-        wuchale(resolve(__dirname, 'wuchale.config.js')),
-        tailwindcss(),
+        wuchale({configPath: resolve(__dirname, 'wuchale.config.js')}),
+        ...tailwindcss(),
         svelte(),
     ],
 

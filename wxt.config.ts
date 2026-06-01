@@ -3,7 +3,7 @@ import {resolve} from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import {nodePolyfills} from 'vite-plugin-node-polyfills'
 import {wuchale} from 'wuchale/vite'
-import {defineConfig} from 'wxt'
+import {defineConfig, type WxtViteConfig} from 'wxt'
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -18,32 +18,32 @@ export default defineConfig({
         browser_specific_settings: {
             gecko: {
                 id: 'shamela_epub_exporter@yshalsager',
-                // @ts-expect-error - WXT doesn't support this field yet
                 data_collection_permissions: {
                     required: ['none'],
                 },
             },
         },
     },
-    vite: () => ({
-        plugins: [
-            nodePolyfills({
-                globals: {
-                    Buffer: true,
-                    global: true,
-                    process: true,
+    vite: () =>
+        ({
+            plugins: [
+                ...nodePolyfills({
+                    globals: {
+                        Buffer: true,
+                        global: true,
+                        process: true,
+                    },
+                }),
+                wuchale(),
+                ...tailwindcss(),
+            ],
+            resolve: {
+                alias: {
+                    '@/lib/platform': resolve(__dirname, 'src/lib/platform/index.wxt.ts'),
+                    '@/lib/job-store': resolve(__dirname, 'src/lib/job-store.wxt.ts'),
                 },
-            }),
-            wuchale(),
-            tailwindcss(),
-        ],
-        resolve: {
-            alias: {
-                '@/lib/platform': resolve(__dirname, 'src/lib/platform/index.wxt.ts'),
-                '@/lib/job-store': resolve(__dirname, 'src/lib/job-store.wxt.ts'),
             },
-        },
-    }),
+        }) as unknown as WxtViteConfig,
     zip: {
         excludeSources: [
             'docs/**',
