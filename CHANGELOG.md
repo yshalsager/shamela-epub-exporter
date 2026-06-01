@@ -1,5 +1,29 @@
 # Changelog
 
+## v1.3.0
+
+[compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.2.1...v1.3.0)
+
+### 🚀 Enhancements
+
+- **bok:** Add full local `.bok` conversion workflow with analysis, preview, EPUB/PDF/HTML export, and batch conversion support ([f9a9e62](https://github.com/yshalsager/shamela-epub-exporter/commit/f9a9e62))
+
+### 🩹 Fixes
+
+- **epub:** Make bok exports epubcheck-safe and parity-stable ([68a1d93](https://github.com/yshalsager/shamela-epub-exporter/commit/68a1d93))
+- **deps:** Resolve npm security advisories and remove unused patching ([0106550](https://github.com/yshalsager/shamela-epub-exporter/commit/0106550), [cf34b68](https://github.com/yshalsager/shamela-epub-exporter/commit/cf34b68), [5892be6](https://github.com/yshalsager/shamela-epub-exporter/commit/5892be6))
+- **tauri:** Support ZIP filter in desktop save dialog ([cd35cae](https://github.com/yshalsager/shamela-epub-exporter/commit/cd35cae))
+
+### 🏡 Chore
+
+- Add missing i18n strings for Bok and download flows ([9c2aaa3](https://github.com/yshalsager/shamela-epub-exporter/commit/9c2aaa3))
+- Update pnpm workspace/lockfile and tooling versions ([e17349a](https://github.com/yshalsager/shamela-epub-exporter/commit/e17349a), [bc8d1cd](https://github.com/yshalsager/shamela-epub-exporter/commit/bc8d1cd))
+- **renovate:** Ignore Android java/gradle updates ([1740d71](https://github.com/yshalsager/shamela-epub-exporter/commit/1740d71))
+
+### ❤️ Contributors
+
+- Yshalsager <ysh-alsager@hotmail.com>
+
 ## v1.2.1
 
 [compare changes](https://github.com/yshalsager/shamela-epub-exporter/compare/v1.2.0...v1.2.1)
