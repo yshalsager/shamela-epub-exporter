@@ -57,7 +57,7 @@ export default defineConfig({
     build: {
         outDir: resolve(__dirname, 'dist-tauri'),
         emptyOutDir: true,
-        target: process.env.TAURI_ENV_PLATFORM === 'windows' ? 'chrome105' : 'safari13',
+        target: 'baseline-widely-available',
         minify: !process.env.TAURI_ENV_DEBUG ? 'esbuild' : false,
         sourcemap: !!process.env.TAURI_ENV_DEBUG,
         rollupOptions: {
