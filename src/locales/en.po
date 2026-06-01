@@ -179,3 +179,56 @@ msgstr "Retry"
 #: src/entrypoints/popup/App.svelte
 msgid "تبديل السمة"
 msgstr "Toggle theme"
+
+#: ../entrypoints/popup/App.svelte
+#: src/entrypoints/popup/App.svelte
+msgid "محول .bok"
+msgstr "BOK Converter"
+
+#: ../entrypoints/popup/App.svelte
+#: src/entrypoints/popup/App.svelte
+msgid "تنزيل من الشاملة"
+msgstr "Download from Shamela"
+
+#: ../entrypoints/popup/App.svelte
+#: src/entrypoints/popup/App.svelte
+msgid "تحويل .bok محلي"
+msgstr "Convert .bok locally"
+
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "أُلغي الاستخلاص."
+msgstr "Scraping was canceled."
+
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "خطأ في التنزيل"
+msgstr "Download error"
+
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "غير معروف"
+msgstr "Unknown"
+
+#. placeholder {0}: runtime?.info?.id || 'غير معروف'
+#. placeholder {1}: error_message
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "فشل تنزيل الكتاب #{0}: {1}"
+msgstr "Failed to download book #{0}: {1}"
+
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "أُعِدَّ ملف EPUB للتنزيل."
+msgstr "EPUB prepared for download."
+
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "اكتمل التنزيل"
+msgstr "Download complete"
+
+#. placeholder {0}: info.title
+#: ../entrypoints/background.ts
+#: src/entrypoints/background.ts
+msgid "نُزل الكتاب: {0}"
+msgstr "Downloaded book: {0}"
