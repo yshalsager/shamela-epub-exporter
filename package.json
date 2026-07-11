@@ -69,7 +69,7 @@
         "mode-watcher": "^1.1.0",
         "pdfmake-rtl": "^2.1.2",
         "playwright": "^1.60.0",
-        "prettier": "3.9.4",
+        "prettier": "3.9.5",
         "prettier-plugin-svelte": "^4.1.0",
         "prettier-plugin-tailwindcss": "^0.8.0",
         "publish-browser-extension": "^5.0.0",
