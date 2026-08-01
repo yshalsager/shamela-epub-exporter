@@ -86,6 +86,6 @@
         "vite-plugin-node-polyfills": "^0.28.0",
         "vitest": "^4.1.8",
         "wuchale": "^0.25.0",
-        "wxt": "^0.20.26"
+        "wxt": "^0.21.0"
     }
 }
