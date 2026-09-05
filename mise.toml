@@ -1,9 +1,9 @@
 [tools]
 node = "24"
-rust = "1.98.0"
+rust = "1.98.1"
 java = "openjdk-21.0.2"
 "aqua:evilmartians/lefthook" = '2'
-"aqua:pnpm/pnpm" = '12.0.0'
+"aqua:pnpm/pnpm" = '12.3.4'
 
 [tasks.default]
 run = "pnpm run dev"
