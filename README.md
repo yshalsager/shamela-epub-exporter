@@ -2,6 +2,9 @@
 
 > A tool to download books from the [Shamela Library](https://shamela.ws) into EPUB files locally. Available as browser extension, desktop app, and Android app.
 
+> [!WARNING]
+> This tool is no longer maintained, use https://app.turath.io/ to download EPUBs directly instead.
+
 [![Available in the Chrome Web Store](./assets/chrome.png)](https://chrome.google.com/webstore/detail/medkbloeipefjhcehnabajepjpikpfhk) [![Get the add-on](./assets/firefox.webp)](https://addons.mozilla.org/firefox/addon/shamela-epub-exporter/)
 
 ## Downloads
@@ -24,6 +27,7 @@
 
 [![PayPal](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat&labelColor=00457C&logo=PayPal&logoColor=white&link=https://www.paypal.me/yshalsager)](https://www.paypal.me/yshalsager)
 [![Liberapay](https://img.shields.io/badge/Liberapay-Support-F6C915?style=flat&labelColor=F6C915&logo=Liberapay&logoColor=white&link=https://liberapay.com/yshalsager)](https://liberapay.com/yshalsager)
+
 
 **Disclaimer:**
 
