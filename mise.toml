@@ -3,7 +3,7 @@ node = "24"
 rust = "1.99.1"
 java = "openjdk-21.0.2"
 "aqua:evilmartians/lefthook" = '2'
-"aqua:pnpm/pnpm" = '12.14.0'
+"aqua:pnpm/pnpm" = '12.15.0'
 
 [tasks.default]
 run = "pnpm run dev"
